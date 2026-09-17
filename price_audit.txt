@@ -1,0 +1,121 @@
+AAC Block | price:3797.0 originalPrice:3797.0
+Concrete Block | price:3793.0 originalPrice:3793.0
+Concrete Block | price:169.0 originalPrice:169.0
+Concrete Block | price:2763.0 originalPrice:2763.0
+Concrete Kerb Stone | price:1297.0 originalPrice:1297.0
+Concrete Paver Block | price:4794.0 originalPrice:6030.37
+Paver Block | price:690.0 originalPrice:964.9
+Red Clay Bricks | price:4486.0 originalPrice:6692.63
+Cement Bricks | price:155.0 originalPrice:155.0
+Fly Ash Bricks | price:2952.0 originalPrice:2952.0
+Cement | price:2205.0 originalPrice:3305.29
+Cement | price:4273.0 originalPrice:4273.0
+Cement | price:4265.0 originalPrice:4265.0
+Cement | price:2089.0 originalPrice:2982.5
+Ready Mix Concrete | price:4515.0 originalPrice:4515.0
+Construction Grout | price:90.0 originalPrice:115.86
+Masonry Cement | price:1258.0 originalPrice:1258.0
+Tile Adhesive | price:3417.0 originalPrice:3417.0
+Wall Putty | price:3548.0 originalPrice:4658.28
+White Cement | price:73.0 originalPrice:73.0
+Ceiling Electrical Box | price:4410.0 originalPrice:5391.05
+Electrical Power Cable | price:3675.0 originalPrice:3675.0
+Electrical Distribution Board | price:190.0 originalPrice:190.0
+Electrical Socket | price:892.0 originalPrice:892.0
+Insulated Electrical Wire | price:4519.0 originalPrice:4519.0
+LED Bulb | price:2670.0 originalPrice:3765.4
+MCB Switch | price:543.0 originalPrice:635.84
+Modular Switch | price:1947.0 originalPrice:2396.16
+Junction Box | price:4278.0 originalPrice:6319.9
+PVC Electrical Conduit Pipe | price:4713.0 originalPrice:4713.0
+Adjustable Wrench | price:3751.0 originalPrice:5108.2
+Brass Door Hinges | price:4135.0 originalPrice:4135.0
+Brass Door Padlock | price:4903.0 originalPrice:4903.0
+Claw Hammer | price:706.0 originalPrice:878.56
+Measuring Tape | price:761.0 originalPrice:761.0
+Electric Hand Drill | price:4417.0 originalPrice:6074.21
+Handheld Electric Angle Grinder | price:210.0 originalPrice:210.0
+Metal Construction Nails | price:2204.0 originalPrice:2204.0
+Metal Cutting Disc | price:4872.0 originalPrice:6337.78
+Nuts & Bolts | price:3547.0 originalPrice:4114.13
+Screwdriver Set | price:3218.0 originalPrice:3218.0
+Wood Screws | price:3189.0 originalPrice:3876.86
+Wall Putty | price:3958.0 originalPrice:3958.0
+Tile Grout | price:2500.0 originalPrice:2500.0
+Metal Primer | price:2439.0 originalPrice:2839.14
+Metal & Wood Paint | price:1907.0 originalPrice:2607.73
+Wall Paint Bucket | price:278.0 originalPrice:278.0
+Wall Primer Bucket | price:418.0 originalPrice:575.33
+Waterproofing Container | price:4458.0 originalPrice:4458.0
+Waterproofing Container | price:1653.0 originalPrice:1653.0
+Plastic Paint Bucket | price:3524.0 originalPrice:4061.88
+Crack Filler | price:2588.0 originalPrice:3675.74
+Brass Ball Valve Handle | price:2163.0 originalPrice:3187.52
+Water Tap | price:2435.0 originalPrice:3256.68
+CPVC Plumbing Pipe | price:4255.0 originalPrice:5624.06
+Grey PVC Elbow Fitting | price:4190.0 originalPrice:4190.0
+Pipe Coupler | price:2607.0 originalPrice:2607.0
+Water Storage Tank | price:568.0 originalPrice:768.85
+White PVC Plumbing Pipe | price:471.0 originalPrice:471.0
+PVC Tee Pipe Fitting | price:1588.0 originalPrice:1588.0
+Braided Hose Pipe | price:988.0 originalPrice:988.0
+UPVC Plumbing Pipe | price:4488.0 originalPrice:5097.66
+Step Ladder | price:2079.0 originalPrice:2628.25
+Yellow Construction Rope | price:183.0 originalPrice:183.0
+Color Coated Roofing Sheet | price:1340.0 originalPrice:1340.0
+Corrugated Roofing Sheet | price:68.0 originalPrice:96.25
+Tarpaulin Sheet | price:4518.0 originalPrice:5736.9
+Polycarbonate Roofing Sheet | price:4183.0 originalPrice:5992.67
+Scaffolding Coupler Clamp | price:689.0 originalPrice:689.0
+Silicone Roofing Sealant Tube | price:4003.0 originalPrice:4003.0
+Steel Roofing Screw With Washer | price:949.0 originalPrice:1256.8
+Wheelbarrow | price:3604.0 originalPrice:4001.68
+Dust Mask | price:4416.0 originalPrice:4416.0
+Ear Defenders | price:225.0 originalPrice:225.0
+Safety Vest | price:1939.0 originalPrice:2307.99
+Safety Boots | price:1804.0 originalPrice:2705.63
+Safety Gloves | price:4394.0 originalPrice:4394.0
+Safety Goggles | price:3900.0 originalPrice:5841.66
+Safety Harness | price:2047.0 originalPrice:2047.0
+Safety Helmet | price:3309.0 originalPrice:4055.42
+Stone Aggregate | price:2957.0 originalPrice:4333.5
+Crushed Stone | price:3669.0 originalPrice:4947.68
+Crushed Stone | price:4411.0 originalPrice:4923.0
+Filling Soil | price:3317.0 originalPrice:3317.0
+Coarse Sand | price:1608.0 originalPrice:2254.07
+Construction Gravel | price:1650.0 originalPrice:2035.87
+Stone Dust | price:3991.0 originalPrice:3991.0
+Plastering Sand | price:3156.0 originalPrice:3633.6
+River Sand | price:3829.0 originalPrice:5317.88
+Manufactured Sand | price:1799.0 originalPrice:2653.37
+Steel Binding Wire | price:3841.0 originalPrice:3841.0
+Steel Angle | price:3871.0 originalPrice:5627.84
+Steel Channel | price:502.0 originalPrice:575.65
+Steel Plate | price:1033.0 originalPrice:1360.09
+Steel Reinforcement Bars Bundle | price:2534.0 originalPrice:3542.39
+Steel Reinforcement Bars | price:3519.0 originalPrice:3519.0
+Steel Reinforcement Bars | price:1543.0 originalPrice:1973.97
+Steel Reinforcement Bars | price:4139.0 originalPrice:4139.0
+Steel Reinforcement Bars | price:3405.0 originalPrice:3405.0
+TMT Steel Reinforcement Bars Bundle | price:1057.0 originalPrice:1057.0
+Anti-Skid Tile | price:3118.0 originalPrice:4169.15
+Ceramic Tile | price:2949.0 originalPrice:2949.0
+Granite Slab | price:4872.0 originalPrice:4872.0
+Kota Stone Slab | price:142.0 originalPrice:156.82
+Paver Tile | price:1500.0 originalPrice:1500.0
+Marble Slab | price:3242.0 originalPrice:4265.79
+Single Floor Tile | price:1024.0 originalPrice:1245.65
+Stone Tile | price:425.0 originalPrice:425.0
+Vitrified Tile | price:1441.0 originalPrice:1934.35
+Wall Tile | price:4881.0 originalPrice:4881.0
+Blockboard | price:819.0 originalPrice:819.0
+Commercial Plywood | price:4885.0 originalPrice:6742.17
+Hardwood Timber | price:1830.0 originalPrice:2328.34
+HDHMR Board | price:1039.0 originalPrice:1415.56
+Marine Plywood | price:3198.0 originalPrice:4183.7
+MDF Board | price:3278.0 originalPrice:4748.04
+Pine Wood Timber | price:505.0 originalPrice:505.0
+Plywood | price:3128.0 originalPrice:3816.98
+Teak Wood | price:1894.0 originalPrice:2168.22
+Flush Door | price:1423.0 originalPrice:1423.0
+Standard Doors & Glass | price:100.0 originalPrice:120.0

@@ -1,0 +1,15 @@
+--- CLOUDINARY AUDIT ---
+Total Cloudinary Images: 156
+Images Used in App (seeded_data): 28
+Unused Cloudinary Images: 128
+
+--- BRAND AUDIT ---
+Brands without Products: {'kcp', 'supreme', 'ramco', 'berger', 'astral', 'ultratech', 'asian_paints', 'penna', 'priya', 'tata', 'acc', 'jaquar'}
+Products without Brands (125): ['Toughened Glass Door', 'AAC Block', 'Concrete Block', 'Concrete Block', 'Concrete Block', 'Concrete Kerb Stone', 'Concrete Paver Block', 'Paver Block', 'Red Clay Bricks', 'Cement Bricks']...
+Brands without Logos (or using placeholders): []
+
+--- CATEGORY AUDIT ---
+Category Image Mismatches:
+
+--- PRODUCT NAMING AUDIT ---
+Generic Product Names: ['Cement', 'Cement', 'Cement', 'Cement']

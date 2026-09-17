@@ -1,0 +1,4495 @@
+{
+    "categories": [
+        {
+            "id": "cement",
+            "name": "Cement",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344597/buildmart_app/zgyreihf6l01vay4faln.jpg"
+        },
+        {
+            "id": "steel",
+            "name": "Steel",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344603/buildmart_app/ddzgen7ir7rvetkqnket.jpg"
+        },
+        {
+            "id": "bricks_blocks",
+            "name": "Bricks & Blocks",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344602/buildmart_app/nkvv3ff5he7edwpbq683.jpg"
+        },
+        {
+            "id": "sand_aggregates",
+            "name": "Sand & Aggregates",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344601/buildmart_app/ufqv0aecijaf7gvmnowu.jpg"
+        },
+        {
+            "id": "plumbing",
+            "name": "Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344605/buildmart_app/rffccluo6qoas2g2ls1l.jpg"
+        },
+        {
+            "id": "electricals",
+            "name": "Electricals",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344606/buildmart_app/qpqxnp1je0u5srqexzp5.jpg"
+        },
+        {
+            "id": "paints",
+            "name": "Paints",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344599/buildmart_app/u5hbyqi3adewjbm7boid.jpg"
+        },
+        {
+            "id": "tiles_stone",
+            "name": "Tiles & Stone",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344598/buildmart_app/zhamx6ug2npn0hultrfu.jpg"
+        },
+        {
+            "id": "hardware_tools",
+            "name": "Hardware & Tools",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344598/buildmart_app/venpuvzgnluty7nbmb1s.jpg"
+        },
+        {
+            "id": "roofing",
+            "name": "Roofing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344596/buildmart_app/tdsffydeuindnhb6npe0.jpg"
+        },
+        {
+            "id": "wood_boards",
+            "name": "Wood & Boards",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344600/buildmart_app/cy2delwezfnbtey1xgrg.jpg"
+        },
+        {
+            "id": "safety_equipment",
+            "name": "Safety Equipment",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344600/buildmart_app/bvnbyfgggp2elxakv9bb.jpg"
+        },
+        {
+            "id": "waterproofing",
+            "name": "Waterproofing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344605/buildmart_app/d7srkmzqlqyidtvfldks.jpg"
+        },
+        {
+            "id": "site_materials",
+            "name": "Site Materials",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344603/buildmart_app/in0qx0ir1vci9yhifmpa.jpg"
+        },
+        {
+            "id": "doors_glass",
+            "name": "Doors & Glass",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344604/buildmart_app/vilfefofj7tz5l4ngmha.jpg"
+        },
+        {
+            "id": "fasteners",
+            "name": "Fasteners",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344596/buildmart_app/s4piubtqhcq3uzt9snli.jpg"
+        }
+    ],
+    "products": [
+        {
+            "id": "prod_door_001",
+            "name": "Wooden Planks Bundle",
+            "description": "High-quality toughened glass for doors and windows. Manufactured to meet industry standards.",
+            "price": 4500.0,
+            "categoryId": "doors_glass",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344600/buildmart_app/cy2delwezfnbtey1xgrg.jpg"
+            ],
+            "specifications": {
+                "Material": "Glass",
+                "Unit": "Sq Ft"
+            },
+            "rating": 4.8,
+            "totalReviews": 125,
+            "stockQuantity": 50,
+            "title": "Wooden Planks Bundle",
+            "originalPrice": 4500.0
+        },
+        {
+            "id": "prod_001",
+            "name": "AAC Block",
+            "description": "High-quality Aac Block for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 65.0,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344606/buildmart_app/tsja8z0k9rvbmnuw9jiq.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 349,
+            "stockQuantity": 71,
+            "title": "AAC Block",
+            "originalPrice": 65.0
+        },
+        {
+            "id": "prod_002",
+            "name": "Concrete Block",
+            "description": "High-quality Concrete Block (1) for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 65.0,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344608/buildmart_app/wqr1k2exvhh7nneeli5k.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 398,
+            "stockQuantity": 95,
+            "title": "Concrete Block",
+            "originalPrice": 65.0
+        },
+        {
+            "id": "prod_005",
+            "name": "Concrete Kerb Stone",
+            "description": "High-quality Concrete Kerb Stone for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344609/buildmart_app/vi9lyhx40zasez5fzlwx.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.5,
+            "totalReviews": 358,
+            "stockQuantity": 75,
+            "title": "Concrete Kerb Stone",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_006",
+            "name": "Concrete Paver Block",
+            "description": "High-quality Concrete Paver Block for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344610/buildmart_app/jvshpnrugvhklfa3crqj.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 379,
+            "stockQuantity": 188,
+            "title": "Concrete Paver Block"
+        },
+        {
+            "id": "prod_007",
+            "name": "Paver Block",
+            "description": "High-quality Paver Block for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344610/buildmart_app/juvdumwnxhvzjpksethq.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 433,
+            "stockQuantity": 115,
+            "title": "Paver Block"
+        },
+        {
+            "id": "prod_008",
+            "name": "Red Clay Bricks",
+            "description": "High-quality Red Clay Bricks Stacked for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 8.0,
+            "originalPrice": 10,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344611/buildmart_app/owye2is7bwo1njs6mrl0.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.5,
+            "totalReviews": 20,
+            "stockQuantity": 92,
+            "title": "Red Clay Bricks"
+        },
+        {
+            "id": "prod_009",
+            "name": "Cement Bricks",
+            "description": "High-quality Cement Bricks for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344612/buildmart_app/yewsrwvifpzcqtzzgx2o.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 120,
+            "stockQuantity": 38,
+            "title": "Cement Bricks",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_010",
+            "name": "Fly Ash Bricks",
+            "description": "High-quality Gray Fly Ash for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 6.0,
+            "categoryId": "bricks_blocks",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344612/buildmart_app/n2rk12fsh838vjpbrzcz.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 385,
+            "stockQuantity": 35,
+            "title": "Fly Ash Bricks",
+            "originalPrice": 6.0
+        },
+        {
+            "id": "prod_011",
+            "name": "Bharat Cement PSC",
+            "description": "High-quality Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "originalPrice": 456,
+            "brand": "bharat_cement",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344613/buildmart_app/ext51jm2xqazyiprua0z.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 419,
+            "stockQuantity": 50,
+            "title": "Bharat Cement PSC"
+        },
+        {
+            "id": "prod_012",
+            "name": "OPC 53 Grade Cement",
+            "description": "High-quality Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344614/buildmart_app/khceqw1br4hjxnlt7r6p.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 77,
+            "stockQuantity": 177,
+            "title": "OPC 53 Grade Cement",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_013",
+            "name": "ACC Rapid-Setting Cement",
+            "description": "High-quality Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "brand": "acc",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344614/buildmart_app/kg89wgtrtuzov1x59qyx.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 5.0,
+            "totalReviews": 303,
+            "stockQuantity": 101,
+            "title": "ACC Rapid-Setting Cement",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_014",
+            "name": "Super Crete PPC Cement",
+            "description": "High-quality Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "originalPrice": 456,
+            "brand": "super_crete",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344615/buildmart_app/iqhrjoq9g80z5zxe0zzv.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 122,
+            "stockQuantity": 56,
+            "title": "Super Crete PPC Cement"
+        },
+        {
+            "id": "prod_015",
+            "name": "UltraTech Ready Mix Concrete",
+            "description": "High-quality Concrete Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "brand": "ultratech",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344616/buildmart_app/scdw66n80sq5tlqj2wrb.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 302,
+            "stockQuantity": 121,
+            "title": "UltraTech Ready Mix Concrete",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_016",
+            "name": "Indian Construction Grout",
+            "description": "High-quality Construction Grout Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344616/buildmart_app/qlgodxdsrxtzyg1kqcsh.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 120,
+            "stockQuantity": 15,
+            "title": "Indian Construction Grout"
+        },
+        {
+            "id": "prod_017",
+            "name": "ACC Masonry Cement",
+            "description": "High-quality Masonry Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "brand": "acc",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344617/buildmart_app/lnlymox0hhirajvhwbhd.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 291,
+            "stockQuantity": 181,
+            "title": "ACC Masonry Cement",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_018",
+            "name": "UltraTech Tilefix",
+            "description": "High-quality Tile Adhesive Bag R for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 450.0,
+            "brand": "ultratech",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344618/buildmart_app/jz5653aze65slhqy0p3q.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 88,
+            "stockQuantity": 187,
+            "title": "UltraTech Tilefix",
+            "originalPrice": 450.0
+        },
+        {
+            "id": "prod_019",
+            "name": "Birla White Wallcare Putty",
+            "description": "High-quality Wall Putty Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 750.0,
+            "originalPrice": 900,
+            "brand": "birla_white",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344618/buildmart_app/yavbevkyqw2gkpmwq3zx.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 6,
+            "stockQuantity": 12,
+            "title": "Birla White Wallcare Putty"
+        },
+        {
+            "id": "prod_020",
+            "name": "UltraTech White Cement",
+            "description": "High-quality White Cement Bag for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "brand": "ultratech",
+            "categoryId": "cement",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344619/buildmart_app/kjxkf7sa25nvstjonydo.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 111,
+            "stockQuantity": 203,
+            "title": "UltraTech White Cement",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_021",
+            "name": "Ceiling Electrical Box",
+            "description": "High-quality Ceilg Electrical Box for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344620/buildmart_app/exnoeycokbqi0q8pfnob.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 465,
+            "stockQuantity": 116,
+            "title": "Ceiling Electrical Box"
+        },
+        {
+            "id": "prod_022",
+            "name": "Electrical Power Cable",
+            "description": "High-quality Cut Electrical Power Cable for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344621/buildmart_app/ub4kbqyejd38wz9dpweq.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 13,
+            "stockQuantity": 16,
+            "title": "Electrical Power Cable",
+            "originalPrice": 1200.0
+        },
+        {
+            "id": "prod_023",
+            "name": "Electrical Distribution Board",
+            "description": "High-quality Electrical Distribution Board Box for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1000.0,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344621/buildmart_app/wicyh7s3fob1orowwcpc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 450,
+            "stockQuantity": 11,
+            "title": "Electrical Distribution Board",
+            "originalPrice": 1000.0
+        },
+        {
+            "id": "prod_024",
+            "name": "Electrical Socket",
+            "description": "High-quality Electrical Socket for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344622/buildmart_app/hmuejiqoojm4vyi3qx9x.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 131,
+            "stockQuantity": 37,
+            "title": "Electrical Socket",
+            "originalPrice": 150.0
+        },
+        {
+            "id": "prod_025",
+            "name": "Insulated Electrical Wire",
+            "description": "High-quality Sulated Electrical Wire Produc for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344623/buildmart_app/dfpsixkthhsx1j3dmqnj.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 323,
+            "stockQuantity": 58,
+            "title": "Insulated Electrical Wire",
+            "originalPrice": 1200.0
+        },
+        {
+            "id": "prod_026",
+            "name": "LED Bulb",
+            "description": "High-quality Led Bulb for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "originalPrice": 180,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344623/buildmart_app/tvijboahywcjq6xfwdf5.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 83,
+            "stockQuantity": 17,
+            "title": "LED Bulb"
+        },
+        {
+            "id": "prod_027",
+            "name": "MCB Switch",
+            "description": "High-quality Mcb Switch Unit for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "originalPrice": 180,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344624/buildmart_app/uvkpceib6f08ovny7loe.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.3,
+            "totalReviews": 167,
+            "stockQuantity": 58,
+            "title": "MCB Switch"
+        },
+        {
+            "id": "prod_028",
+            "name": "Modular Switch",
+            "description": "High-quality Modular Electrical Switch for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "originalPrice": 180,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344624/buildmart_app/ks9arrkfgeiqqbqnktzv.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 321,
+            "stockQuantity": 29,
+            "title": "Modular Switch"
+        },
+        {
+            "id": "prod_029",
+            "name": "Junction Box",
+            "description": "High-quality Plastic Junction Box For Wirg for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344625/buildmart_app/skejbcuayxx0bsnb0avb.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 158,
+            "stockQuantity": 142,
+            "title": "Junction Box"
+        },
+        {
+            "id": "prod_030",
+            "name": "PVC Electrical Conduit Pipe",
+            "description": "High-quality Pvc Electrical Conduit Pipe for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "categoryId": "electricals",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344626/buildmart_app/nn8ytonvnlp6xnveqxpg.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 281,
+            "stockQuantity": 168,
+            "title": "PVC Electrical Conduit Pipe",
+            "originalPrice": 400.0
+        },
+        {
+            "id": "prod_031",
+            "name": "Adjustable Wrench",
+            "description": "High-quality Adjustable Wrench Spanner Produc for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 300.0,
+            "originalPrice": 360,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344626/buildmart_app/hae2v85fenp9vgxpaczw.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 100,
+            "stockQuantity": 205,
+            "title": "Adjustable Wrench"
+        },
+        {
+            "id": "prod_032",
+            "name": "Brass Door Hinges",
+            "description": "High-quality Brass Door Hges for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 3500.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344627/buildmart_app/hnjggaozthi1zji5uctz.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 302,
+            "stockQuantity": 50,
+            "title": "Brass Door Hinges",
+            "originalPrice": 3500.0
+        },
+        {
+            "id": "prod_033",
+            "name": "Brass Door Padlock",
+            "description": "High-quality Brass Door Padlock for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 3500.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344628/buildmart_app/rnx3aeb7nuohbjmvihkl.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 290,
+            "stockQuantity": 49,
+            "title": "Brass Door Padlock",
+            "originalPrice": 3500.0
+        },
+        {
+            "id": "prod_034",
+            "name": "Claw Hammer",
+            "description": "High-quality Claw Hammer for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 300.0,
+            "originalPrice": 360,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344628/buildmart_app/v3o24zuutsaiqucxh2mz.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 115,
+            "stockQuantity": 11,
+            "title": "Claw Hammer"
+        },
+        {
+            "id": "prod_035",
+            "name": "Measuring Tape",
+            "description": "High-quality Coiled Yellow Measurg Tape for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344629/buildmart_app/wzhiofraka4xrolotoql.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 462,
+            "stockQuantity": 50,
+            "title": "Measuring Tape",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_036",
+            "name": "Electric Hand Drill",
+            "description": "High-quality Electric Hand Drill for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344630/buildmart_app/qkgftyqlhji1umhepgut.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 83,
+            "stockQuantity": 15,
+            "title": "Electric Hand Drill"
+        },
+        {
+            "id": "prod_037",
+            "name": "Handheld Electric Angle Grinder",
+            "description": "High-quality Handheld Electric Angle Grder for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344630/buildmart_app/fvboojxygbbrvflnrxuq.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 53,
+            "stockQuantity": 165,
+            "title": "Handheld Electric Angle Grinder",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_038",
+            "name": "Metal Construction Nails",
+            "description": "High-quality Metal Construction Nails for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344631/buildmart_app/wvpjexxt4deadbta6wt4.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 178,
+            "stockQuantity": 41,
+            "title": "Metal Construction Nails",
+            "originalPrice": 150.0
+        },
+        {
+            "id": "prod_039",
+            "name": "Metal Cutting Disc",
+            "description": "High-quality Metal Cuttg Disc Blade for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344631/buildmart_app/kc1sfjc3z2a5f6tn4hg8.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 394,
+            "stockQuantity": 106,
+            "title": "Metal Cutting Disc"
+        },
+        {
+            "id": "prod_040",
+            "name": "Nuts & Bolts",
+            "description": "High-quality Nuts And Bolts for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "originalPrice": 180,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344632/buildmart_app/bjhk3zvadfpuwoswlr9l.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 390,
+            "stockQuantity": 13,
+            "title": "Nuts & Bolts"
+        },
+        {
+            "id": "prod_041",
+            "name": "Screwdriver Set",
+            "description": "High-quality Screwdriver Set Showg for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344633/buildmart_app/gagi1ohqeil2mw7c3ufc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 293,
+            "stockQuantity": 70,
+            "title": "Screwdriver Set",
+            "originalPrice": 150.0
+        },
+        {
+            "id": "prod_042",
+            "name": "Wood Screws",
+            "description": "High-quality Steel Wood Screws for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2000.0,
+            "originalPrice": 2400,
+            "categoryId": "hardware_tools",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344633/buildmart_app/jeitgu9imsb1edf7vm9g.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 2,
+            "stockQuantity": 62,
+            "title": "Wood Screws"
+        },
+        {
+            "id": "prod_043",
+            "name": "Wall Putty",
+            "description": "High-quality Wall Putty Powder for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 750.0,
+            "categoryId": "waterproofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344634/buildmart_app/ysgusdnrucp36k7qo5a6.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 90,
+            "stockQuantity": 162,
+            "title": "Wall Putty",
+            "originalPrice": 750.0
+        },
+        {
+            "id": "prod_044",
+            "name": "Tile Grout",
+            "description": "High-quality Tile Grout Powder for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "categoryId": "waterproofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344634/buildmart_app/icq056woiqwz7qvmgn7h.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 26,
+            "stockQuantity": 184,
+            "title": "Tile Grout",
+            "originalPrice": 600.0
+        },
+        {
+            "id": "prod_045",
+            "name": "Metal Primer",
+            "description": "High-quality Metal Primer T Can for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "waterproofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344635/buildmart_app/sexlbptevcubyb9y2b9f.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 385,
+            "stockQuantity": 101,
+            "title": "Metal Primer"
+        },
+        {
+            "id": "prod_046",
+            "name": "General Purpose Wood Primer",
+            "description": "High-quality Metal Wood for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "originalPrice": 1800,
+            "categoryId": "paints",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344636/buildmart_app/ahzf6miealmxl0zbjdro.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 411,
+            "stockQuantity": 169,
+            "title": "General Purpose Wood Primer"
+        },
+        {
+            "id": "prod_047",
+            "name": "Exterior Wall Paint",
+            "description": "High-quality Plastic Bucket Of Wall Pat for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "categoryId": "paints",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344636/buildmart_app/ovvv3p10ohhowh9m49pk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 194,
+            "stockQuantity": 145,
+            "title": "Exterior Wall Paint",
+            "originalPrice": 1500.0
+        },
+        {
+            "id": "prod_048",
+            "name": "Wall Primer - Interior/Exterior",
+            "description": "High-quality Plastic Bucket Of Wall Primer for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "paints",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344637/buildmart_app/rhp2ln5apwoqbmnhzzqs.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 425,
+            "stockQuantity": 167,
+            "title": "Wall Primer - Interior/Exterior"
+        },
+        {
+            "id": "prod_049",
+            "name": "Waterproofing Container",
+            "description": "High-quality Plastic Contaer Of Waterproofi for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "waterproofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344638/buildmart_app/oex5pynmubnizjuzfito.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 270,
+            "stockQuantity": 208,
+            "title": "Waterproofing Container",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_050",
+            "name": "Liquid Waterproofing Chemical",
+            "description": "High-quality Plastic Contaer Of Waterproofi for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "paints",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344639/buildmart_app/qgseke2srxzje6uvzypf.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.5,
+            "totalReviews": 170,
+            "stockQuantity": 102,
+            "title": "Liquid Waterproofing Chemical",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_051",
+            "name": "Plastic Paint Bucket",
+            "description": "High-quality Plastic Pat Bucket On for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "originalPrice": 1800,
+            "categoryId": "waterproofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344639/buildmart_app/lug8zuddyhfcnapjillo.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 181,
+            "stockQuantity": 83,
+            "title": "Plastic Paint Bucket"
+        },
+        {
+            "id": "prod_052",
+            "name": "Wall Crack Filler Paste",
+            "description": "High-quality Wall Crack Filler for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "paints",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344640/buildmart_app/jjcxhyk4bsf1bu1lgi7x.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 53,
+            "stockQuantity": 145,
+            "title": "Wall Crack Filler Paste"
+        },
+        {
+            "id": "prod_053",
+            "name": "Brass Ball Valve Handle",
+            "description": "High-quality Brass Ball Valve Handle for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344640/buildmart_app/mmzrmrmteui3nayxv15v.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 141,
+            "stockQuantity": 47,
+            "title": "Brass Ball Valve Handle"
+        },
+        {
+            "id": "prod_054",
+            "name": "Water Tap",
+            "description": "High-quality Chrome Water Tap R for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344641/buildmart_app/sygqi33mi9fum97yun4c.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 164,
+            "stockQuantity": 77,
+            "title": "Water Tap"
+        },
+        {
+            "id": "prod_055",
+            "name": "CPVC Plumbing Pipe",
+            "description": "High-quality Cpvc Plumbing Pipe for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "originalPrice": 480,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344641/buildmart_app/wbipsny5x5nndpvihywx.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 168,
+            "stockQuantity": 67,
+            "title": "CPVC Plumbing Pipe"
+        },
+        {
+            "id": "prod_056",
+            "name": "Grey PVC Elbow Fitting",
+            "description": "High-quality Grey Pvc Elbow Pipe Fittg for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344642/buildmart_app/vzvcaiv9xqu1lhzk24q9.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.3,
+            "totalReviews": 369,
+            "stockQuantity": 59,
+            "title": "Grey PVC Elbow Fitting",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_057",
+            "name": "Pipe Coupler",
+            "description": "High-quality Plastic Pipe Coupler Pho for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344643/buildmart_app/nilb6ac5eat4e1oaqksk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 195,
+            "stockQuantity": 140,
+            "title": "Pipe Coupler",
+            "originalPrice": 400.0
+        },
+        {
+            "id": "prod_058",
+            "name": "Water Storage Tank",
+            "description": "High-quality Plastic Water Storage Tank for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344643/buildmart_app/abhtrjkskricyzlalu3q.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 290,
+            "stockQuantity": 177,
+            "title": "Water Storage Tank"
+        },
+        {
+            "id": "prod_059",
+            "name": "White PVC Plumbing Pipe",
+            "description": "High-quality Pvc Plumbing Pipe On White for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344644/buildmart_app/ubnuhiewegoxon0qamwx.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 284,
+            "stockQuantity": 24,
+            "title": "White PVC Plumbing Pipe",
+            "originalPrice": 400.0
+        },
+        {
+            "id": "prod_060",
+            "name": "PVC Tee Pipe Fitting",
+            "description": "High-quality Pvc Tee Pipe Fittg for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344644/buildmart_app/bq6bjexhimk1opqhj67c.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 434,
+            "stockQuantity": 182,
+            "title": "PVC Tee Pipe Fitting",
+            "originalPrice": 400.0
+        },
+        {
+            "id": "prod_061",
+            "name": "Braided Hose Pipe",
+            "description": "High-quality Stainless Steel Braided Hose Pipe for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344645/buildmart_app/qdxskgs5h7dsvxr09n53.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 360,
+            "stockQuantity": 44,
+            "title": "Braided Hose Pipe",
+            "originalPrice": 400.0
+        },
+        {
+            "id": "prod_062",
+            "name": "UPVC Plumbing Pipe",
+            "description": "High-quality Upvc Plumbing Pipe for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 400.0,
+            "originalPrice": 480,
+            "categoryId": "plumbing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344646/buildmart_app/i5khb8t7ii4ybe4tfjgp.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 406,
+            "stockQuantity": 202,
+            "title": "UPVC Plumbing Pipe"
+        },
+        {
+            "id": "prod_063",
+            "name": "Step Ladder",
+            "description": "High-quality Alumum Step Ladder Pho for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344646/buildmart_app/ghtnih3i9xzfp4evfklk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 434,
+            "stockQuantity": 60,
+            "title": "Step Ladder"
+        },
+        {
+            "id": "prod_064",
+            "name": "Yellow Construction Rope",
+            "description": "High-quality Coiled Yellow Construction Rope for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344647/buildmart_app/dk1oll5jhwydetcsu8px.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 379,
+            "stockQuantity": 100,
+            "title": "Yellow Construction Rope",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_065",
+            "name": "Color Coated Roofing Sheet",
+            "description": "High-quality Color Coated Roofing Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344648/buildmart_app/xg3yjt6ejz4n2g0envds.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 46,
+            "stockQuantity": 85,
+            "title": "Color Coated Roofing Sheet",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_066",
+            "name": "Corrugated Roofing Sheet",
+            "description": "High-quality Corrugated Roofing Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "roofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344648/buildmart_app/tjgiy1khxd8hzic06rml.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 376,
+            "stockQuantity": 154,
+            "title": "Corrugated Roofing Sheet"
+        },
+        {
+            "id": "prod_067",
+            "name": "Tarpaulin Sheet",
+            "description": "High-quality Folded Blue Tarpaulinin Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "roofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344649/buildmart_app/qszmxhxwahsho3sa6wtb.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 218,
+            "stockQuantity": 105,
+            "title": "Tarpaulin Sheet"
+        },
+        {
+            "id": "prod_068",
+            "name": "Polycarbonate Roofing Sheet",
+            "description": "High-quality Polycarbonate Roofing Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344649/buildmart_app/anpbuog401rjncyvgkrz.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 116,
+            "stockQuantity": 184,
+            "title": "Polycarbonate Roofing Sheet"
+        },
+        {
+            "id": "prod_069",
+            "name": "Scaffolding Coupler Clamp",
+            "description": "High-quality Scaffoldg Coupler Clamp Produc for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344650/buildmart_app/ixrr22xl6djv7vn1w0gy.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 87,
+            "stockQuantity": 180,
+            "title": "Scaffolding Coupler Clamp",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_070",
+            "name": "Silicone Roofing Sealant Tube",
+            "description": "High-quality Silicone Roofing Sealant Tube for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "site_materials",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344651/buildmart_app/wcc6ffxmhk4w5vzw1hfn.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 5.0,
+            "totalReviews": 138,
+            "stockQuantity": 69,
+            "title": "Silicone Roofing Sealant Tube",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_071",
+            "name": "Steel Roofing Screw With Washer",
+            "description": "High-quality Steel Roofing Screw With Washer for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 150.0,
+            "originalPrice": 180,
+            "categoryId": "roofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344651/buildmart_app/ljzllh0qjpbmqc1uhyrb.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 287,
+            "stockQuantity": 198,
+            "title": "Steel Roofing Screw With Washer"
+        },
+        {
+            "id": "prod_072",
+            "name": "Wheelbarrow",
+            "description": "High-quality Steel Wheelbarrow for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "roofing",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344652/buildmart_app/vz2d8olwrywxun7qu2nf.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 180,
+            "stockQuantity": 162,
+            "title": "Wheelbarrow"
+        },
+        {
+            "id": "prod_073",
+            "name": "Dust Mask",
+            "description": "High-quality Dust Mask for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344652/buildmart_app/frmsikwhpwhnn0l5gw7m.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 5.0,
+            "totalReviews": 340,
+            "stockQuantity": 99,
+            "title": "Dust Mask",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_074",
+            "name": "Ear Defenders",
+            "description": "High-quality Dustrial Ear Defenders for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344653/buildmart_app/x6id80ojzanzbv42h6wh.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 260,
+            "stockQuantity": 141,
+            "title": "Ear Defenders",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_075",
+            "name": "Safety Vest",
+            "description": "High-quality Reflective Safety Vest for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344654/buildmart_app/s5a6h120f9g08ziiz5i7.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 384,
+            "stockQuantity": 142,
+            "title": "Safety Vest"
+        },
+        {
+            "id": "prod_076",
+            "name": "Safety Boots",
+            "description": "High-quality Safety Boots for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344654/buildmart_app/vla5jotilqpoeyblp4zc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 50,
+            "stockQuantity": 129,
+            "title": "Safety Boots"
+        },
+        {
+            "id": "prod_077",
+            "name": "Safety Gloves",
+            "description": "High-quality Safety Gloves Flat for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344655/buildmart_app/nzkezat67slcjeiavjgc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 331,
+            "stockQuantity": 109,
+            "title": "Safety Gloves",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_078",
+            "name": "Safety Goggles",
+            "description": "High-quality Safety Goggles With Elastic Head for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344656/buildmart_app/wpp7tntitgbujhyofwv6.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.6,
+            "totalReviews": 263,
+            "stockQuantity": 82,
+            "title": "Safety Goggles"
+        },
+        {
+            "id": "prod_079",
+            "name": "Safety Harness",
+            "description": "High-quality Safety Harness for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344657/buildmart_app/czlpgq3nl97th894fmad.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 258,
+            "stockQuantity": 85,
+            "title": "Safety Harness",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_080",
+            "name": "Safety Helmet",
+            "description": "High-quality Yellow Construction Safety Helmet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "safety_equipment",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344657/buildmart_app/ympe8osviyima8rck8sk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 49,
+            "stockQuantity": 135,
+            "title": "Safety Helmet"
+        },
+        {
+            "id": "prod_081",
+            "name": "Stone Aggregate",
+            "description": "High-quality Construction Stone Aggregate Pro for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 800.0,
+            "originalPrice": 960,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344658/buildmart_app/fwpome2us9mo6v0wn3g6.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 224,
+            "stockQuantity": 23,
+            "title": "Stone Aggregate"
+        },
+        {
+            "id": "prod_082",
+            "name": "Crushed Stone",
+            "description": "High-quality Crushed Stone Heap O for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 800.0,
+            "originalPrice": 960,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344659/buildmart_app/tatannbdrynboszvl7dt.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 359,
+            "stockQuantity": 185,
+            "title": "Crushed Stone"
+        },
+        {
+            "id": "prod_084",
+            "name": "Filling Soil",
+            "description": "High-quality Brown Fillg Soil for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344660/buildmart_app/tnka5imzhfpmgrtdnuln.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 5.0,
+            "totalReviews": 429,
+            "stockQuantity": 87,
+            "title": "Filling Soil",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_085",
+            "name": "Coarse Sand",
+            "description": "High-quality Coarse Sand for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344660/buildmart_app/lisoyxch2bcwamwicnmi.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 66,
+            "stockQuantity": 106,
+            "title": "Coarse Sand"
+        },
+        {
+            "id": "prod_086",
+            "name": "Construction Gravel",
+            "description": "High-quality Construction Gravel for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 800.0,
+            "originalPrice": 960,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344661/buildmart_app/tx4yipxqjtmbeph9v01r.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 13,
+            "stockQuantity": 192,
+            "title": "Construction Gravel"
+        },
+        {
+            "id": "prod_087",
+            "name": "Stone Dust",
+            "description": "High-quality Construction Stone Dust for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344662/buildmart_app/lfyvmwf6ca83a8oavcpi.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 368,
+            "stockQuantity": 22,
+            "title": "Stone Dust",
+            "originalPrice": 500.0
+        },
+        {
+            "id": "prod_088",
+            "name": "Plastering Sand",
+            "description": "High-quality Plasterg Sand for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344662/buildmart_app/faatajlvvahnjqabsixg.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 264,
+            "stockQuantity": 74,
+            "title": "Plastering Sand"
+        },
+        {
+            "id": "prod_089",
+            "name": "River Sand",
+            "description": "High-quality River Sand for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344663/buildmart_app/e9ke84yyzkmxwy793bur.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 55,
+            "stockQuantity": 101,
+            "title": "River Sand"
+        },
+        {
+            "id": "prod_090",
+            "name": "Manufactured Sand",
+            "description": "High-quality Manufactured Sand Heap O for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "originalPrice": 1440,
+            "categoryId": "sand_aggregates",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344664/buildmart_app/pm51nwjmn5iofarptq6f.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 5.0,
+            "totalReviews": 67,
+            "stockQuantity": 207,
+            "title": "Manufactured Sand"
+        },
+        {
+            "id": "prod_091",
+            "name": "Steel Binding Wire",
+            "description": "High-quality Roll Of Steel Bdg Wire for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1200.0,
+            "categoryId": "steel",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344664/buildmart_app/ejf1qywkyf53nsmwtjwa.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 48,
+            "stockQuantity": 138,
+            "title": "Steel Binding Wire",
+            "originalPrice": 1200.0
+        },
+        {
+            "id": "prod_092",
+            "name": "Steel Angle",
+            "description": "High-quality Steel Angle for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "fasteners",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344665/buildmart_app/n2gdcm1z6hwzujncufcc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 119,
+            "stockQuantity": 160,
+            "title": "Steel Angle"
+        },
+        {
+            "id": "prod_093",
+            "name": "Steel Channel",
+            "description": "High-quality Steel Channel for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "steel",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344665/buildmart_app/vkmepw6mfj2asy1uzqka.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 452,
+            "stockQuantity": 70,
+            "title": "Steel Channel"
+        },
+        {
+            "id": "prod_094",
+            "name": "Steel Plate",
+            "description": "High-quality Steel Plate for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "steel",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344666/buildmart_app/vbkfvlbitbfizp75ifvy.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.7,
+            "totalReviews": 47,
+            "stockQuantity": 53,
+            "title": "Steel Plate"
+        },
+        {
+            "id": "prod_095",
+            "name": "Steel Reinforcement Bars Bundle",
+            "description": "High-quality Steel Reinforcement Bars Bundle for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "originalPrice": 456,
+            "categoryId": "steel",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344666/buildmart_app/otmmqim18gfegdha1qpz.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.3,
+            "totalReviews": 77,
+            "stockQuantity": 43,
+            "title": "Steel Reinforcement Bars Bundle"
+        },
+        {
+            "id": "prod_096",
+            "name": "Steel Reinforcement Bars",
+            "description": "High-quality Steel Reinforcement Bars for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "categoryId": "steel",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344667/buildmart_app/oklvutty3sterxhvgo06.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 51,
+            "stockQuantity": 84,
+            "title": "Steel Reinforcement Bars",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_100",
+            "name": "TMT Steel Reinforcement Bars Bundle",
+            "description": "High-quality Tmt Steel Reinforcement Bars Bundle for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 380.0,
+            "categoryId": "fasteners",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344669/buildmart_app/k9pdswaub0w0abzwdklk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 377,
+            "stockQuantity": 43,
+            "title": "TMT Steel Reinforcement Bars Bundle",
+            "originalPrice": 380.0
+        },
+        {
+            "id": "prod_101",
+            "name": "Anti-Skid Tile",
+            "description": "High-quality Anti Skid Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "originalPrice": 720,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344670/buildmart_app/nae0mfmdzxbgrhpmkdji.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.9,
+            "totalReviews": 202,
+            "stockQuantity": 177,
+            "title": "Anti-Skid Tile"
+        },
+        {
+            "id": "prod_102",
+            "name": "Ceramic Tile",
+            "description": "High-quality Ceramic Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344671/buildmart_app/kqoq5wlhghmkcqd0eudp.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 56,
+            "stockQuantity": 57,
+            "title": "Ceramic Tile",
+            "originalPrice": 600.0
+        },
+        {
+            "id": "prod_103",
+            "name": "Granite Slab",
+            "description": "High-quality Granite Slab O for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2500.0,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344671/buildmart_app/afrauhkhaq8m05bu9hiu.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.2,
+            "totalReviews": 425,
+            "stockQuantity": 82,
+            "title": "Granite Slab",
+            "originalPrice": 2500.0
+        },
+        {
+            "id": "prod_104",
+            "name": "Kota Stone Slab",
+            "description": "High-quality Kota Stone Slab for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 500.0,
+            "originalPrice": 600,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344672/buildmart_app/fyzveeunggkia7luoclc.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 264,
+            "stockQuantity": 77,
+            "title": "Kota Stone Slab"
+        },
+        {
+            "id": "prod_105",
+            "name": "Paver Tile",
+            "description": "High-quality Outdoor Paver Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344673/buildmart_app/ohfhbz9qg64o95pbprrj.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 268,
+            "stockQuantity": 157,
+            "title": "Paver Tile",
+            "originalPrice": 600.0
+        },
+        {
+            "id": "prod_106",
+            "name": "Marble Slab",
+            "description": "High-quality Polished Marble Slab for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2500.0,
+            "originalPrice": 3000,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344673/buildmart_app/qekx9q8yvoflqnmm8sau.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.0,
+            "totalReviews": 31,
+            "stockQuantity": 105,
+            "title": "Marble Slab"
+        },
+        {
+            "id": "prod_107",
+            "name": "Single Floor Tile",
+            "description": "High-quality Single Floor Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "originalPrice": 720,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344674/buildmart_app/jkrxyo0swgoprqs5fd2l.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 247,
+            "stockQuantity": 142,
+            "title": "Single Floor Tile"
+        },
+        {
+            "id": "prod_108",
+            "name": "Stone Tile",
+            "description": "High-quality Stone Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344674/buildmart_app/o2yrfdcvwuyx2t97bdzf.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 439,
+            "stockQuantity": 91,
+            "title": "Stone Tile",
+            "originalPrice": 600.0
+        },
+        {
+            "id": "prod_109",
+            "name": "Vitrified Tile",
+            "description": "High-quality Vitrified Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "originalPrice": 720,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344675/buildmart_app/pphtun05vy2vxnpkvvuh.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.6,
+            "totalReviews": 164,
+            "stockQuantity": 203,
+            "title": "Vitrified Tile"
+        },
+        {
+            "id": "prod_110",
+            "name": "Wall Tile",
+            "description": "High-quality Wall Tile for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 600.0,
+            "categoryId": "tiles_stone",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344676/buildmart_app/edy5sx2gb9uyg0mvmdzm.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.7,
+            "totalReviews": 482,
+            "stockQuantity": 53,
+            "title": "Wall Tile",
+            "originalPrice": 600.0
+        },
+        {
+            "id": "prod_111",
+            "name": "Blockboard",
+            "description": "High-quality Blockboard Panel Show for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1000.0,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344676/buildmart_app/w4hye3wwb3dogfy4luuk.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.8,
+            "totalReviews": 183,
+            "stockQuantity": 87,
+            "title": "Blockboard",
+            "originalPrice": 1000.0
+        },
+        {
+            "id": "prod_112",
+            "name": "Commercial Plywood",
+            "description": "High-quality Commercial Plywood Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "originalPrice": 1800,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344677/buildmart_app/qwphf37pfb4cyw3vcjvb.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 133,
+            "stockQuantity": 89,
+            "title": "Commercial Plywood"
+        },
+        {
+            "id": "prod_113",
+            "name": "Hardwood Timber",
+            "description": "High-quality Hardwood Timber Block Ph for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2000.0,
+            "originalPrice": 2400,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344677/buildmart_app/xzq5f6a1wrvlrzplkzqs.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 65,
+            "stockQuantity": 200,
+            "title": "Hardwood Timber"
+        },
+        {
+            "id": "prod_114",
+            "name": "HDHMR Board",
+            "description": "High-quality HDHMR Board for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1000.0,
+            "originalPrice": 1200,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344678/buildmart_app/sgfckyzh6ovawhiwhmap.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.5,
+            "totalReviews": 251,
+            "stockQuantity": 60,
+            "title": "HDHMR Board"
+        },
+        {
+            "id": "prod_115",
+            "name": "Marine Plywood",
+            "description": "High-quality Mare Plywood Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "originalPrice": 1800,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344679/buildmart_app/ljzecjkzersknufc0fxt.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 375,
+            "stockQuantity": 96,
+            "title": "Marine Plywood"
+        },
+        {
+            "id": "prod_116",
+            "name": "MDF Board",
+            "description": "High-quality Mdf Board for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1000.0,
+            "originalPrice": 1200,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344679/buildmart_app/v409dzwzf6kbvwbtchvu.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.9,
+            "totalReviews": 75,
+            "stockQuantity": 170,
+            "title": "MDF Board"
+        },
+        {
+            "id": "prod_117",
+            "name": "Pine Wood Timber",
+            "description": "High-quality Pine Wood Timber Block for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2000.0,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344680/buildmart_app/h8vbfirstyjxyyujxw1d.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.3,
+            "totalReviews": 203,
+            "stockQuantity": 173,
+            "title": "Pine Wood Timber",
+            "originalPrice": 2000.0
+        },
+        {
+            "id": "prod_118",
+            "name": "Plywood",
+            "description": "High-quality Plywood Sheet for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 1500.0,
+            "originalPrice": 1800,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344680/buildmart_app/sbucsf7fdxzztthrng7c.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.1,
+            "totalReviews": 214,
+            "stockQuantity": 24,
+            "title": "Plywood"
+        },
+        {
+            "id": "prod_119",
+            "name": "Teak Wood",
+            "description": "High-quality Teak Wood Block O for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 2000.0,
+            "originalPrice": 2400,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344681/buildmart_app/ah0yxvpffbrolhsdtlhg.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 4.4,
+            "totalReviews": 76,
+            "stockQuantity": 188,
+            "title": "Teak Wood"
+        },
+        {
+            "id": "prod_120",
+            "name": "Flush Door",
+            "description": "High-quality Wooden Flush Door for your construction and building needs. Manufactured to meet industry standards.",
+            "price": 3500.0,
+            "categoryId": "wood_boards",
+            "shopId": "shop_01",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344682/buildmart_app/b3le1ygr4wbmbmx6lrs3.jpg"
+            ],
+            "specifications": {
+                "Material": "Standard",
+                "Unit": "Piece/Bag"
+            },
+            "rating": 3.8,
+            "totalReviews": 73,
+            "stockQuantity": 17,
+            "title": "Flush Door",
+            "originalPrice": 3500.0
+        },
+        {
+            "id": "prod_door_002",
+            "name": "Teak Wood Main Door",
+            "title": "Teak Wood Main Door",
+            "description": "Premium quality teak wood main door with elegant carvings. Highly durable and termite resistant.",
+            "price": 25000,
+            "originalPrice": 28000,
+            "categoryId": "doors_glass",
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344604/buildmart_app/vilfefofj7tz5l4ngmha.jpg"
+            ],
+            "unit": "Piece",
+            "inStock": true,
+            "stockQuantity": 15,
+            "isFeatured": true,
+            "specifications": {
+                "Material": "Teak Wood",
+                "Dimensions": "7x3 ft",
+                "Thickness": "35mm"
+            },
+            "rating": 4.8,
+            "reviewCount": 24
+        },
+        {
+            "id": "prod_121",
+            "title": "ACC cement bag product photography",
+            "name": "ACC cement bag product photography",
+            "description": "High quality ACC cement bag product photography by ACC Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626877/buildmart_app/products/y6tzkmgkkvofikrocgkj.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626877/buildmart_app/products/y6tzkmgkkvofikrocgkj.jpg",
+            "categoryId": "cement",
+            "brand": "acc",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_122",
+            "title": "ACC cement bag product photography 2",
+            "name": "ACC cement bag product photography 2",
+            "description": "High quality ACC cement bag product photography 2 by ACC Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626878/buildmart_app/products/gpzkxemguf7nn9k63alf.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626878/buildmart_app/products/gpzkxemguf7nn9k63alf.jpg",
+            "categoryId": "cement",
+            "brand": "acc",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_123",
+            "title": "ACC Cement bag studio shot",
+            "name": "ACC Cement bag studio shot",
+            "description": "High quality ACC Cement bag studio shot by ACC Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626879/buildmart_app/products/faz1oynqyzaarh3qyuje.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626879/buildmart_app/products/faz1oynqyzaarh3qyuje.jpg",
+            "categoryId": "cement",
+            "brand": "acc",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_124",
+            "title": "Ambuja cement bag product shot",
+            "name": "Ambuja cement bag product shot",
+            "description": "High quality Ambuja cement bag product shot by Ambuja Cements.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626880/buildmart_app/products/xbrvp7lqxixri0xdx2mv.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626880/buildmart_app/products/xbrvp7lqxixri0xdx2mv.jpg",
+            "categoryId": "cement",
+            "brand": "ambuja",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_125",
+            "title": "Ambuja cement bag studio shot",
+            "name": "Ambuja cement bag studio shot",
+            "description": "High quality Ambuja cement bag studio shot by Ambuja Cements.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626881/buildmart_app/products/hvuwscrcg03sstl0ma6x.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626881/buildmart_app/products/hvuwscrcg03sstl0ma6x.jpg",
+            "categoryId": "cement",
+            "brand": "ambuja",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_126",
+            "title": "Ambuja cement bag studio shot 2",
+            "name": "Ambuja cement bag studio shot 2",
+            "description": "High quality Ambuja cement bag studio shot 2 by Ambuja Cements.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626881/buildmart_app/products/mrfjhmjb88k176v4fvqn.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626881/buildmart_app/products/mrfjhmjb88k176v4fvqn.jpg",
+            "categoryId": "cement",
+            "brand": "ambuja",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_127",
+            "title": "Astral CPVC coupler product shot",
+            "name": "Astral CPVC coupler product shot",
+            "description": "High quality Astral CPVC coupler product shot by Astral Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626882/buildmart_app/products/e9mzrvocpldk7f934jtt.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626882/buildmart_app/products/e9mzrvocpldk7f934jtt.jpg",
+            "categoryId": "plumbing",
+            "brand": "astral",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_128",
+            "title": "Astral CPVC elbow fitting",
+            "name": "Astral CPVC elbow fitting",
+            "description": "High quality Astral CPVC elbow fitting by Astral Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626883/buildmart_app/products/aubsb2mxz9yxvcu6dwr4.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626883/buildmart_app/products/aubsb2mxz9yxvcu6dwr4.jpg",
+            "categoryId": "plumbing",
+            "brand": "astral",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_129",
+            "title": "Astral CPVC plumbing pipe produc\u2026",
+            "name": "Astral CPVC plumbing pipe produc\u2026",
+            "description": "High quality Astral CPVC plumbing pipe produc\u2026 by Astral Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626884/buildmart_app/products/gzp1k1ch46jftgr4zpre.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626884/buildmart_app/products/gzp1k1ch46jftgr4zpre.jpg",
+            "categoryId": "plumbing",
+            "brand": "astral",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_130",
+            "title": "Astral PVC pipe product shot",
+            "name": "Astral PVC pipe product shot",
+            "description": "High quality Astral PVC pipe product shot by Astral Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626884/buildmart_app/products/rutadoua8grthxdbz4so.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626884/buildmart_app/products/rutadoua8grthxdbz4so.jpg",
+            "categoryId": "plumbing",
+            "brand": "astral",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_131",
+            "title": "Astral SWR pipe product shot",
+            "name": "Astral SWR pipe product shot",
+            "description": "High quality Astral SWR pipe product shot by Astral Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626885/buildmart_app/products/bk7smegalhtewkbo0gg4.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626885/buildmart_app/products/bk7smegalhtewkbo0gg4.jpg",
+            "categoryId": "plumbing",
+            "brand": "astral",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_132",
+            "title": "Berger metal paint container stu\u2026",
+            "name": "Berger metal paint container stu\u2026",
+            "description": "High quality Berger metal paint container stu\u2026 by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626886/buildmart_app/products/jifnew9izglmjzjcxm4p.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626886/buildmart_app/products/jifnew9izglmjzjcxm4p.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_133",
+            "title": "Berger paint container in studio",
+            "name": "Berger paint container in studio",
+            "description": "High quality Berger paint container in studio by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626887/buildmart_app/products/bnrbp5h5ct1j7e3b2tnq.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626887/buildmart_app/products/bnrbp5h5ct1j7e3b2tnq.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_134",
+            "title": "Berger paint container product p\u2026",
+            "name": "Berger paint container product p\u2026",
+            "description": "High quality Berger paint container product p\u2026 by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626887/buildmart_app/products/dd14jjgqtzy0djtjh46p.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626887/buildmart_app/products/dd14jjgqtzy0djtjh46p.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_135",
+            "title": "Berger paint container studio shot",
+            "name": "Berger paint container studio shot",
+            "description": "High quality Berger paint container studio shot by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626888/buildmart_app/products/qb4nwvq4vq9m6oq5cmzi.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626888/buildmart_app/products/qb4nwvq4vq9m6oq5cmzi.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_136",
+            "title": "Berger paint container studio shot 2",
+            "name": "Berger paint container studio shot 2",
+            "description": "High quality Berger paint container studio shot 2 by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626889/buildmart_app/products/u1uu8atnkbrs98yek1qu.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626889/buildmart_app/products/u1uu8atnkbrs98yek1qu.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_137",
+            "title": "Berger wall primer container",
+            "name": "Berger wall primer container",
+            "description": "High quality Berger wall primer container by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626890/buildmart_app/products/q3shylhdvtpyuz2nrkzg.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626890/buildmart_app/products/q3shylhdvtpyuz2nrkzg.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_138",
+            "title": "Berger wall putty bag studio",
+            "name": "Berger wall putty bag studio",
+            "description": "High quality Berger wall putty bag studio by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626891/buildmart_app/products/bvr5phoragcz0cxxabrh.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626891/buildmart_app/products/bvr5phoragcz0cxxabrh.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_139",
+            "title": "Berger waterproofing paint conta\u2026",
+            "name": "Berger waterproofing paint conta\u2026",
+            "description": "High quality Berger waterproofing paint conta\u2026 by Berger Paints.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626891/buildmart_app/products/bbafpugtcnnqjqs64nac.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626891/buildmart_app/products/bbafpugtcnnqjqs64nac.jpg",
+            "categoryId": "paints",
+            "brand": "berger",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_140",
+            "title": "Binding wire roll isolated shot",
+            "name": "Binding wire roll isolated shot",
+            "description": "High quality Binding wire roll isolated shot by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626892/buildmart_app/products/v3swjghskugdr8hv3w0l.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626892/buildmart_app/products/v3swjghskugdr8hv3w0l.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_141",
+            "title": "KCP cement bag product photography",
+            "name": "KCP cement bag product photography",
+            "description": "High quality KCP cement bag product photography by KCP Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626893/buildmart_app/products/bt1dt9boemcn9ikwmcta.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626893/buildmart_app/products/bt1dt9boemcn9ikwmcta.jpg",
+            "categoryId": "cement",
+            "brand": "kcp",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_142",
+            "title": "KCP cement bag product photography 2",
+            "name": "KCP cement bag product photography 2",
+            "description": "High quality KCP cement bag product photography 2 by KCP Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626894/buildmart_app/products/ozldjilgygkdurkhvpfy.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626894/buildmart_app/products/ozldjilgygkdurkhvpfy.jpg",
+            "categoryId": "cement",
+            "brand": "kcp",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_143",
+            "title": "KCP cement bag product photography 3",
+            "name": "KCP cement bag product photography 3",
+            "description": "High quality KCP cement bag product photography 3 by KCP Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626895/buildmart_app/products/ks3svoeihlx2lrjwqpvb.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626895/buildmart_app/products/ks3svoeihlx2lrjwqpvb.jpg",
+            "categoryId": "cement",
+            "brand": "kcp",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_144",
+            "title": "pennaCement bag on neutral background",
+            "name": "pennaCement bag on neutral background",
+            "description": "High quality pennaCement bag on neutral background by Penna Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626896/buildmart_app/products/vi4khcixheok0cqhfj6m.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626896/buildmart_app/products/vi4khcixheok0cqhfj6m.jpg",
+            "categoryId": "cement",
+            "brand": "penna",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_145",
+            "title": "Penna cement bag studio shot",
+            "name": "Penna cement bag studio shot",
+            "description": "High quality Penna cement bag studio shot by Penna Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626897/buildmart_app/products/isu4kzkvdjfwhpsim8hs.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626897/buildmart_app/products/isu4kzkvdjfwhpsim8hs.jpg",
+            "categoryId": "cement",
+            "brand": "penna",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_146",
+            "title": "Penna cement bag studio shot 2",
+            "name": "Penna cement bag studio shot 2",
+            "description": "High quality Penna cement bag studio shot 2 by Penna Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626898/buildmart_app/products/u6cucuden71fewzskyb4.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626898/buildmart_app/products/u6cucuden71fewzskyb4.jpg",
+            "categoryId": "cement",
+            "brand": "penna",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_147",
+            "title": "Priya cement bag studio shot",
+            "name": "Priya cement bag studio shot",
+            "description": "High quality Priya cement bag studio shot by Priya Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626899/buildmart_app/products/ksbb7nbk3dn1kir4ovuo.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626899/buildmart_app/products/ksbb7nbk3dn1kir4ovuo.jpg",
+            "categoryId": "cement",
+            "brand": "priya",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_148",
+            "title": "Priya cement bag studio shot 2",
+            "name": "Priya cement bag studio shot 2",
+            "description": "High quality Priya cement bag studio shot 2 by Priya Cement.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626900/buildmart_app/products/b6jgbv926hshcy6nwckb.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626900/buildmart_app/products/b6jgbv926hshcy6nwckb.jpg",
+            "categoryId": "cement",
+            "brand": "priya",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_149",
+            "title": "Ramco cement bag studio shot",
+            "name": "Ramco cement bag studio shot",
+            "description": "High quality Ramco cement bag studio shot by Ramco.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626901/buildmart_app/products/omu9bmh9hvoffflrrrgs.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626901/buildmart_app/products/omu9bmh9hvoffflrrrgs.jpg",
+            "categoryId": "cement",
+            "brand": "ramco",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_150",
+            "title": "Ramco PPC Cement bag",
+            "name": "Ramco PPC Cement bag",
+            "description": "High quality Ramco PPC Cement bag by Ramco.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626902/buildmart_app/products/wik9trfle3e7pgpghmtx.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626902/buildmart_app/products/wik9trfle3e7pgpghmtx.jpg",
+            "categoryId": "cement",
+            "brand": "ramco",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_151",
+            "title": "Steel bars bound together",
+            "name": "Steel bars bound together",
+            "description": "High quality Steel bars bound together by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626903/buildmart_app/products/mqfmwtzxycnaasy2cxce.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626903/buildmart_app/products/mqfmwtzxycnaasy2cxce.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_152",
+            "title": "Steel square hollow pipe section",
+            "name": "Steel square hollow pipe section",
+            "description": "High quality Steel square hollow pipe section by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626904/buildmart_app/products/c0vnujh26ikmyjpf8f0e.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626904/buildmart_app/products/c0vnujh26ikmyjpf8f0e.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_153",
+            "title": "Steel structural I-beam displayed",
+            "name": "Steel structural I-beam displayed",
+            "description": "High quality Steel structural I-beam displayed by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626905/buildmart_app/products/hethxemonqzybvf13xdc.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626905/buildmart_app/products/hethxemonqzybvf13xdc.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_154",
+            "title": "Supreme CPVC pipe product shot",
+            "name": "Supreme CPVC pipe product shot",
+            "description": "High quality Supreme CPVC pipe product shot by Supreme Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626905/buildmart_app/products/lstzxuy7ho3qhsmaccad.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626905/buildmart_app/products/lstzxuy7ho3qhsmaccad.jpg",
+            "categoryId": "plumbing",
+            "brand": "supreme",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_155",
+            "title": "Supreme pipe coupler fitting pho\u2026",
+            "name": "Supreme pipe coupler fitting pho\u2026",
+            "description": "High quality Supreme pipe coupler fitting pho\u2026 by Supreme Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626906/buildmart_app/products/adpo2wuee15ljxod3jj2.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626906/buildmart_app/products/adpo2wuee15ljxod3jj2.jpg",
+            "categoryId": "plumbing",
+            "brand": "supreme",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_156",
+            "title": "Supreme PVC elbow fitting produc\u2026",
+            "name": "Supreme PVC elbow fitting produc\u2026",
+            "description": "High quality Supreme PVC elbow fitting produc\u2026 by Supreme Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626907/buildmart_app/products/yggssyxn6x3smouxjzqm.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626907/buildmart_app/products/yggssyxn6x3smouxjzqm.jpg",
+            "categoryId": "plumbing",
+            "brand": "supreme",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_157",
+            "title": "Supreme PVC pipe product shot",
+            "name": "Supreme PVC pipe product shot",
+            "description": "High quality Supreme PVC pipe product shot by Supreme Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626907/buildmart_app/products/owbiitijlontwuc8drqp.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626907/buildmart_app/products/owbiitijlontwuc8drqp.jpg",
+            "categoryId": "plumbing",
+            "brand": "supreme",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_158",
+            "title": "Supreme SWR pipe product shot",
+            "name": "Supreme SWR pipe product shot",
+            "description": "High quality Supreme SWR pipe product shot by Supreme Pipes.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626908/buildmart_app/products/oqtla9pnb0us7phxtnn6.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626908/buildmart_app/products/oqtla9pnb0us7phxtnn6.jpg",
+            "categoryId": "plumbing",
+            "brand": "supreme",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_159",
+            "title": "Tata Steel angle bar photographed",
+            "name": "Tata Steel angle bar photographed",
+            "description": "High quality Tata Steel angle bar photographed by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626909/buildmart_app/products/ko0xa7pscfhl5y35s6mx.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626909/buildmart_app/products/ko0xa7pscfhl5y35s6mx.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_160",
+            "title": "Tata Steel C-channel bar photogr\u2026",
+            "name": "Tata Steel C-channel bar photogr\u2026",
+            "description": "High quality Tata Steel C-channel bar photogr\u2026 by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626910/buildmart_app/products/omzxlxcehosdc7w87q5v.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626910/buildmart_app/products/omzxlxcehosdc7w87q5v.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_161",
+            "title": "Tata Steel corrugated roofing sheet",
+            "name": "Tata Steel corrugated roofing sheet",
+            "description": "High quality Tata Steel corrugated roofing sheet by Tata Steel.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626911/buildmart_app/products/qwmmh7m8wy0z3y74ut3z.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626911/buildmart_app/products/qwmmh7m8wy0z3y74ut3z.jpg",
+            "categoryId": "steel",
+            "brand": "tata_steel",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_162",
+            "title": "Tata Tiscon steel bar photographed",
+            "name": "Tata Tiscon steel bar photographed",
+            "description": "High quality Tata Tiscon steel bar photographed by Tata Tiscon.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626912/buildmart_app/products/lmk6pg1ostgadmpaz9tt.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626912/buildmart_app/products/lmk6pg1ostgadmpaz9tt.jpg",
+            "categoryId": "steel",
+            "brand": "tata_tiscon",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_163",
+            "title": "CenturyDoors Bond Door",
+            "name": "CenturyDoors Bond Door",
+            "description": "High quality CenturyDoors Bond Door by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626913/buildmart_app/products/hpo5r6kdsnlifwjefhzp.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626913/buildmart_app/products/hpo5r6kdsnlifwjefhzp.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_164",
+            "title": "CenturyDoors decorative flush do\u2026",
+            "name": "CenturyDoors decorative flush do\u2026",
+            "description": "High quality CenturyDoors decorative flush do\u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626914/buildmart_app/products/lzabyo5jgao5vl6l6ddh.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626914/buildmart_app/products/lzabyo5jgao5vl6l6ddh.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_165",
+            "title": "CenturyDoors door product photog\u2026",
+            "name": "CenturyDoors door product photog\u2026",
+            "description": "High quality CenturyDoors door product photog\u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626915/buildmart_app/products/duqibswvxx2vzewfbe6g.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626915/buildmart_app/products/duqibswvxx2vzewfbe6g.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_166",
+            "title": "CenturyDoors flush door product \u2026",
+            "name": "CenturyDoors flush door product \u2026",
+            "description": "High quality CenturyDoors flush door product \u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626916/buildmart_app/products/qcziyrozyzg6goyurcfi.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626916/buildmart_app/products/qcziyrozyzg6goyurcfi.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_167",
+            "title": "CenturyDoors Sainik Door product\u2026",
+            "name": "CenturyDoors Sainik Door product\u2026",
+            "description": "High quality CenturyDoors Sainik Door product\u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626917/buildmart_app/products/maudinbjaxnicsxy1efq.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626917/buildmart_app/products/maudinbjaxnicsxy1efq.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_168",
+            "title": "Century Laminated Door product p\u2026",
+            "name": "Century Laminated Door product p\u2026",
+            "description": "High quality Century Laminated Door product p\u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626918/buildmart_app/products/itdppp7cdcbz14hdaolq.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626918/buildmart_app/products/itdppp7cdcbz14hdaolq.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_169",
+            "title": "Century veneer door product phot\u2026",
+            "name": "Century veneer door product phot\u2026",
+            "description": "High quality Century veneer door product phot\u2026 by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626919/buildmart_app/products/ocrmzkfdlyrz19ixhndt.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626919/buildmart_app/products/ocrmzkfdlyrz19ixhndt.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_170",
+            "title": "White primed door visible",
+            "name": "White primed door visible",
+            "description": "High quality White primed door visible by CenturyDoors.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626919/buildmart_app/products/i4qy3shh2ej0tb2lbpur.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626919/buildmart_app/products/i4qy3shh2ej0tb2lbpur.jpg",
+            "categoryId": "doors_glass",
+            "brand": "centurydoors",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_171",
+            "title": "Fenesta aluminium casement windo\u2026",
+            "name": "Fenesta aluminium casement windo\u2026",
+            "description": "High quality Fenesta aluminium casement windo\u2026 by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626920/buildmart_app/products/cgggt6gvzuhwhtc7bb47.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626920/buildmart_app/products/cgggt6gvzuhwhtc7bb47.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_172",
+            "title": "Fenesta aluminium sliding window\u2026",
+            "name": "Fenesta aluminium sliding window\u2026",
+            "description": "High quality Fenesta aluminium sliding window\u2026 by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626922/buildmart_app/products/jeq6cdtsidad2vvlb0ap.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626922/buildmart_app/products/jeq6cdtsidad2vvlb0ap.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_173",
+            "title": "Fenesta lift and slide door",
+            "name": "Fenesta lift and slide door",
+            "description": "High quality Fenesta lift and slide door by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626923/buildmart_app/products/nlmxnsbmylly9nrgjnc0.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626923/buildmart_app/products/nlmxnsbmylly9nrgjnc0.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_174",
+            "title": "Fenesta slide and fold door",
+            "name": "Fenesta slide and fold door",
+            "description": "High quality Fenesta slide and fold door by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626924/buildmart_app/products/weylmj4vwgp3pyav760g.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626924/buildmart_app/products/weylmj4vwgp3pyav760g.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_175",
+            "title": "Fenesta uPVC Casement Door",
+            "name": "Fenesta uPVC Casement Door",
+            "description": "High quality Fenesta uPVC Casement Door by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626926/buildmart_app/products/p4ksmwiboxeexu98ugx2.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626926/buildmart_app/products/p4ksmwiboxeexu98ugx2.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_176",
+            "title": "Fenesta uPVC Casement Window vis\u2026",
+            "name": "Fenesta uPVC Casement Window vis\u2026",
+            "description": "High quality Fenesta uPVC Casement Window vis\u2026 by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626927/buildmart_app/products/qfmobja3zoa0ced26ap5.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626927/buildmart_app/products/qfmobja3zoa0ced26ap5.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_177",
+            "title": "Fenesta uPVC sliding door",
+            "name": "Fenesta uPVC sliding door",
+            "description": "High quality Fenesta uPVC sliding door by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626928/buildmart_app/products/sjf4pupwsy3zvprynqdn.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626928/buildmart_app/products/sjf4pupwsy3zvprynqdn.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_178",
+            "title": "Fenesta uPVC sliding window arch\u2026",
+            "name": "Fenesta uPVC sliding window arch\u2026",
+            "description": "High quality Fenesta uPVC sliding window arch\u2026 by Fenesta.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626929/buildmart_app/products/nnm0ddxcii48t2y1lto1.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626929/buildmart_app/products/nnm0ddxcii48t2y1lto1.jpg",
+            "categoryId": "doors_glass",
+            "brand": "fenesta",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_179",
+            "title": "Greenply Club wooden flush door",
+            "name": "Greenply Club wooden flush door",
+            "description": "High quality Greenply Club wooden flush door by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626930/buildmart_app/products/cjyvrucormk3w0jknqxx.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626930/buildmart_app/products/cjyvrucormk3w0jknqxx.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_180",
+            "title": "Greenply marine plywood stacked \u2026",
+            "name": "Greenply marine plywood stacked \u2026",
+            "description": "High quality Greenply marine plywood stacked \u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626931/buildmart_app/products/r1zb6cfdgrudwo3wy1bw.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626931/buildmart_app/products/r1zb6cfdgrudwo3wy1bw.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_181",
+            "title": "Greenply plywood sheets stacked \u2026",
+            "name": "Greenply plywood sheets stacked \u2026",
+            "description": "High quality Greenply plywood sheets stacked \u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626933/buildmart_app/products/klvh4r8tn4ywkv3q7qqj.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626933/buildmart_app/products/klvh4r8tn4ywkv3q7qqj.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_182",
+            "title": "Greenply plywood sheet stacked i\u2026",
+            "name": "Greenply plywood sheet stacked i\u2026",
+            "description": "High quality Greenply plywood sheet stacked i\u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626934/buildmart_app/products/wpwxvmxnd4dn8ih7nvb3.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626934/buildmart_app/products/wpwxvmxnd4dn8ih7nvb3.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_183",
+            "title": "Greenply plywood sheet stacked i\u2026 2",
+            "name": "Greenply plywood sheet stacked i\u2026 2",
+            "description": "High quality Greenply plywood sheet stacked i\u2026 2 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626936/buildmart_app/products/artwwjmz9gfuymrsfklw.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626936/buildmart_app/products/artwwjmz9gfuymrsfklw.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_184",
+            "title": "Greenply plywood stacked in show\u2026",
+            "name": "Greenply plywood stacked in show\u2026",
+            "description": "High quality Greenply plywood stacked in show\u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626937/buildmart_app/products/r6kdvoylerdsohksvnqx.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626937/buildmart_app/products/r6kdvoylerdsohksvnqx.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_185",
+            "title": "Greenply plywood stacked in ware\u2026",
+            "name": "Greenply plywood stacked in ware\u2026",
+            "description": "High quality Greenply plywood stacked in ware\u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626938/buildmart_app/products/oejckr3hrrgtwhxdwcd1.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626938/buildmart_app/products/oejckr3hrrgtwhxdwcd1.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_186",
+            "title": "Greenply wooden flush door displ\u2026",
+            "name": "Greenply wooden flush door displ\u2026",
+            "description": "High quality Greenply wooden flush door displ\u2026 by Greenply.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626939/buildmart_app/products/bqzjkbsk10iiiqqhsnho.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626939/buildmart_app/products/bqzjkbsk10iiiqqhsnho.jpg",
+            "categoryId": "wood_boards",
+            "brand": "greenply",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_187",
+            "title": "Jaquar Basin Mixer Tap",
+            "name": "Jaquar Basin Mixer Tap",
+            "description": "High quality Jaquar Basin Mixer Tap by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626940/buildmart_app/products/jmonhkevpegzywteo9zv.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626940/buildmart_app/products/jmonhkevpegzywteo9zv.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_188",
+            "title": "Jaquar bathroom accessories set",
+            "name": "Jaquar bathroom accessories set",
+            "description": "High quality Jaquar bathroom accessories set by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626941/buildmart_app/products/kifsvkhikmmsvjhoyszn.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626941/buildmart_app/products/kifsvkhikmmsvjhoyszn.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_189",
+            "title": "Jaquar Bib Cock tap",
+            "name": "Jaquar Bib Cock tap",
+            "description": "High quality Jaquar Bib Cock tap by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626942/buildmart_app/products/aqta6nqwk8edjoq6wlgp.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626942/buildmart_app/products/aqta6nqwk8edjoq6wlgp.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_190",
+            "title": "Jaquar bib cock tap",
+            "name": "Jaquar bib cock tap",
+            "description": "High quality Jaquar bib cock tap by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626942/buildmart_app/products/hzimfeew0yv7ca84vmc2.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626942/buildmart_app/products/hzimfeew0yv7ca84vmc2.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_191",
+            "title": "Jaquar hand shower with hose",
+            "name": "Jaquar hand shower with hose",
+            "description": "High quality Jaquar hand shower with hose by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626944/buildmart_app/products/xbhndybcf4lf9rl99zfq.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626944/buildmart_app/products/xbhndybcf4lf9rl99zfq.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_192",
+            "title": "Jaquar kitchen faucet displayed",
+            "name": "Jaquar kitchen faucet displayed",
+            "description": "High quality Jaquar kitchen faucet displayed by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626944/buildmart_app/products/uvogkbwy4otmdy8w8fdo.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626944/buildmart_app/products/uvogkbwy4otmdy8w8fdo.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_193",
+            "title": "Jaquar shower head wall mounted",
+            "name": "Jaquar shower head wall mounted",
+            "description": "High quality Jaquar shower head wall mounted by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626945/buildmart_app/products/z6vtxqykg2q9pojlh3el.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626945/buildmart_app/products/z6vtxqykg2q9pojlh3el.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_194",
+            "title": "Jaquar single-piece toilet",
+            "name": "Jaquar single-piece toilet",
+            "description": "High quality Jaquar single-piece toilet by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626946/buildmart_app/products/ahccps4aiuy6vwtxnzzo.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626946/buildmart_app/products/ahccps4aiuy6vwtxnzzo.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_195",
+            "title": "Jaquar wall-hung WC toilet",
+            "name": "Jaquar wall-hung WC toilet",
+            "description": "High quality Jaquar wall-hung WC toilet by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626947/buildmart_app/products/gvpmbzcdxi7gp22nxewg.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626947/buildmart_app/products/gvpmbzcdxi7gp22nxewg.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_196",
+            "title": "Jaquar wash basin product photog\u2026",
+            "name": "Jaquar wash basin product photog\u2026",
+            "description": "High quality Jaquar wash basin product photog\u2026 by Jaquar.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626948/buildmart_app/products/n09qdgkm7cgrn7vvjifk.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626948/buildmart_app/products/n09qdgkm7cgrn7vvjifk.jpg",
+            "categoryId": "plumbing",
+            "brand": "jaquar",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_197",
+            "title": "Glass panel on studio background",
+            "name": "Glass panel on studio background",
+            "description": "High quality Glass panel on studio background by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626948/buildmart_app/products/qzatp6qkzzudexp223k3.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626948/buildmart_app/products/qzatp6qkzzudexp223k3.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_198",
+            "title": "Glass sheet leaning in studio",
+            "name": "Glass sheet leaning in studio",
+            "description": "High quality Glass sheet leaning in studio by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626949/buildmart_app/products/x8xbgypnfmozbqedqvcf.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626949/buildmart_app/products/x8xbgypnfmozbqedqvcf.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_199",
+            "title": "Saint-Gobain adhesive tube cartr\u2026",
+            "name": "Saint-Gobain adhesive tube cartr\u2026",
+            "description": "High quality Saint-Gobain adhesive tube cartr\u2026 by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626950/buildmart_app/products/uow244skn28bno69kdh3.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626950/buildmart_app/products/uow244skn28bno69kdh3.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_200",
+            "title": "Saint-Gobain glass wool insulati\u2026",
+            "name": "Saint-Gobain glass wool insulati\u2026",
+            "description": "High quality Saint-Gobain glass wool insulati\u2026 by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626951/buildmart_app/products/kih6sllxwkvnaxudtlyv.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626951/buildmart_app/products/kih6sllxwkvnaxudtlyv.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_201",
+            "title": "Saint-Gobain Gyproc Gypsum Board\u2026",
+            "name": "Saint-Gobain Gyproc Gypsum Board\u2026",
+            "description": "High quality Saint-Gobain Gyproc Gypsum Board\u2026 by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626953/buildmart_app/products/xo5vmwnum0aegceuoaaa.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626953/buildmart_app/products/xo5vmwnum0aegceuoaaa.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_202",
+            "title": "Saint-Gobain plaster bag spilled\u2026",
+            "name": "Saint-Gobain plaster bag spilled\u2026",
+            "description": "High quality Saint-Gobain plaster bag spilled\u2026 by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626954/buildmart_app/products/ejfoqjzaayns7mr40n4n.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626954/buildmart_app/products/ejfoqjzaayns7mr40n4n.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_203",
+            "title": "Saint-Gobain Tile Adhesive sack",
+            "name": "Saint-Gobain Tile Adhesive sack",
+            "description": "High quality Saint-Gobain Tile Adhesive sack by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626955/buildmart_app/products/ghzfninorw3nwnbs7oyo.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626955/buildmart_app/products/ghzfninorw3nwnbs7oyo.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_204",
+            "title": "Stacked drywall boards",
+            "name": "Stacked drywall boards",
+            "description": "High quality Stacked drywall boards by Saint-Gobain.",
+            "price": 800,
+            "originalPrice": 1000,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626956/buildmart_app/products/vgtbjavie2p5l9o0uxif.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786626956/buildmart_app/products/vgtbjavie2p5l9o0uxif.jpg",
+            "categoryId": "doors_glass",
+            "brand": "saint_gobain",
+            "inStock": true,
+            "unit": "Piece",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_205",
+            "title": "Asian Paints bucket container di\u2026",
+            "name": "Asian Paints bucket container di\u2026",
+            "description": "High quality Asian Paints bucket container di\u2026 by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627874/buildmart_app/products/q1dbjcdyobtkx5lvtad6.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627874/buildmart_app/products/q1dbjcdyobtkx5lvtad6.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_206",
+            "title": "Asian Paints bucket on floor",
+            "name": "Asian Paints bucket on floor",
+            "description": "High quality Asian Paints bucket on floor by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627874/buildmart_app/products/rv0vwtkfdsywaa0cprlx.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627874/buildmart_app/products/rv0vwtkfdsywaa0cprlx.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_207",
+            "title": "Asian Paints container on floor",
+            "name": "Asian Paints container on floor",
+            "description": "High quality Asian Paints container on floor by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627875/buildmart_app/products/nd7jzbvj894ttsqwxkt7.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627875/buildmart_app/products/nd7jzbvj894ttsqwxkt7.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_208",
+            "title": "Asian Paints tile adhesive conta\u2026",
+            "name": "Asian Paints tile adhesive conta\u2026",
+            "description": "High quality Asian Paints tile adhesive conta\u2026 by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627876/buildmart_app/products/prxykxeszvxokwrh8rr8.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627876/buildmart_app/products/prxykxeszvxokwrh8rr8.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_209",
+            "title": "Asian Paints wall putty sack",
+            "name": "Asian Paints wall putty sack",
+            "description": "High quality Asian Paints wall putty sack by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627876/buildmart_app/products/lyf2cpfprt3z8cp1jjoy.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627876/buildmart_app/products/lyf2cpfprt3z8cp1jjoy.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_210",
+            "title": "Asian Paints waterproofing bucke\u2026",
+            "name": "Asian Paints waterproofing bucke\u2026",
+            "description": "High quality Asian Paints waterproofing bucke\u2026 by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627877/buildmart_app/products/awrobevyx6jcytzfdqpm.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627877/buildmart_app/products/awrobevyx6jcytzfdqpm.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_211",
+            "title": "Paint bucket container on floor",
+            "name": "Paint bucket container on floor",
+            "description": "High quality Paint bucket container on floor by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627878/buildmart_app/products/cnd8m4gw42zn8waslele.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627878/buildmart_app/products/cnd8m4gw42zn8waslele.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_212",
+            "title": "Paint tin container on floor",
+            "name": "Paint tin container on floor",
+            "description": "High quality Paint tin container on floor by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627879/buildmart_app/products/zt4xsctedj74awdrn5mc.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627879/buildmart_app/products/zt4xsctedj74awdrn5mc.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_213",
+            "title": "Paint tin container on floor 2",
+            "name": "Paint tin container on floor 2",
+            "description": "High quality Paint tin container on floor 2 by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627879/buildmart_app/products/jamldb9umgrjch8mkima.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627879/buildmart_app/products/jamldb9umgrjch8mkima.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        },
+        {
+            "id": "prod_214",
+            "title": "Waterproofing chemical can on floor",
+            "name": "Waterproofing chemical can on floor",
+            "description": "High quality Waterproofing chemical can on floor by Asian Paints.",
+            "price": 850,
+            "originalPrice": 1050,
+            "rating": 4.8,
+            "reviews": 15,
+            "totalReviews": 15,
+            "imageUrls": [
+                "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627880/buildmart_app/products/chtqnujofqwwcflwwyy1.jpg"
+            ],
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786627880/buildmart_app/products/chtqnujofqwwcflwwyy1.jpg",
+            "categoryId": "paints",
+            "brand": "asian_paints",
+            "inStock": true,
+            "unit": "Bucket",
+            "deliveryTime": "1-2 days"
+        }
+    ],
+    "brands": [
+        {
+            "id": "acc",
+            "name": "ACC Cement",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611920/buildmart_app/brands/ymo9cxbsqxplbc5zjhsp.avif"
+        },
+        {
+            "id": "asian_paints",
+            "name": "Asian Paints",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611924/buildmart_app/brands/lhk9xtmww0jhyo58bif0.jpg"
+        },
+        {
+            "id": "berger",
+            "name": "Berger Paints",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611925/buildmart_app/brands/vkli9funk2uafznrrdbb.png"
+        },
+        {
+            "id": "jaquar",
+            "name": "Jaquar",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611929/buildmart_app/brands/o1vu2wxlcrdpfjoqanz7.png"
+        },
+        {
+            "id": "astral",
+            "name": "Astral Pipes",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611924/buildmart_app/brands/d7sihesriq0ii4zbtojm.png"
+        },
+        {
+            "id": "ramco",
+            "name": "Ramco",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611931/buildmart_app/brands/ecfueulivo2novxdbp24.jpg"
+        },
+        {
+            "id": "priya",
+            "name": "Priya Cement",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611930/buildmart_app/brands/uzgwa1fsengt7lcvbpts.jpg"
+        },
+        {
+            "id": "kcp",
+            "name": "KCP Cement",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611935/buildmart_app/brands/r5fxwzagksjjwpzbjmxj.avif"
+        },
+        {
+            "id": "penna",
+            "name": "Penna Cement",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611930/buildmart_app/brands/jfgahb4zlyuc6f9knfkr.jpg"
+        },
+        {
+            "id": "supreme",
+            "name": "Supreme Pipes",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611932/buildmart_app/brands/ijuuhofntjpmfgoscjpr.jpg"
+        },
+        {
+            "id": "ultratech",
+            "name": "UltraTech",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611936/buildmart_app/brands/usoa7r2qqo6qwdewnvk6.webp"
+        },
+        {
+            "id": "ambuja",
+            "name": "Ambuja Cements",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611921/buildmart_app/brands/hv9dgaiqd0lwjbxqfw4j.png"
+        },
+        {
+            "id": "centurydoors",
+            "name": "CenturyDoors",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611926/buildmart_app/brands/g4gy0crxgv6hrtdjg5dm.jpg"
+        },
+        {
+            "id": "greenply",
+            "name": "Greenply",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611927/buildmart_app/brands/iel70zowuw67jhqpo5bc.webp"
+        },
+        {
+            "id": "fenesta",
+            "name": "Fenesta",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611927/buildmart_app/brands/p1pbrorvupqlpnrbbzzm.png"
+        },
+        {
+            "id": "saint_gobain",
+            "name": "Saint-Gobain",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611932/buildmart_app/brands/vihkigczjiprtxqcomhm.jpg"
+        },
+        {
+            "id": "tata_tiscon",
+            "name": "Tata Tiscon",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611933/buildmart_app/brands/tgwlwl3mg6ytxpjntlcn.jpg"
+        },
+        {
+            "id": "tata_steel",
+            "name": "Tata Steel",
+            "logoUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786611934/buildmart_app/brands/jddnmvaj0razasisusfj.png"
+        }
+    ],
+    "banners": [
+        {
+            "id": "banner_1",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344585/buildmart_app/vs5fsjo2mgmczbhobcmc.png",
+            "targetUrl": "/category/plumbing"
+        },
+        {
+            "id": "banner_2",
+            "title": "New Arrivals",
+            "subtitle": "Latest in Premium Tiles",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344586/buildmart_app/dlrjo58yqytiledb6krc.png",
+            "targetUrl": "/category/tiles_stone"
+        },
+        {
+            "id": "banner_3",
+            "title": "Bulk Discount",
+            "subtitle": "Special rates for Cement",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344587/buildmart_app/uha1d0hb6otchyru4ke8.png",
+            "targetUrl": "/category/cement"
+        },
+        {
+            "id": "banner_4",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344590/buildmart_app/ovb4ccxwc6bgogg3cmwr.png",
+            "targetUrl": "/category/plumbing"
+        },
+        {
+            "id": "banner_5",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344591/buildmart_app/bidac6aw1fqbzdgqlgkf.png",
+            "targetUrl": "/category/plumbing"
+        },
+        {
+            "id": "banner_6",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344592/buildmart_app/wlpogq0pbjuupfeq6yki.png",
+            "targetUrl": "/category/plumbing"
+        },
+        {
+            "id": "banner_7",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344593/buildmart_app/tlkahgsob0fzlk3pfeyw.png",
+            "targetUrl": "/category/plumbing"
+        },
+        {
+            "id": "banner_8",
+            "title": "Summer Sale",
+            "subtitle": "Up to 30% off on Plumbing",
+            "imageUrl": "https://res.cloudinary.com/snwiu5gv/image/upload/v1786344595/buildmart_app/ldii5iz4qz8egcplp104.png",
+            "targetUrl": "/category/plumbing"
+        }
+    ],
+    "shops": [
+        {
+            "id": "shop_001",
+            "name": "Sri Sai Hardware & Cements",
+            "coverImageUrl": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600&h=300",
+            "logoUrl": "https://images.unsplash.com/photo-1560159906-8d626359e223?auto=format&fit=crop&q=80&w=150&h=150",
+            "rating": 4.8,
+            "reviewCount": 120,
+            "address": "Banjara Hills, Hyderabad",
+            "distance": "1.2",
+            "isOpen": true,
+            "categories": [
+                "hardware",
+                "cement"
+            ]
+        },
+        {
+            "id": "shop_002",
+            "name": "Balaji Steel Traders",
+            "coverImageUrl": "https://images.unsplash.com/photo-1620241608701-94ef138c7ea9?auto=format&fit=crop&q=80&w=600&h=300",
+            "logoUrl": "https://images.unsplash.com/photo-1560159906-8d626359e223?auto=format&fit=crop&q=80&w=150&h=150",
+            "rating": 4.5,
+            "reviewCount": 85,
+            "address": "Jubilee Hills, Hyderabad",
+            "distance": "3.5",
+            "isOpen": true,
+            "categories": [
+                "steel"
+            ]
+        },
+        {
+            "id": "shop_003",
+            "name": "Mega BuildMart Store",
+            "coverImageUrl": "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb65?auto=format&fit=crop&q=80&w=600&h=300",
+            "logoUrl": "https://images.unsplash.com/photo-1560159906-8d626359e223?auto=format&fit=crop&q=80&w=150&h=150",
+            "rating": 4.9,
+            "reviewCount": 340,
+            "address": "Madhapur, Hyderabad",
+            "distance": "5.0",
+            "isOpen": false,
+            "categories": [
+                "cement",
+                "steel",
+                "paints",
+                "tiles_stone"
+            ]
+        }
+    ]
+}

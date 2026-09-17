@@ -1,0 +1,84 @@
+{
+"project_info": {
+"project_number": "348092807266",
+"project_id": "buildmart-24c42",
+"storage_bucket": "buildmart-24c42.firebasestorage.app"
+},
+"client": [
+{
+"client_info": {
+"mobilesdk_app_id": "1:348092807266:android:94d6e510760112c33cb93b",
+"android_client_info": {
+"package_name": "com.buildmart.app"
+}
+},
+"oauth_client": [
+{
+"client_id": "348092807266-hnvq112vi916trkes74a99a1s0q0ghet.apps.googleusercontent.com",
+"client_type": 1,
+"android_info": {
+"package_name": "com.buildmart.app",
+"certificate_hash": "eecd2bf2d7a4afd2730cca0d9d1812a85fc74081"
+}
+},
+{
+"client_id": "348092807266-amk1vfope9uk9392opok2sinf7bd409n.apps.googleusercontent.com",
+"client_type": 3
+}
+],
+"api_key": [
+{
+"current_key": "AIzaSyAQhcGisHO00--2B3rGC-ylCi-ft1SpW38"
+}
+],
+"services": {
+"appinvite_service": {
+"other_platform_oauth_client": [
+{
+"client_id": "348092807266-amk1vfope9uk9392opok2sinf7bd409n.apps.googleusercontent.com",
+"client_type": 3
+}
+]
+}
+}
+},
+{
+"client_info": {
+"mobilesdk_app_id": "1:348092807266:android:3d8606f4d0a716253cb93b",
+"android_client_info": {
+"package_name": "com.example.buildmart"
+}
+},
+"oauth_client": [
+{
+"client_id": "348092807266-hgvcshhr22pfqpof7ln0tr4lfv0oosth.apps.googleusercontent.com",
+"client_type": 1,
+"android_info": {
+"package_name": "com.example.buildmart",
+"certificate_hash": "eecd2bf2d7a4afd2730cca0d9d1812a85fc74081"
+}
+},
+{
+"client_id": "348092807266-amk1vfope9uk9392opok2sinf7bd409n.apps.googleusercontent.com",
+"client_type": 3
+}
+],
+"api_key": [
+{
+"current_key": "AIzaSyAQhcGisHO00--2B3rGC-ylCi-ft1SpW38"
+}
+],
+"services": {
+"appinvite_service": {
+"other_platform_oauth_client": [
+{
+"client_id": "348092807266-amk1vfope9uk9392opok2sinf7bd409n.apps.googleusercontent.com",
+"client_type": 3
+}
+]
+}
+}
+}
+],
+"configuration_version": "1"
+}

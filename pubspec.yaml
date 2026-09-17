@@ -1,0 +1,92 @@
+name: buildmart
+description: "A production-ready construction materials marketplace Flutter application."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # State Management & DI
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Navigation
+  go_router: ^14.1.0
+
+  # Networking
+  dio: ^5.4.3+1
+
+  # Local Storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Firebase
+  # Maps & Location
+  google_maps_flutter: ^2.6.0
+
+  # Payments
+  razorpay_flutter: ^1.4.5
+
+  # Utilities & UI
+  flutter_dotenv: ^5.1.0
+  cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.10
+  google_fonts: ^6.2.1
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.1
+  shimmer: ^3.0.0
+  flutter_animate: ^4.5.0
+  carousel_slider: ^5.1.2
+  
+  # Hardware & Advanced Search
+  image_picker: ^1.1.1
+  mobile_scanner: ^3.5.6
+  intl: ^0.20.2
+  firebase_core: ^4.13.0
+  firebase_auth: ^6.5.7
+  firebase_messaging: ^16.5.0
+  speech_to_text: ^7.4.0
+  cloud_firestore: ^6.8.0
+  flutter_secure_storage: ^9.2.2
+  google_sign_in: 6.2.1
+  share_plus: ^12.0.2
+  http: ^1.6.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  shared_preferences: ^2.5.5
+  pdf: ^3.12.0
+  printing: ^5.14.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.9
+  riverpod_generator: ^2.4.0
+  freezed: ^2.5.2
+  json_serializable: ^6.9.5
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - .env
+    - assets/seeded_data.json
+    - assets/images/
+    - assets/images/empty_state_illustrations/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.jpg"
+
+flutter_native_splash:
+  color: "#0B1527"
+  image: "assets/images/app_logo.jpg"
+  android: true
+  ios: true
