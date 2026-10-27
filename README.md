@@ -230,3 +230,30 @@ The repository includes automated CI workflows:
 - Secret Isolation: Secrets must reside exclusively in `.env` or CI secret vaults. Privileged keys (such as `RAZORPAY_KEY_SECRET` or database master passwords) are never bundled into client applications.
 - Input Validation: All network payloads are validated using Pydantic v2 on the backend and Zod on the frontend.
 - Statutory Compliance: Invoices include 18% GST construction tax calculations with Input Tax Credit eligibility.
+
+---
+
+## About BuildMart
+
+BuildMart is a digital procurement and supply chain infrastructure platform purpose-built for the building construction industry. By bridging the gap between primary manufacturers (such as UltraTech, Tata Tiscon, Ambuja, and Berger) and certified regional material yards, BuildMart enables contractors, infrastructure developers, and builders to procure high-specification materials at transparent factory-direct prices.
+
+### Core Value Propositions
+- Direct Mill Sourcing: Complete authenticity with manufacturer Mill Test Certificates (MTC) and Bureau of Indian Standards (BIS) conformity.
+- Automated Commercial Estimating: Contractors can generate instant PDF quotations for Bill of Materials (BOM) client approval.
+- Tax and Accounting Ready: Guaranteed 18% GST e-invoices with full Input Tax Credit (ITC) eligibility.
+- Logistics Transparency: Real-time fleet tracking from regional distribution hubs to project site gates.
+
+---
+
+## Releases and Changelog
+
+Official release packages, tags, and changelogs are tracked on GitHub Releases:
+
+- [Release v2.0.0](https://github.com/KatkamKoushik/BuildMart/releases/tag/v2.0.0) (Latest)
+  - Full-stack monorepo transformation with pnpm and Turborepo.
+  - Next.js 15 App Router web application replacing legacy Flutter Web.
+  - Asynchronous FastAPI Python backend with SQLAlchemy 2.0 ORM.
+  - Automated database seed pipeline importing 16 material categories, 18 brands, and 210 products.
+  - Dynamic ReportLab PDF commercial quotation generator.
+  - Comprehensive automated Pytest and Next.js build CI pipelines.
+
