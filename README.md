@@ -1,159 +1,117 @@
 # BuildMart 🏗️
 
-A production-ready marketplace application for Construction Materials (Cement, Steel, Sand, Bricks, Tiles, Hardware, and Electricals), built with **Flutter**.
+> **Production-Grade Construction Materials Marketplace & Commercial Procurement Platform**  
+> Managed as a high-performance **pnpm monorepo** with a **Next.js 15** frontend, **FastAPI** Python backend, and retained **Flutter** mobile client.
 
 ---
 
-## 🚀 Features
-
-*   **Premium UI/UX:** Built with a stunning `Dark/White/Yellow (#FFC107)` theme, utilizing `flutter_animate` for smooth staggered animations and `carousel_slider` for dynamic top banners.
-*   **Complete Dark Mode:** Native, automatic OS-level Dark Mode utilizing Material 3 `ColorScheme` tokens.
-*   **Advanced Search Engine:** 
-    *   **Voice Search:** Speak search queries via `speech_to_text`.
-    *   **Barcode Scanning:** Instantly find products by scanning barcodes/QR codes via `mobile_scanner`.
-    *   **Image Recognition:** Snap or select material photos for visual recommendations via `image_picker`.
-*   **Performance First:** 
-    *   Skeleton loaders (`ShimmerLoader`) for instant perceived load times.
-    *   Infinite pagination via `ScrollController` on product listings.
-    *   Offline-first caching via `Hive`.
-*   **Security & Token Storage:**
-    *   Hardware-backed keystore/keychain credential isolation via `flutter_secure_storage` (`SecureStorage`).
-*   **Core Systems:**
-    *   **State Management:** Reactive architecture using `flutter_riverpod`.
-    *   **Routing:** Type-safe declarative routing via `go_router` (including `StatefulShellRoute` bottom navigation).
-    *   **API Layer:** `Dio` client configured for Clean Architecture Repository patterns.
-    *   **Models:** Immutable, JSON-serializable models generated via `freezed`.
-    *   **Localization:** Fully configured `flutter_localizations` supporting `.arb` files for multi-language scaling.
-
----
-
-## 🛠️ Architecture & Repository Structure
+## 🏛️ Monorepo Architecture
 
 ```text
 buildmart/
-├── .github/
-│   └── workflows/
-│       └── flutter_ci.yml     # Continuous Integration pipeline (Lint, Test, Build)
-├── android/                   # Native Android host & google-services.json
-├── assets/                    # Bundled application assets & seed data
-├── ios/                       # Native iOS host configuration
-├── lib/                       # Production Application Source Code
-│   ├── core/                  # Core constants, themes, security, and providers
-│   ├── features/              # Feature modules (auth, home, products, cart, checkout, etc.)
-│   ├── l10n/                  # Localization templates and ARB files
-│   ├── navigation/            # go_router declarative route definitions
-│   ├── services/              # API clients and caching services
-│   └── shared/                # Reusable UI components (buttons, cards, empty states)
-├── scripts/                   # Documented offline maintenance, migration & audit tooling
-│   ├── audits/                # Data verification scripts and audit reports
-│   ├── migrations/            # Data sanitization and price/brand normalization scripts
-│   ├── upload/                # Cloud asset uploaders and Cloudinary synchronizers
-│   └── scratch/               # Exploratory data inspection utilities
-├── test/                      # App-level Automated Test Suite
-│   ├── models/                # Unit tests for domain models and JSON serialization
-│   ├── core/                  # Theme and secure storage service tests
-│   └── widgets/               # Widget tests for UI components and interaction callbacks
-├── .env.example               # Safe environment variable template with documentation
-├── analysis_options.yaml      # Dart analyzer and linting rules
-└── pubspec.yaml               # Flutter package dependencies and asset declarations
+├── apps/
+│   └── web/                   # Next.js 15 (App Router, React 19, TypeScript, Tailwind CSS)
+│       ├── src/app/           # Home, Products, Checkout, Orders, Quotes, Shops
+│       ├── src/components/    # Header, Footer, CartDrawer, HeroBanners, FeaturedProducts
+│       ├── src/stores/        # Zustand reactive state stores
+│       └── src/lib/           # Typed API Client & UI Utilities
+│
+├── services/
+│   └── api/                   # Python FastAPI Backend
+│       ├── app/api/v1/        # Products, Categories, Brands, Shops, Cart, Orders, Checkout, Quotes
+│       ├── app/models/        # SQLAlchemy 2.0 ORM Declarative Models
+│       ├── app/schemas/       # Pydantic v2 Request/Response Schemas
+│       ├── app/core/          # Configuration, Security, and Auth
+│       ├── app/seed.py        # Seed pipeline importing 210 products & 16 categories
+│       ├── tests/             # Automated Pytest Integration Suite
+│       └── Dockerfile         # Production Container Definition
+│
+├── packages/
+│   └── shared/                # Shared TypeScript Domain Types & Zod Schemas
+│
+├── mobile/                    # Flutter Mobile Application (iOS & Android)
+│   ├── lib/                   # Riverpod 2, Freezed, GoRouter, SecureStorage
+│   └── test/                  # Flutter Unit & Widget Test Suite
+│
+├── infra/
+│   └── docker-compose.yml     # PostgreSQL 16, Redis 7, and FastAPI Service
+│
+├── .github/workflows/
+│   ├── ci-web.yml             # Next.js Typecheck & Build Pipeline
+│   ├── ci-api.yml             # FastAPI Pytest & Seed Pipeline
+│   └── flutter_ci.yml         # Mobile Flutter Test & APK Build Pipeline
+│
+├── pnpm-workspace.yaml        # pnpm Monorepo Workspace Definitions
+├── turbo.json                 # Turborepo Build Cache & Task Orchestration
+└── .env.example               # Unified Monorepo Environment Configuration
 ```
 
 ---
 
-## 📦 Supported Product Workflow
+## 🚀 Quick Start Guide
 
-Follow these steps for a reproducible, clean checkout and execution:
+### Prerequisites
+- **Node.js**: >= 20.0.0
+- **pnpm**: >= 9.0.0 (`npm i -g pnpm`)
+- **Python**: >= 3.12 with pip
+- **Docker** (optional for Postgres/Redis): `docker compose`
 
-### 1. Prerequisites
-- **Flutter SDK**: `>=3.2.0 <4.0.0` (Tested on Flutter 3.24+ / 3.47+)
-- **Dart SDK**: `^3.2.0`
-- **Git**
-
-### 2. Clean Checkout & Environment Setup
-Clone the repository and copy the environment template to create a local `.env`:
-
+### 1. Setup Environment
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/KatkamKoushik/BuildMart.git
-cd BuildMart
+cd buildmart
 
-# Create local environment file from safe template
-# Linux / macOS:
+# Copy safe local environment template
 cp .env.example .env
-
-# Windows (PowerShell):
-Copy-Item .env.example .env
 ```
 
-> **Clean-Checkout Safety**: The application is configured with graceful runtime fallbacks. If `.env` is omitted, the app will log a notice and continue running using safe defaults rather than crashing on launch.
-
-### 3. Install Dependencies
+### 2. Install Monorepo Dependencies
 ```bash
-flutter pub get
+pnpm install
 ```
 
-### 4. Code Generation (Freezed & Riverpod)
-When cloning or modifying data models, regenerate Freezed and JSON serialization files:
+### 3. Initialize & Seed Python Backend
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+cd services/api
+pip install -r requirements.txt
+python -m app.seed
 ```
 
-### 5. Static Analysis & Code Quality
-Verify code formatting and run the analyzer:
+### 4. Run Development Servers
+From the repository root:
 ```bash
-dart format --output=none --set-exit-if-changed lib/ test/
-flutter analyze --no-fatal-infos
-```
+# Run both Frontend & Backend concurrently via Turborepo:
+pnpm dev
 
-### 6. Run Automated Test Suite
-Execute unit and widget tests:
-```bash
-flutter test --coverage
-```
-
-### 7. Run the Application
-```bash
-# Run on Chrome (Web)
-flutter run -d chrome
-
-# Run on Desktop (Windows / macOS / Linux)
-flutter run -d windows
-
-# Run on Mobile (connected device or emulator)
-flutter run
+# Or run individual services:
+pnpm dev:web     # Next.js Web App at http://localhost:3000
+pnpm dev:api     # FastAPI Backend at http://localhost:8000 (Docs at /docs)
 ```
 
 ---
 
-## 🔐 Security & Secrets Management Policy
+## 🧪 Testing & Validation
 
-### Environment Variables (`.env` vs `.env.example`)
-*   `.env` is strictly excluded from version control via `.gitignore`.
-*   `.env.example` is committed as a reference template containing only public client-side keys and safe placeholders.
-*   **Never Bundle Privileged Server Secrets**: Private server keys (such as `RAZORPAY_KEY_SECRET`, database admin passwords, or Cloudinary API secrets) belong exclusively in backend microservices. They must **never** be placed in the mobile `.env` or bundled into client app binaries.
+```bash
+# Shared Package Typecheck
+pnpm --filter @buildmart/shared typecheck
 
-### Firebase Client Configuration (`google-services.json`)
-*   `android/app/google-services.json` contains Firebase client configuration values (project number, client IDs, and mobile API keys).
-*   **Security Boundary**: Firebase client identifiers are not privileged server credentials. Access security is strictly enforced by:
-    1.  **Cloud Firestore Security Rules**: Enforcing user authentication and document ownership checks.
-    2.  **Firebase Storage Security Rules**: Restricting file uploads and write permissions to authenticated users.
-    3.  **Firebase App Check**: Attesting request authenticity via Play Integrity on Android and DeviceCheck on iOS.
-    4.  **Google Cloud API Key Restrictions**: Restricting client API keys to the application's Android package name (`com.buildmart.app`) and SHA-1 signing certificate fingerprint.
+# Next.js Web App Typecheck & Build
+pnpm --filter @buildmart/web typecheck
+pnpm --filter @buildmart/web build
 
----
-
-## 🧪 Continuous Integration (CI)
-
-Every commit and pull request to `main` is automatically validated via GitHub Actions ([`.github/workflows/flutter_ci.yml`](.github/workflows/flutter_ci.yml)):
-1.  **Environment Preparation**: Instantiates `.env` from `.env.example` to ensure clean checkout asset bundling.
-2.  **Dependency Resolution**: Runs `flutter pub get`.
-3.  **Format Verification**: Validates adherence to Dart standard formatting (`dart format`).
-4.  **Static Analysis**: Enforces clean analysis without warnings (`flutter analyze`).
-5.  **Automated Testing**: Executes the unit and widget test suites with coverage tracking (`flutter test`).
-6.  **Release Build Verification**: Validates that a release web artifact compiles without errors (`flutter build web --release`).
+# Python Backend Pytest Suite
+cd services/api
+pytest -v
+```
 
 ---
 
-## 🛠️ Maintenance & Offline Data Scripts
+## 🔒 Security & Quality Highlights
 
-All one-off data cleanup, catalog fixes, image uploaders, and audit log files are organized under [`scripts/`](scripts/README.md). See [`scripts/README.md`](scripts/README.md) for documentation on how to use these utilities for offline catalog curation.
+- **Direct Factory Sourcing:** Mill Test Certificates (MTC) and BIS compliance verification.
+- **GST Invoicing:** 18% statutory construction tax computation with Input Tax Credit (ITC) tracking.
+- **Dynamic Project Quotations:** Instant server-side PDF generation for commercial contractor procurement.
+- **Token Security:** Hardware Keystore token encryption on mobile, secure HTTP-only cookies on web.
+- **Payment Gateway:** Razorpay SDK integration with server-side HMAC-SHA256 signature verification.
