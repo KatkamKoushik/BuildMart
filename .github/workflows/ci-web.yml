@@ -1,0 +1,57 @@
+name: Web CI (Next.js)
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'apps/web/**'
+      - 'packages/shared/**'
+      - 'pnpm-workspace.yaml'
+      - 'package.json'
+      - 'turbo.json'
+      - '.github/workflows/ci-web.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'apps/web/**'
+      - 'packages/shared/**'
+      - 'pnpm-workspace.yaml'
+      - 'package.json'
+      - 'turbo.json'
+      - '.github/workflows/ci-web.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-web:
+    name: Typecheck & Build Next.js
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Typecheck Shared & Web
+        run: |
+          pnpm --filter @buildmart/shared typecheck
+          pnpm --filter @buildmart/web typecheck
+
+      - name: Build Next.js App
+        run: pnpm --filter @buildmart/web build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1

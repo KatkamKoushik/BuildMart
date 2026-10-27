@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Default deny all access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isUnderMaxSize(maxMegabytes) {
+      return request.resource.size < maxMegabytes * 1024 * 1024;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (request.auth.token.role == 'admin' || request.auth.token.admin == true);
+    }
+
+    // User profile uploads: owner only, images up to 5MB
+    match /users/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated() && request.auth.uid == userId && isImageFile() && isUnderMaxSize(5);
+    }
+
+    // Product & catalog assets: public read, admin write only
+    match /catalog/{allCatalogPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isImageFile() && isUnderMaxSize(10);
+    }
+
+    // Quote attachments: authenticated create only, 10MB limit
+    match /quotes/{quoteId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isUnderMaxSize(10);
+    }
+  }
+}

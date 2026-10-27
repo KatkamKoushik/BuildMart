@@ -1,10 +1,16 @@
-name: Flutter CI
+name: Mobile CI (Flutter)
 
 on:
   push:
     branches: [ main, master ]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/flutter_ci.yml'
   pull_request:
     branches: [ main, master ]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/flutter_ci.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,8 +18,11 @@ concurrency:
 
 jobs:
   validate-and-test:
-    name: Lint, Test & Build Validation
+    name: Lint, Test & Validate Mobile App
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
 
     steps:
       - name: Checkout repository
@@ -30,7 +39,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-${{ hashFiles("**/pubspec.lock") }}'
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-${{ hashFiles('mobile/pubspec.lock') }}"
 
       - name: Prepare Clean-Checkout Environment (.env)
         run: |
@@ -50,5 +59,5 @@ jobs:
       - name: Run Flutter Test Suite
         run: flutter test --coverage
 
-      - name: Verify Clean Release Web Build
-        run: flutter build web --release --no-tree-shake-icons
+      - name: Validate Flutter APK Build (Debug)
+        run: flutter build apk --debug --android-skip-build-dependency-validation

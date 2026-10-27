@@ -32,8 +32,17 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
 /coverage/
+
+# Android keystore & release secrets
+key.properties
+*.jks
+*.keystore
+
+# Built binaries
+*.apk
+*.aab
 
 # Symbolication related
 app.*.symbols
@@ -45,3 +54,36 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Monorepo & Node.js
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+out/
+
+# Next.js
+.next/
+next-env.d.ts
+
+# Python & Backend
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Environment variables
+.env
+.env*.local
+mobile/.env
+apps/*/.env*.local
+services/*/.env*.local
+
