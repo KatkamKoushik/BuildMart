@@ -7,12 +7,14 @@ part 'order_model.g.dart';
 class OrderModel with _$OrderModel {
   const factory OrderModel({
     required String id,
-    required String status, // 'placed', 'confirmed', 'shipped', 'out_for_delivery', 'delivered'
+    required String
+        status, // 'placed', 'confirmed', 'shipped', 'out_for_delivery', 'delivered'
     required double totalAmount,
     required DateTime createdAt,
     required String driverName,
     required String driverPhone,
   }) = _OrderModel;
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) => _$OrderModelFromJson(json);
+  factory OrderModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderModelFromJson(json);
 }

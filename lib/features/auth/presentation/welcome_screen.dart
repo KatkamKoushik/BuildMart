@@ -254,7 +254,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             .fade(delay: 800.ms, duration: 400.ms)
                             .slideY(begin: 0.3, curve: Curves.easeOut),
 
-                        SizedBox(height: bottomPadding > 0 ? bottomPadding + 8 : 28),
+                        SizedBox(
+                            height: bottomPadding > 0 ? bottomPadding + 8 : 28),
                       ],
                     ),
                   ),
@@ -267,5 +268,3 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
-
-

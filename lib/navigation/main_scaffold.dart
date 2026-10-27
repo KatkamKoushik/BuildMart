@@ -79,7 +79,8 @@ class MainScaffold extends ConsumerWidget {
             label: AppLocalizations.of(context)!.profile,
           ),
         ],
-      ).animate().slideY(begin: 1.0, end: 0.0, duration: 400.ms, curve: Curves.easeOut),
+      ).animate().slideY(
+          begin: 1.0, end: 0.0, duration: 400.ms, curve: Curves.easeOut),
     );
   }
 }

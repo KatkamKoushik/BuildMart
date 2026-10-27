@@ -12,7 +12,8 @@ class PaymentSuccessScreen extends StatefulWidget {
   State<PaymentSuccessScreen> createState() => _PaymentSuccessScreenState();
 }
 
-class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> with SingleTickerProviderStateMixin {
+class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -61,13 +62,17 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> with Single
               Text(
                 'Order Placed Successfully!',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Your order #BM-9876543 has been confirmed. You will receive an update shortly.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.textLight, height: 1.5, fontSize: 16),
+                style: TextStyle(
+                    color: AppColors.textLight, height: 1.5, fontSize: 16),
               ),
               const Spacer(),
               BuildMartButton(

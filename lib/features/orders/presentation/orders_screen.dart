@@ -16,7 +16,7 @@ class OrdersScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final userId = userState.value?.id;
-    
+
     // If not logged in, just show empty
     if (userId == null) {
       return Scaffold(
@@ -32,7 +32,7 @@ class OrdersScreen extends ConsumerWidget {
         ),
       );
     }
-    
+
     final ordersAsync = ref.watch(userOrdersProvider(userId));
 
     return Scaffold(
@@ -45,7 +45,8 @@ class OrdersScreen extends ConsumerWidget {
             return EmptyState(
               icon: Icons.receipt_long_outlined,
               title: 'No orders yet',
-              message: 'You haven\'t placed any orders yet. Once you do, they\'ll appear here.',
+              message:
+                  'You haven\'t placed any orders yet. Once you do, they\'ll appear here.',
               buttonText: 'Start Shopping',
               onAction: () => context.go('/home'),
             );
@@ -63,8 +64,11 @@ class OrdersScreen extends ConsumerWidget {
                     children: [
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text('Order #${order.id.substring(0, 8)}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('Status: ${order.status}\nTotal: ₹${order.totalAmount}'),
+                        title: Text('Order #${order.id.substring(0, 8)}',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(
+                            'Status: ${order.status}\nTotal: ₹${order.totalAmount}'),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {
                           context.push('/order-tracking');
@@ -78,17 +82,23 @@ class OrdersScreen extends ConsumerWidget {
                           children: [
                             TextButton.icon(
                               onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Downloading Invoice...')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Downloading Invoice...')));
                               },
                               icon: const Icon(Icons.download, size: 18),
                               label: const Text('Invoice'),
-                              style: TextButton.styleFrom(foregroundColor: AppColors.textLight),
+                              style: TextButton.styleFrom(
+                                  foregroundColor: AppColors.textLight),
                             ),
                             BuildMartButton(
                               text: 'Repeat Order',
                               isOutlined: true,
                               onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Items added to cart')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Items added to cart')));
                                 context.go('/cart');
                               },
                             )
@@ -108,7 +118,8 @@ class OrdersScreen extends ConsumerWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 16),
           itemBuilder: (_, __) => const OrderCardShimmer(),
         ),
-        error: (error, stack) => const Center(child: Text('Failed to load orders')),
+        error: (error, stack) =>
+            const Center(child: Text('Failed to load orders')),
       ),
     );
   }

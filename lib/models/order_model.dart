@@ -6,7 +6,15 @@ import 'delivery_model.dart';
 part 'order_model.freezed.dart';
 part 'order_model.g.dart';
 
-enum OrderStatus { pending, confirmed, processing, packed, outForDelivery, delivered, cancelled }
+enum OrderStatus {
+  pending,
+  confirmed,
+  processing,
+  packed,
+  outForDelivery,
+  delivered,
+  cancelled
+}
 
 @freezed
 class OrderModel with _$OrderModel {
@@ -21,5 +29,6 @@ class OrderModel with _$OrderModel {
     required DeliveryModel deliveryDetails,
   }) = _OrderModel;
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) => _$OrderModelFromJson(json);
+  factory OrderModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderModelFromJson(json);
 }

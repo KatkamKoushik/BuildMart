@@ -12,5 +12,6 @@ class BrandModel with _$BrandModel {
     String? description,
   }) = _BrandModel;
 
-  factory BrandModel.fromJson(Map<String, dynamic> json) => _$BrandModelFromJson(json);
+  factory BrandModel.fromJson(Map<String, dynamic> json) =>
+      _$BrandModelFromJson(json);
 }

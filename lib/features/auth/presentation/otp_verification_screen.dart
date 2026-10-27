@@ -11,11 +11,13 @@ class OtpVerificationScreen extends ConsumerStatefulWidget {
   const OtpVerificationScreen({super.key, required this.phoneNumber});
 
   @override
-  ConsumerState<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
+  ConsumerState<OtpVerificationScreen> createState() =>
+      _OtpVerificationScreenState();
 }
 
 class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
+  final List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   bool _isLoading = false;
 
@@ -27,12 +29,12 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       );
       return;
     }
-    
+
     setState(() => _isLoading = true);
-    
+
     final repo = ref.read(authRepositoryProvider);
     final success = await repo.verifyOtp(widget.phoneNumber, otp);
-    
+
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
@@ -90,7 +92,6 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                     ),
               ).animate().fade(delay: 200.ms).slideY(begin: 0.2),
               const SizedBox(height: 40),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(6, (index) {
@@ -103,7 +104,10 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
                       decoration: InputDecoration(
                         counterText: '',
                         filled: true,
@@ -114,7 +118,8 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                          borderSide: const BorderSide(
+                              color: AppColors.primary, width: 2),
                         ),
                       ),
                       onChanged: (value) {
@@ -125,24 +130,29 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         }
                       },
                     ),
-                  ).animate().fade(delay: (300 + (index * 50)).ms).slideY(begin: 0.2);
+                  )
+                      .animate()
+                      .fade(delay: (300 + (index * 50)).ms)
+                      .slideY(begin: 0.2);
                 }),
               ),
-              
               const SizedBox(height: 40),
               BuildMartButton(
                 text: 'Verify OTP',
                 onPressed: _verifyOtp,
                 isLoading: _isLoading,
               ).animate().fade(delay: 600.ms).slideY(begin: 0.2),
-              
               const SizedBox(height: 24),
               Center(
                 child: TextButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('OTP Resent!')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('OTP Resent!')));
                   },
-                  child: const Text('Resend OTP', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                  child: const Text('Resend OTP',
+                      style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold)),
                 ),
               ).animate().fade(delay: 700.ms),
             ],

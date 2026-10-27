@@ -23,7 +23,8 @@ class _NearbyShopsScreenState extends ConsumerState<NearbyShopsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nearby Shops'),
-        backgroundColor: Colors.transparent, // Making appbar transparent over map
+        backgroundColor:
+            Colors.transparent, // Making appbar transparent over map
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.accent),
         actions: [
@@ -45,7 +46,7 @@ class _NearbyShopsScreenState extends ConsumerState<NearbyShopsScreen> {
             myLocationEnabled: true,
             zoomControlsEnabled: false,
           ),
-          
+
           // Draggable Bottom Sheet for Shops
           DraggableScrollableSheet(
             initialChildSize: 0.4,
@@ -77,10 +78,13 @@ class _NearbyShopsScreenState extends ConsumerState<NearbyShopsScreen> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       child: Row(
                         children: [
-                          Text('Shops near you', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          Text('Shops near you',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
                         ],
                       ),
                     ),
@@ -88,7 +92,8 @@ class _NearbyShopsScreenState extends ConsumerState<NearbyShopsScreen> {
                       child: shopsAsync.when(
                         data: (shops) {
                           if (shops.isEmpty) {
-                            return const Center(child: Text('No shops found nearby.'));
+                            return const Center(
+                                child: Text('No shops found nearby.'));
                           }
                           return ListView.builder(
                             controller: scrollController,
@@ -103,8 +108,10 @@ class _NearbyShopsScreenState extends ConsumerState<NearbyShopsScreen> {
                             },
                           );
                         },
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => Center(child: Text('Error loading shops: $error')),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (error, stack) =>
+                            Center(child: Text('Error loading shops: $error')),
                       ),
                     ),
                   ],

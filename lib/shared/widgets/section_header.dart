@@ -21,7 +21,10 @@ class SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           if (onSeeAll != null)
             TextButton(
@@ -32,7 +35,8 @@ class SectionHeader extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: Text(AppLocalizations.of(context)!.seeAll, style: const TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.seeAll,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
         ],
       ),

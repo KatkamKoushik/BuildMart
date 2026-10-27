@@ -8,10 +8,7 @@ class ShopRepository {
   ShopRepository(this._firestore);
 
   Stream<List<ShopModel>> watchNearbyShops() {
-    return _firestore
-        .collection('shops')
-        .snapshots()
-        .map((snapshot) {
+    return _firestore.collection('shops').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;

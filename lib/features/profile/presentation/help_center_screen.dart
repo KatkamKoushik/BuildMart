@@ -49,7 +49,8 @@ class HelpCenterScreen extends StatelessWidget {
               side: BorderSide(color: AppColors.border),
             ),
             child: ListTile(
-              leading: const Icon(Icons.support_agent, color: AppColors.primary),
+              leading:
+                  const Icon(Icons.support_agent, color: AppColors.primary),
               title: Text(AppLocalizations.of(context)!.chatSupport),
               subtitle: Text(
                 AppLocalizations.of(context)!.chatSupportSub,
@@ -70,7 +71,8 @@ class HelpCenterScreen extends StatelessWidget {
               side: BorderSide(color: AppColors.border),
             ),
             child: ListTile(
-              leading: const Icon(Icons.email_outlined, color: AppColors.primary),
+              leading:
+                  const Icon(Icons.email_outlined, color: AppColors.primary),
               title: Text(AppLocalizations.of(context)!.emailUs),
               subtitle: const Text('support@buildmart.com'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -89,7 +91,8 @@ class HelpCenterScreen extends StatelessWidget {
               side: BorderSide(color: AppColors.border),
             ),
             child: ListTile(
-              leading: const Icon(Icons.phone_outlined, color: AppColors.primary),
+              leading:
+                  const Icon(Icons.phone_outlined, color: AppColors.primary),
               title: Text(AppLocalizations.of(context)!.callUs),
               subtitle: const Text('+91 1800 123 4567'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),

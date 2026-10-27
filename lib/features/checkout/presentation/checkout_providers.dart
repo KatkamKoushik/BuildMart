@@ -8,7 +8,8 @@ class AddressModel {
   final String title;
   final String addressLine;
 
-  const AddressModel({required this.id, required this.title, required this.addressLine});
+  const AddressModel(
+      {required this.id, required this.title, required this.addressLine});
 }
 
 final addressesProvider = Provider<List<AddressModel>>((ref) {
@@ -16,13 +17,12 @@ final addressesProvider = Provider<List<AddressModel>>((ref) {
   if (user == null || user.savedAddresses.isEmpty) {
     return [
       const AddressModel(
-        id: '1',
-        title: 'Home',
-        addressLine: 'Please add an address in your profile.'
-      ),
+          id: '1',
+          title: 'Home',
+          addressLine: 'Please add an address in your profile.'),
     ];
   }
-  
+
   return user.savedAddresses.asMap().entries.map((entry) {
     return AddressModel(
       id: entry.key.toString(),
@@ -37,7 +37,7 @@ final selectedAddressIdProvider = StateProvider<String?>((ref) => null);
 final selectedAddressProvider = Provider<AddressModel>((ref) {
   final addresses = ref.watch(addressesProvider);
   final selectedId = ref.watch(selectedAddressIdProvider);
-  
+
   if (selectedId != null) {
     try {
       return addresses.firstWhere((a) => a.id == selectedId);
@@ -54,7 +54,8 @@ const deliverySlots = [
   'Tomorrow, 2 PM - 5 PM',
 ];
 
-final selectedDeliverySlotProvider = StateProvider<String>((ref) => deliverySlots.first);
+final selectedDeliverySlotProvider =
+    StateProvider<String>((ref) => deliverySlots.first);
 
 // Order Notes
 final orderNotesProvider = StateProvider<String>((ref) => '');

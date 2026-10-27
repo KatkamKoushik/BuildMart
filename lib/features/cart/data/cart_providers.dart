@@ -18,7 +18,8 @@ class SaveForLaterNotifier extends StateNotifier<List<CartItemModel>> {
   }
 }
 
-final saveForLaterProvider = StateNotifierProvider<SaveForLaterNotifier, List<CartItemModel>>((ref) {
+final saveForLaterProvider =
+    StateNotifierProvider<SaveForLaterNotifier, List<CartItemModel>>((ref) {
   return SaveForLaterNotifier();
 });
 
@@ -30,7 +31,8 @@ class CouponNotifier extends StateNotifier<String?> {
 
   Future<bool> applyCoupon(String code) async {
     try {
-      final doc = await _firestore.collection('coupons').doc(code.toUpperCase()).get();
+      final doc =
+          await _firestore.collection('coupons').doc(code.toUpperCase()).get();
       if (doc.exists && doc.data()?['active'] == true) {
         state = code.toUpperCase();
         return true;

@@ -11,17 +11,20 @@ final featuredProductsProvider = StreamProvider<List<ProductModel>>((ref) {
   return repository.watchFeaturedProducts();
 });
 
-final productsByCategoryProvider = StreamProvider.family<List<ProductModel>, String>((ref, categoryId) {
+final productsByCategoryProvider =
+    StreamProvider.family<List<ProductModel>, String>((ref, categoryId) {
   final repository = ref.watch(productRepositoryProvider);
   return repository.watchProductsByCategory(categoryId);
 });
 
-final productsByBrandProvider = StreamProvider.family<List<ProductModel>, String>((ref, brandId) {
+final productsByBrandProvider =
+    StreamProvider.family<List<ProductModel>, String>((ref, brandId) {
   final repository = ref.watch(productRepositoryProvider);
   return repository.watchProductsByBrand(brandId);
 });
 
-final productStreamProvider = StreamProvider.family<ProductModel, String>((ref, id) {
+final productStreamProvider =
+    StreamProvider.family<ProductModel, String>((ref, id) {
   final repository = ref.watch(productRepositoryProvider);
   return repository.watchProduct(id);
 });
@@ -35,24 +38,24 @@ class ProductRepository {
     data['id'] = id;
     data['title'] = data['title'] ?? data['name'] ?? '';
     data['brand'] = data['brand'] ?? ''; // Handle missing brand
-    data['imageUrl'] = data['imageUrl'] ?? (data['imageUrls'] != null && (data['imageUrls'] as List).isNotEmpty ? data['imageUrls'][0] : '');
+    data['imageUrl'] = data['imageUrl'] ??
+        (data['imageUrls'] != null && (data['imageUrls'] as List).isNotEmpty
+            ? data['imageUrls'][0]
+            : '');
     data['reviews'] = data['reviews'] ?? data['totalReviews'] ?? 0;
     data['inStock'] = data['inStock'] ?? ((data['stockQuantity'] ?? 0) > 0);
     data['deliveryTime'] = data['deliveryTime'] ?? '2-3 days';
-    
+
     // Ensure numeric types match the model
     data['price'] = (data['price'] ?? 0).toDouble();
     data['originalPrice'] = (data['originalPrice'] ?? 0).toDouble();
     data['rating'] = (data['rating'] ?? 0).toDouble();
-    
+
     return data;
   }
 
   Stream<List<ProductModel>> watchFeaturedProducts() {
-    return _firestore
-        .collection('products')
-        .snapshots()
-        .map((snapshot) {
+    return _firestore.collection('products').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return ProductModel.fromJson(_mapProductData(doc.data(), doc.id));
       }).toList();

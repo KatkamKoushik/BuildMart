@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/buildmart_card.dart';
@@ -40,10 +39,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     try {
       final imageUrl = await _cloudinaryService.uploadImage(image);
       if (imageUrl != null) {
-        await ref.read(userRepositoryProvider).updateUserProfileImage(uid, imageUrl);
+        await ref
+            .read(userRepositoryProvider)
+            .updateUserProfileImage(uid, imageUrl);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profile picture updated successfully!')),
+            const SnackBar(
+                content: Text('Profile picture updated successfully!')),
           );
         }
       } else {
@@ -85,7 +87,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               message: 'Please log in to view your profile.',
               buttonText: 'Login',
               onAction: () async {
-                // If they are stuck in a state where FirebaseAuth thinks they are logged in 
+                // If they are stuck in a state where FirebaseAuth thinks they are logged in
                 // but there is no user document, force a logout first to break the loop.
                 final repo = ref.read(authRepositoryProvider);
                 if (await repo.isAuthenticated()) {
@@ -106,24 +108,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: _isUploading ? null : () => _uploadProfilePicture(user.id),
+                          onTap: _isUploading
+                              ? null
+                              : () => _uploadProfilePicture(user.id),
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
                               Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: AppColors.primary, width: 2),
+                                  border: Border.all(
+                                      color: AppColors.primary, width: 2),
                                 ),
                                 child: NetworkImageWidget(
-                                  imageUrl: user.profileImageUrl ?? 'https://via.placeholder.com/150',
+                                  imageUrl: user.profileImageUrl ??
+                                      'https://via.placeholder.com/150',
                                   width: 64,
                                   height: 64,
-                                  borderRadius: const BorderRadius.all(Radius.circular(32)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
                                 ),
                               ),
                               if (_isUploading)
-                                const CircularProgressIndicator(color: AppColors.primary),
+                                const CircularProgressIndicator(
+                                    color: AppColors.primary),
                               if (!_isUploading)
                                 Positioned(
                                   bottom: 0,
@@ -134,7 +142,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       color: AppColors.primary,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Icon(Icons.edit, size: 12, color: Colors.white),
+                                    child: const Icon(Icons.edit,
+                                        size: 12, color: Colors.white),
                                   ),
                                 ),
                             ],
@@ -145,10 +154,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(user.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                              Text(user.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
                               const SizedBox(height: 4),
                               Text(
-                                user.phone.isNotEmpty ? user.phone : user.email, 
+                                user.phone.isNotEmpty ? user.phone : user.email,
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -160,14 +173,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ],
                 ),
-              ).animate().fadeIn().slideY(begin: 0.2, end: 0, duration: 400.ms, curve: Curves.easeOut),
+              ).animate().fadeIn().slideY(
+                  begin: 0.2, end: 0, duration: 400.ms, curve: Curves.easeOut),
               const SizedBox(height: 24),
-              _buildSettingsItem(context, Icons.inventory_2_outlined, AppLocalizations.of(context)!.myOrders, delay: 100, onTap: () => context.go('/orders')),
-              _buildSettingsItem(context, Icons.favorite_border, AppLocalizations.of(context)!.wishlist, delay: 150, onTap: () => context.push('/wishlist')),
-              _buildSettingsItem(context, Icons.history, AppLocalizations.of(context)!.recentlyViewed, delay: 200, onTap: () => context.push('/recently-viewed')),
-              _buildSettingsItem(context, Icons.location_on_outlined, AppLocalizations.of(context)!.myAddresses, delay: 250, onTap: () => context.push('/location')),
-              _buildSettingsItem(context, Icons.payment_outlined, AppLocalizations.of(context)!.paymentMethods, delay: 300, onTap: () => context.push('/payment-methods')),
-              _buildSettingsItem(context, Icons.group_add_outlined, AppLocalizations.of(context)!.referralProgram, delay: 320),
+              _buildSettingsItem(context, Icons.inventory_2_outlined,
+                  AppLocalizations.of(context)!.myOrders,
+                  delay: 100, onTap: () => context.go('/orders')),
+              _buildSettingsItem(context, Icons.favorite_border,
+                  AppLocalizations.of(context)!.wishlist,
+                  delay: 150, onTap: () => context.push('/wishlist')),
+              _buildSettingsItem(context, Icons.history,
+                  AppLocalizations.of(context)!.recentlyViewed,
+                  delay: 200, onTap: () => context.push('/recently-viewed')),
+              _buildSettingsItem(context, Icons.location_on_outlined,
+                  AppLocalizations.of(context)!.myAddresses,
+                  delay: 250, onTap: () => context.push('/location')),
+              _buildSettingsItem(context, Icons.payment_outlined,
+                  AppLocalizations.of(context)!.paymentMethods,
+                  delay: 300, onTap: () => context.push('/payment-methods')),
+              _buildSettingsItem(context, Icons.group_add_outlined,
+                  AppLocalizations.of(context)!.referralProgram,
+                  delay: 320),
               _buildSettingsItem(
                 context,
                 Icons.language,
@@ -184,21 +210,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.english),
                             onTap: () {
-                              ref.read(localeProvider.notifier).setLocale(const Locale('en'));
+                              ref
+                                  .read(localeProvider.notifier)
+                                  .setLocale(const Locale('en'));
                               Navigator.pop(context);
                             },
                           ),
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.hindi),
                             onTap: () {
-                              ref.read(localeProvider.notifier).setLocale(const Locale('hi'));
+                              ref
+                                  .read(localeProvider.notifier)
+                                  .setLocale(const Locale('hi'));
                               Navigator.pop(context);
                             },
                           ),
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.telugu),
                             onTap: () {
-                              ref.read(localeProvider.notifier).setLocale(const Locale('te'));
+                              ref
+                                  .read(localeProvider.notifier)
+                                  .setLocale(const Locale('te'));
                               Navigator.pop(context);
                             },
                           ),
@@ -224,21 +256,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.system),
                             onTap: () {
-                              ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.system);
+                              ref
+                                  .read(themeModeProvider.notifier)
+                                  .setThemeMode(ThemeMode.system);
                               Navigator.pop(context);
                             },
                           ),
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.light),
                             onTap: () {
-                              ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.light);
+                              ref
+                                  .read(themeModeProvider.notifier)
+                                  .setThemeMode(ThemeMode.light);
                               Navigator.pop(context);
                             },
                           ),
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.dark),
                             onTap: () {
-                              ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.dark);
+                              ref
+                                  .read(themeModeProvider.notifier)
+                                  .setThemeMode(ThemeMode.dark);
                               Navigator.pop(context);
                             },
                           ),
@@ -248,7 +286,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   );
                 },
               ),
-              _buildSettingsItem(context, Icons.help_outline, AppLocalizations.of(context)!.helpCenter, delay: 400, onTap: () => context.push('/help-center')),
+              _buildSettingsItem(context, Icons.help_outline,
+                  AppLocalizations.of(context)!.helpCenter,
+                  delay: 400, onTap: () => context.push('/help-center')),
               if (AdminConstants.isAdmin(user.email))
                 _buildSettingsItem(
                   context,
@@ -260,39 +300,44 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               _buildSettingsItem(
                 context,
                 Icons.refresh,
-                _isSeeding ? AppLocalizations.of(context)!.refreshingCatalog : AppLocalizations.of(context)!.refreshCatalog,
+                _isSeeding
+                    ? AppLocalizations.of(context)!.refreshingCatalog
+                    : AppLocalizations.of(context)!.refreshCatalog,
                 delay: 420,
-                onTap: _isSeeding ? null : () async {
-                  setState(() => _isSeeding = true);
-                  try {
-                    await SeederService().seedDatabase();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('✅ Catalog refreshed! Restart the app to see changes.'),
-                          backgroundColor: AppColors.success,
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('❌ Error: $e'),
-                          backgroundColor: AppColors.error,
-                        ),
-                      );
-                    }
-                  } finally {
-                    if (mounted) setState(() => _isSeeding = false);
-                  }
-                },
+                onTap: _isSeeding
+                    ? null
+                    : () async {
+                        setState(() => _isSeeding = true);
+                        try {
+                          await SeederService().seedDatabase();
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    '✅ Catalog refreshed! Restart the app to see changes.'),
+                                backgroundColor: AppColors.success,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('❌ Error: $e'),
+                                backgroundColor: AppColors.error,
+                              ),
+                            );
+                          }
+                        } finally {
+                          if (mounted) setState(() => _isSeeding = false);
+                        }
+                      },
               ),
               _buildSettingsItem(
-                context, 
-                Icons.logout, 
-                AppLocalizations.of(context)!.logout, 
-                isDestructive: true, 
+                context,
+                Icons.logout,
+                AppLocalizations.of(context)!.logout,
+                isDestructive: true,
                 delay: 450,
                 onTap: () async {
                   await ref.read(authRepositoryProvider).logout();
@@ -310,25 +355,43 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildSettingsItem(BuildContext context, IconData icon, String title, {bool isDestructive = false, int delay = 0, VoidCallback? onTap}) {
-    final color = isDestructive ? AppColors.error : Theme.of(context).textTheme.titleMedium?.color;
+  Widget _buildSettingsItem(BuildContext context, IconData icon, String title,
+      {bool isDestructive = false, int delay = 0, VoidCallback? onTap}) {
+    final color = isDestructive
+        ? AppColors.error
+        : Theme.of(context).textTheme.titleMedium?.color;
     final iconColor = isDestructive ? AppColors.error : AppColors.primary;
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isDestructive ? AppColors.error.withValues(alpha: 0.1) : Theme.of(context).colorScheme.surface,
+          color: isDestructive
+              ? AppColors.error.withValues(alpha: 0.1)
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: iconColor),
       ),
-      title: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: color, fontWeight: FontWeight.w500)),
-      trailing: Icon(Icons.chevron_right, color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.5)),
-      onTap: onTap ?? () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$title coming soon!')),
-        );
-      },
-    ).animate().fadeIn(delay: delay.ms).slideX(begin: 0.1, end: 0, delay: delay.ms);
+      title: Text(title,
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(color: color, fontWeight: FontWeight.w500)),
+      trailing: Icon(Icons.chevron_right,
+          color: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.color
+              ?.withValues(alpha: 0.5)),
+      onTap: onTap ??
+          () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$title coming soon!')),
+            );
+          },
+    )
+        .animate()
+        .fadeIn(delay: delay.ms)
+        .slideX(begin: 0.1, end: 0, delay: delay.ms);
   }
 }

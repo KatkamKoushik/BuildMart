@@ -6,7 +6,8 @@ final cartRepositoryProvider = Provider<CartRepository>((ref) {
   return CartRepository(FirebaseFirestore.instance);
 });
 
-final cartStreamProvider = StreamProvider.family<List<CartItemModel>, String>((ref, userId) {
+final cartStreamProvider =
+    StreamProvider.family<List<CartItemModel>, String>((ref, userId) {
   final repository = ref.watch(cartRepositoryProvider);
   return repository.watchCart(userId);
 });
@@ -31,7 +32,8 @@ class CartRepository {
     });
   }
 
-  Future<void> updateQuantity(String userId, String itemId, int newQuantity) async {
+  Future<void> updateQuantity(
+      String userId, String itemId, int newQuantity) async {
     if (newQuantity <= 0) {
       await _firestore
           .collection('users')
@@ -55,7 +57,7 @@ class CartRepository {
         .doc(userId)
         .collection('cart')
         .doc(item.id);
-        
+
     final doc = await docRef.get();
     if (doc.exists) {
       await docRef.update({'quantity': FieldValue.increment(item.quantity)});

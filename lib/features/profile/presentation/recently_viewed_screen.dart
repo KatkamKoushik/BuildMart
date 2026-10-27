@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../products/data/product_providers.dart';
-import '../../products/data/product_model.dart';
 import '../../../shared/widgets/product_card.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -26,7 +25,8 @@ class RecentlyViewedScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.history, size: 64, color: AppColors.textLight),
+                  const Icon(Icons.history,
+                      size: 64, color: AppColors.textLight),
                   const SizedBox(height: 16),
                   Text(
                     'No recently viewed items',

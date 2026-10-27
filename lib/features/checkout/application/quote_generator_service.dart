@@ -15,7 +15,8 @@ class QuoteGeneratorService {
     required double discount,
   }) async {
     final pdf = pw.Document();
-    final formatCurrency = NumberFormat.currency(locale: 'en_IN', symbol: 'Rs.');
+    final formatCurrency =
+        NumberFormat.currency(locale: 'en_IN', symbol: 'Rs.');
 
     pdf.addPage(
       pw.MultiPage(
@@ -45,10 +46,14 @@ class QuoteGeneratorService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('BuildMart Quotation',
-            style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900)),
+            style: pw.TextStyle(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900)),
         pw.SizedBox(height: 8),
         pw.Text('Date: ${DateFormat('dd MMM yyyy').format(DateTime.now())}'),
-        pw.Text('Valid until: ${DateFormat('dd MMM yyyy').format(DateTime.now().add(const Duration(days: 7)))}'),
+        pw.Text(
+            'Valid until: ${DateFormat('dd MMM yyyy').format(DateTime.now().add(const Duration(days: 7)))}'),
       ],
     );
   }
@@ -57,7 +62,8 @@ class QuoteGeneratorService {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text('Prepared For:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
+        pw.Text('Prepared For:',
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
         pw.SizedBox(height: 4),
         pw.Text(user.name),
         pw.Text(user.email),
@@ -66,10 +72,12 @@ class QuoteGeneratorService {
     );
   }
 
-  static pw.Widget _buildItemsTable(List<CartItemModel> items, NumberFormat formatter) {
+  static pw.Widget _buildItemsTable(
+      List<CartItemModel> items, NumberFormat formatter) {
     return pw.TableHelper.fromTextArray(
       headers: ['S.No', 'Product', 'Qty', 'Unit Price', 'Amount'],
-      headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+      headerStyle:
+          pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
       headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey800),
       cellHeight: 30,
       cellAlignments: {
@@ -96,31 +104,43 @@ class QuoteGeneratorService {
     );
   }
 
-  static pw.Widget _buildSummary(double subtotal, double gst, double discount, double total, NumberFormat formatter) {
+  static pw.Widget _buildSummary(double subtotal, double gst, double discount,
+      double total, NumberFormat formatter) {
     return pw.Container(
       alignment: pw.Alignment.centerRight,
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.end,
         children: [
           _summaryRow('Subtotal:', formatter.format(subtotal)),
-          if (discount > 0) _summaryRow('Discount:', '-${formatter.format(discount)}', color: PdfColors.green700),
+          if (discount > 0)
+            _summaryRow('Discount:', '-${formatter.format(discount)}',
+                color: PdfColors.green700),
           _summaryRow('GST (18%):', formatter.format(gst)),
           pw.Divider(),
-          _summaryRow('Total Estimate:', formatter.format(total), isTotal: true),
+          _summaryRow('Total Estimate:', formatter.format(total),
+              isTotal: true),
         ],
       ),
     );
   }
 
-  static pw.Widget _summaryRow(String label, String value, {bool isTotal = false, PdfColor? color}) {
+  static pw.Widget _summaryRow(String label, String value,
+      {bool isTotal = false, PdfColor? color}) {
     return pw.Container(
       width: 200,
       padding: const pw.EdgeInsets.symmetric(vertical: 4),
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
-          pw.Text(label, style: pw.TextStyle(fontWeight: isTotal ? pw.FontWeight.bold : pw.FontWeight.normal)),
-          pw.Text(value, style: pw.TextStyle(fontWeight: isTotal ? pw.FontWeight.bold : pw.FontWeight.normal, color: color)),
+          pw.Text(label,
+              style: pw.TextStyle(
+                  fontWeight:
+                      isTotal ? pw.FontWeight.bold : pw.FontWeight.normal)),
+          pw.Text(value,
+              style: pw.TextStyle(
+                  fontWeight:
+                      isTotal ? pw.FontWeight.bold : pw.FontWeight.normal,
+                  color: color)),
         ],
       ),
     );
@@ -132,8 +152,10 @@ class QuoteGeneratorService {
       children: [
         pw.Divider(),
         pw.SizedBox(height: 8),
-        pw.Text('Thank you for your business!', style: const pw.TextStyle(fontSize: 12)),
-        pw.Text('For queries, contact support@buildmart.com', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+        pw.Text('Thank you for your business!',
+            style: const pw.TextStyle(fontSize: 12)),
+        pw.Text('For queries, contact support@buildmart.com',
+            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
       ],
     );
   }

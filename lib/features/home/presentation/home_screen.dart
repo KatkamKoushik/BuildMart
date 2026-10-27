@@ -19,7 +19,6 @@ import '../../categories/data/category_repository.dart';
 import '../../brands/data/brand_repository.dart';
 import '../../shops/data/shop_repository.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../checkout/presentation/checkout_providers.dart';
 import '../../../core/services/seeder_service.dart';
 import '../../../core/utils/category_translator.dart';
 
@@ -34,129 +33,145 @@ class HomeScreen extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-        onRefresh: () async {
-          // Simulate network delay for pull-to-refresh
-          await Future.delayed(const Duration(seconds: 1));
-        },
-        color: AppColors.primary,
-        child: CustomScrollView(
-          slivers: [
-            // Sticky Search Bar
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _StickySearchBarDelegate(
-                child: const AdvancedSearchBar(),
+          onRefresh: () async {
+            // Simulate network delay for pull-to-refresh
+            await Future.delayed(const Duration(seconds: 1));
+          },
+          color: AppColors.primary,
+          child: CustomScrollView(
+            slivers: [
+              // Sticky Search Bar
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _StickySearchBarDelegate(
+                  child: const AdvancedSearchBar(),
+                ),
               ),
-            ),
-          SliverToBoxAdapter(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Column(
-                children: [
-                  _buildBannerSlider(ref),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        _buildCategoriesGrid(context, ref),
-                        SectionHeader(
-                          title: AppLocalizations.of(context)!.popularBrands,
-                          onSeeAll: () => context.push('/brands'),
-                        ),
-                        _buildBrandsHorizontalList(ref).animate().fade(delay: 200.ms).slideX(),
+              SliverToBoxAdapter(
+                child: Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Column(
+                    children: [
+                      _buildBannerSlider(ref),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          children: [
+                            _buildCategoriesGrid(context, ref),
+                            SectionHeader(
+                              title:
+                                  AppLocalizations.of(context)!.popularBrands,
+                              onSeeAll: () => context.push('/brands'),
+                            ),
+                            _buildBrandsHorizontalList(ref)
+                                .animate()
+                                .fade(delay: 200.ms)
+                                .slideX(),
+                            Consumer(
+                              builder: (context, ref, child) {
+                                final recentlyViewed =
+                                    ref.watch(recentlyViewedProvider);
+                                if (recentlyViewed.isEmpty)
+                                  return const SizedBox.shrink();
 
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final recentlyViewed = ref.watch(recentlyViewedProvider);
-                            if (recentlyViewed.isEmpty) return const SizedBox.shrink();
-                            
-                            return Column(
-                              children: [
-                                SectionHeader(
-                                  title: AppLocalizations.of(context)!.recentlyViewed,
-                                  onSeeAll: () => context.push('/products'),
-                                ),
-                                SizedBox(
-                                  height: 360,
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: recentlyViewed.length,
-                                    separatorBuilder: (context, index) => const SizedBox(width: 16),
-                                    itemBuilder: (context, index) {
-                                      final product = recentlyViewed[index];
-                                      return SizedBox(
-                                        width: 180,
-                                        child: ProductCard(
-                                          product: product,
-                                          onTap: () => context.push('/product-details/${product.id}'),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ).animate().fade(delay: 350.ms).slideY(),
-                              ],
-                            );
-                          },
+                                return Column(
+                                  children: [
+                                    SectionHeader(
+                                      title: AppLocalizations.of(context)!
+                                          .recentlyViewed,
+                                      onSeeAll: () => context.push('/products'),
+                                    ),
+                                    SizedBox(
+                                      height: 360,
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: recentlyViewed.length,
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(width: 16),
+                                        itemBuilder: (context, index) {
+                                          final product = recentlyViewed[index];
+                                          return SizedBox(
+                                            width: 180,
+                                            child: ProductCard(
+                                              product: product,
+                                              onTap: () => context.push(
+                                                  '/product-details/${product.id}'),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ).animate().fade(delay: 350.ms).slideY(),
+                                  ],
+                                );
+                              },
+                            ),
+                            SectionHeader(
+                              title: AppLocalizations.of(context)!
+                                  .trendingProducts,
+                              onSeeAll: () => context.push('/products'),
+                            ),
+                            _buildProductsHorizontalList(context, ref)
+                                .animate()
+                                .fade(delay: 400.ms)
+                                .slideY(),
+                          ],
                         ),
-                        SectionHeader(
-                          title: AppLocalizations.of(context)!.trendingProducts,
-                          onSeeAll: () => context.push('/products'),
-                        ),
-                        _buildProductsHorizontalList(context, ref).animate().fade(delay: 400.ms).slideY(),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                ],
+                ),
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  SectionHeader(
-                    title: AppLocalizations.of(context)!.nearbyShops,
-                    onSeeAll: () => context.push('/shops'),
-                  ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final shopsAsync = ref.watch(nearbyShopsProvider);
-                      return shopsAsync.when(
-                        data: (shops) {
-                          if (shops.isEmpty) return const SizedBox.shrink();
-                          final displayShops = shops.take(3).toList();
-                          return Column(
-                            children: displayShops.map((shop) => ShopCard(
-                              shop: shop,
-                              onTap: () => context.push('/shop/${shop.id}'),
-                            )).toList(),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      SectionHeader(
+                        title: AppLocalizations.of(context)!.nearbyShops,
+                        onSeeAll: () => context.push('/shops'),
+                      ),
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final shopsAsync = ref.watch(nearbyShopsProvider);
+                          return shopsAsync.when(
+                            data: (shops) {
+                              if (shops.isEmpty) return const SizedBox.shrink();
+                              final displayShops = shops.take(3).toList();
+                              return Column(
+                                children: displayShops
+                                    .map((shop) => ShopCard(
+                                          shop: shop,
+                                          onTap: () =>
+                                              context.push('/shop/${shop.id}'),
+                                        ))
+                                    .toList(),
+                              );
+                            },
+                            loading: () => const Center(
+                                child: CircularProgressIndicator()),
+                            error: (error, stack) => const SizedBox.shrink(),
                           );
                         },
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => const SizedBox.shrink(),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ).animate().fade(delay: 500.ms).slideY(),
-            ),
-          )
-        ],
-      ),
-      ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ).animate().fade(delay: 500.ms).slideY(),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
   AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(userProvider);
-    
+
     String titleText = AppLocalizations.of(context)!.location;
     String shortAddress = AppLocalizations.of(context)!.selectDeliveryLocation;
-    
+
     userAsync.whenData((user) {
       if (user != null && user.savedAddresses.isNotEmpty) {
         final addressLine = user.savedAddresses.first;
@@ -182,13 +197,20 @@ class HomeScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations.of(context)!.deliveringTo(titleText), style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.textLight)),
+                    Text(AppLocalizations.of(context)!.deliveringTo(titleText),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(color: AppColors.textLight)),
                     Row(
                       children: [
                         Flexible(
                           child: Text(
                             shortAddress,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -208,12 +230,15 @@ class HomeScreen extends ConsumerWidget {
           label: 'Seed Database',
           button: true,
           child: IconButton(
-            icon: const Icon(Icons.cloud_upload, color: AppColors.primary, size: 28),
+            icon: const Icon(Icons.cloud_upload,
+                color: AppColors.primary, size: 28),
             onPressed: () async {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seeding database...')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Seeding database...')));
               await SeederService().seedDatabase();
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seeding complete! Please restart app.')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Seeding complete! Please restart app.')));
               }
             },
           ),
@@ -222,7 +247,8 @@ class HomeScreen extends ConsumerWidget {
           label: 'Notifications',
           button: true,
           child: IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: AppColors.accent, size: 28),
+            icon: const Icon(Icons.notifications_outlined,
+                color: AppColors.accent, size: 28),
             onPressed: () => context.push('/notifications'),
           ),
         ),
@@ -273,20 +299,22 @@ class HomeScreen extends ConsumerWidget {
           },
         ).animate().fade(duration: 500.ms).scale(duration: 500.ms);
       },
-      loading: () => const SizedBox(height: 180, child: Center(child: CircularProgressIndicator())),
-      error: (e, st) => const SizedBox(height: 180, child: Center(child: Text('Error loading banners'))),
+      loading: () => const SizedBox(
+          height: 180, child: Center(child: CircularProgressIndicator())),
+      error: (e, st) => const SizedBox(
+          height: 180, child: Center(child: Text('Error loading banners'))),
     );
   }
 
   Widget _buildCategoriesGrid(BuildContext context, WidgetRef ref) {
     final categoriesAsync = ref.watch(categoriesProvider);
-    
+
     return categoriesAsync.when(
       data: (categories) {
         if (categories.isEmpty) return const SizedBox();
         final screenWidth = MediaQuery.of(context).size.width;
         final crossAxisCount = screenWidth > 600 ? 6 : 4;
-        
+
         // Take at most 8 categories for the home screen grid
         final displayCategories = categories.take(8).toList();
 
@@ -306,7 +334,8 @@ class HomeScreen extends ConsumerWidget {
               label: 'Category: ${category.name}',
               button: true,
               child: GestureDetector(
-                onTap: () => context.push('/products?categoryId=${category.id}'),
+                onTap: () =>
+                    context.push('/products?categoryId=${category.id}'),
                 child: Column(
                   children: [
                     Container(
@@ -334,7 +363,10 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Text(
                       translateCategory(context, category.name),
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, fontSize: 11),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(fontWeight: FontWeight.w600, fontSize: 11),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -342,7 +374,10 @@ class HomeScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-            ).animate().scale(delay: (index * 50).ms, duration: 300.ms).fadeIn();
+            )
+                .animate()
+                .scale(delay: (index * 50).ms, duration: 300.ms)
+                .fadeIn();
           },
         );
       },
@@ -374,11 +409,17 @@ class HomeScreen extends ConsumerWidget {
                 child: Container(
                   width: 80,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
-                    border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+                    color: Theme.of(context).cardTheme.color ??
+                        Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                        color: Theme.of(context)
+                            .dividerColor
+                            .withValues(alpha: 0.1)),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4),
+                      BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 4),
                     ],
                   ),
                   child: Padding(
@@ -394,8 +435,10 @@ class HomeScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const SizedBox(height: 80, child: Center(child: CircularProgressIndicator())),
-      error: (e, st) => const SizedBox(height: 80, child: Center(child: Text('Error loading brands'))),
+      loading: () => const SizedBox(
+          height: 80, child: Center(child: CircularProgressIndicator())),
+      error: (e, st) => const SizedBox(
+          height: 80, child: Center(child: Text('Error loading brands'))),
     );
   }
 
@@ -449,7 +492,8 @@ class _StickySearchBarDelegate extends SliverPersistentHeaderDelegate {
   _StickySearchBarDelegate({required this.child});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       alignment: Alignment.center,

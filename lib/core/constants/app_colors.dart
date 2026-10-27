@@ -4,7 +4,7 @@ class AppColors {
   // Brand Colors
   static const Color primary = Color(0xFFFFC107);
   static const Color primaryDark = Color(0xFFE6AC00);
-  
+
   // Neutral Colors
   static const Color text = Color(0xFF222222);
   static const Color textLight = Color(0xFF757575); // Added for secondary text
@@ -12,7 +12,7 @@ class AppColors {
   static const Color secondaryBackground = Color(0xFFF8F8F8);
   static const Color border = Color(0xFFE5E5E5);
   static const Color accent = Color(0xFF222222); // Reusing black for accent
-  
+
   // Status Colors
   static const Color success = Color(0xFF16A34A);
   static const Color error = Color(0xFFDC2626);

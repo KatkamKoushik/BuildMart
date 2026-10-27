@@ -18,7 +18,8 @@ class NotificationsScreen extends StatelessWidget {
             icon: Icons.local_shipping,
             color: AppColors.primary,
             title: 'Order Out for Delivery',
-            description: 'Your order #BM8472 is out for delivery and will reach you in 45 mins.',
+            description:
+                'Your order #BM8472 is out for delivery and will reach you in 45 mins.',
             time: 'Just now',
             isUnread: true,
           ),
@@ -27,7 +28,8 @@ class NotificationsScreen extends StatelessWidget {
             icon: Icons.local_offer,
             color: AppColors.success,
             title: 'Special Offer on UltraTech',
-            description: 'Get 10% off on bulk orders of UltraTech cement. Valid till midnight.',
+            description:
+                'Get 10% off on bulk orders of UltraTech cement. Valid till midnight.',
             time: '2 hours ago',
             isUnread: true,
           ),
@@ -36,7 +38,8 @@ class NotificationsScreen extends StatelessWidget {
             icon: Icons.check_circle,
             color: AppColors.textLight,
             title: 'Payment Successful',
-            description: 'We have received your payment of ₹14,500 for order #BM8471.',
+            description:
+                'We have received your payment of ₹14,500 for order #BM8471.',
             time: 'Yesterday',
             isUnread: false,
           ),
@@ -45,7 +48,8 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationItem(BuildContext context, {
+  Widget _buildNotificationItem(
+    BuildContext context, {
     required IconData icon,
     required Color color,
     required String title,
@@ -60,7 +64,9 @@ class NotificationsScreen extends StatelessWidget {
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isUnread ? AppColors.primary.withValues(alpha: 0.5) : AppColors.border.withValues(alpha: 0.5),
+          color: isUnread
+              ? AppColors.primary.withValues(alpha: 0.5)
+              : AppColors.border.withValues(alpha: 0.5),
         ),
       ),
       child: Row(
@@ -85,9 +91,12 @@ class NotificationsScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: isUnread
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
                       ),
                     ),
                     if (isUnread)
@@ -105,16 +114,16 @@ class NotificationsScreen extends StatelessWidget {
                 Text(
                   description,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textLight,
-                  ),
+                        color: AppColors.textLight,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   time,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textLight,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: AppColors.textLight,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),

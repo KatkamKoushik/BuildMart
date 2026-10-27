@@ -50,12 +50,16 @@ class BrandCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: const BoxDecoration(
                 color: AppColors.secondaryBackground,
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(16)),
               ),
               child: Text(
                 name,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontWeight: FontWeight.w600),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -63,6 +67,9 @@ class BrandCard extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 400.ms).scale(duration: 400.ms, curve: Curves.easeOut);
+    )
+        .animate()
+        .fadeIn(duration: 400.ms)
+        .scale(duration: 400.ms, curve: Curves.easeOut);
   }
 }

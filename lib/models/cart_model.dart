@@ -13,7 +13,8 @@ class CartItemModel with _$CartItemModel {
     required int quantity,
   }) = _CartItemModel;
 
-  factory CartItemModel.fromJson(Map<String, dynamic> json) => _$CartItemModelFromJson(json);
+  factory CartItemModel.fromJson(Map<String, dynamic> json) =>
+      _$CartItemModelFromJson(json);
 }
 
 @freezed
@@ -24,7 +25,8 @@ class CartShopGroupModel with _$CartShopGroupModel {
     required double subtotal,
   }) = _CartShopGroupModel;
 
-  factory CartShopGroupModel.fromJson(Map<String, dynamic> json) => _$CartShopGroupModelFromJson(json);
+  factory CartShopGroupModel.fromJson(Map<String, dynamic> json) =>
+      _$CartShopGroupModelFromJson(json);
 }
 
 @freezed
@@ -37,5 +39,6 @@ class CartModel with _$CartModel {
     required double totalDeliveryCharges,
   }) = _CartModel;
 
-  factory CartModel.fromJson(Map<String, dynamic> json) => _$CartModelFromJson(json);
+  factory CartModel.fromJson(Map<String, dynamic> json) =>
+      _$CartModelFromJson(json);
 }

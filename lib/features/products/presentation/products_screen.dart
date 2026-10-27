@@ -46,12 +46,12 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
     final brandsAsync = ref.watch(brandsProvider);
-    
+
     final AsyncValue<List<ProductModel>> productsAsync;
     if (widget.brandId != null) {
       productsAsync = ref.watch(productsByBrandProvider(widget.brandId!));
     } else {
-      productsAsync = _selectedCategoryId == null 
+      productsAsync = _selectedCategoryId == null
           ? ref.watch(featuredProductsProvider)
           : ref.watch(productsByCategoryProvider(_selectedCategoryId!));
     }
@@ -59,7 +59,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     String appBarTitle = widget.query ?? AppLocalizations.of(context)!.products;
     if (widget.brandId != null && brandsAsync.hasValue) {
       try {
-        final brand = brandsAsync.value!.firstWhere((b) => b.id == widget.brandId);
+        final brand =
+            brandsAsync.value!.firstWhere((b) => b.id == widget.brandId);
         if (brand.name.isNotEmpty) {
           appBarTitle = brand.name;
         }
@@ -68,7 +69,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       }
     } else if (widget.categoryId != null && categoriesAsync.hasValue) {
       try {
-        final category = categoriesAsync.value!.firstWhere((c) => c.id == widget.categoryId);
+        final category =
+            categoriesAsync.value!.firstWhere((c) => c.id == widget.categoryId);
         if (category.name.isNotEmpty) {
           appBarTitle = translateCategory(context, category.name);
         }
@@ -127,37 +129,42 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 data: (categories) {
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: categories.length + 1, // +1 for "All"
                     itemBuilder: (context, index) {
-                    final isAll = index == 0;
-                    final category = isAll ? null : categories[index - 1];
-                    final isSelected = _selectedCategoryId == category?.id;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: FilterChip(
-                        label: Text(isAll ? AppLocalizations.of(context)!.all : translateCategory(context, category!.name)),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          setState(() {
-                            if (isAll) {
-                              _selectedCategoryId = null;
-                            } else {
-                              _selectedCategoryId = selected ? category?.id : null;
-                            }
-                          });
-                        },
-                        selectedColor: AppColors.primary.withValues(alpha: 0.2),
-                        checkmarkColor: AppColors.primary,
-                      ),
-                    );
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => const SizedBox(),
+                      final isAll = index == 0;
+                      final category = isAll ? null : categories[index - 1];
+                      final isSelected = _selectedCategoryId == category?.id;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: FilterChip(
+                          label: Text(isAll
+                              ? AppLocalizations.of(context)!.all
+                              : translateCategory(context, category!.name)),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (isAll) {
+                                _selectedCategoryId = null;
+                              } else {
+                                _selectedCategoryId =
+                                    selected ? category?.id : null;
+                              }
+                            });
+                          },
+                          selectedColor:
+                              AppColors.primary.withValues(alpha: 0.2),
+                          checkmarkColor: AppColors.primary,
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => const SizedBox(),
+              ),
             ),
-          ),
           // Product Grid
           Expanded(
             child: productsAsync.when(
@@ -168,7 +175,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         if (p.brand.toLowerCase().contains(q)) {
                           return true;
                         }
-                        final regex = RegExp(r'\b' + RegExp.escape(q), caseSensitive: false);
+                        final regex = RegExp(r'\b' + RegExp.escape(q),
+                            caseSensitive: false);
                         return regex.hasMatch(p.title);
                       }).toList()
                     : allProducts.toList();
@@ -186,14 +194,17 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 }
 
                 if (products.isEmpty) {
-                  return Center(child: Text(AppLocalizations.of(context)!.noProductsFound));
+                  return Center(
+                      child:
+                          Text(AppLocalizations.of(context)!.noProductsFound));
                 }
                 return CustomScrollView(
                   slivers: [
                     SliverPadding(
                       padding: const EdgeInsets.all(16),
                       sliver: SliverGrid(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 0.55,
                           crossAxisSpacing: 16,
@@ -204,14 +215,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                             final product = products[index];
                             return ProductCard(
                               product: product,
-                              onTap: () => context.push('/product-details/${product.id}'),
+                              onTap: () => context
+                                  .push('/product-details/${product.id}'),
                             );
                           },
                           childCount: products.length,
                         ),
                       ),
                     ),
-                    const SliverToBoxAdapter(child: SizedBox(height: 80)), // Space for FAB
+                    const SliverToBoxAdapter(
+                        child: SizedBox(height: 80)), // Space for FAB
                   ],
                 );
               },
@@ -220,7 +233,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.55,
                         crossAxisSpacing: 16,
@@ -234,7 +248,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   ),
                 ],
               ),
-              error: (error, stack) => Center(child: Text('Error loading products: $error')),
+              error: (error, stack) =>
+                  Center(child: Text('Error loading products: $error')),
             ),
           ),
         ],
@@ -257,16 +272,25 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildFloatingAction(context, Icons.sort, AppLocalizations.of(context)!.sort, _showSortModal),
-            Container(width: 1, height: 24, color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.3)),
-            _buildFloatingAction(context, Icons.filter_alt_outlined, AppLocalizations.of(context)!.filter, _showFilterModal),
+            _buildFloatingAction(context, Icons.sort,
+                AppLocalizations.of(context)!.sort, _showSortModal),
+            Container(
+                width: 1,
+                height: 24,
+                color: Theme.of(context)
+                    .colorScheme
+                    .surface
+                    .withValues(alpha: 0.3)),
+            _buildFloatingAction(context, Icons.filter_alt_outlined,
+                AppLocalizations.of(context)!.filter, _showFilterModal),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFloatingAction(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+  Widget _buildFloatingAction(
+      BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Row(
@@ -274,7 +298,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.surface, size: 20),
           const SizedBox(width: 8),
-          Text(label, style: TextStyle(color: Theme.of(context).colorScheme.surface, fontWeight: FontWeight.bold)),
+          Text(label,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -282,33 +309,36 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   void _showSortModal() {
     showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Sort By', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text('Sort By',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   _buildSortRadio(setModalState, 'default', 'Recommended'),
-                  _buildSortRadio(setModalState, 'price_asc', 'Price: Low to High'),
-                  _buildSortRadio(setModalState, 'price_desc', 'Price: High to Low'),
+                  _buildSortRadio(
+                      setModalState, 'price_asc', 'Price: Low to High'),
+                  _buildSortRadio(
+                      setModalState, 'price_desc', 'Price: High to Low'),
                   _buildSortRadio(setModalState, 'rating', 'Customer Rating'),
                 ],
               ),
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 
-  Widget _buildSortRadio(StateSetter setModalState, String value, String title) {
+  Widget _buildSortRadio(
+      StateSetter setModalState, String value, String title) {
     return RadioListTile<String>(
       title: Text(title),
       value: value,
@@ -328,18 +358,20 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   void _showFilterModal() {
     showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Filters', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text('Filters',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   SwitchListTile(
                     title: const Text('In Stock Only'),
@@ -359,16 +391,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white),
                       child: const Text('Apply'),
                     ),
                   ),
                 ],
               ),
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 }

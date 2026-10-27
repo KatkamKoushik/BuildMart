@@ -24,7 +24,8 @@ class ShimmerLoader extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: borderRadius ?? const BorderRadius.all(Radius.circular(8)),
+          borderRadius:
+              borderRadius ?? const BorderRadius.all(Radius.circular(8)),
         ),
       ),
     );
@@ -87,7 +88,10 @@ class CartItemShimmer extends StatelessWidget {
         ),
         child: const Row(
           children: [
-            ShimmerLoader(width: 60, height: 60, borderRadius: BorderRadius.all(Radius.circular(8))),
+            ShimmerLoader(
+                width: 60,
+                height: 60,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
             SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -155,7 +159,10 @@ class ProductDetailShimmer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ShimmerLoader(width: double.infinity, height: 350, borderRadius: BorderRadius.zero),
+          ShimmerLoader(
+              width: double.infinity,
+              height: 350,
+              borderRadius: BorderRadius.zero),
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -206,7 +213,10 @@ class OrderCardShimmer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ShimmerLoader(width: 100, height: 16),
-                ShimmerLoader(width: 60, height: 24, borderRadius: BorderRadius.all(Radius.circular(12))),
+                ShimmerLoader(
+                    width: 60,
+                    height: 24,
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
               ],
             ),
             SizedBox(height: 12),
@@ -218,7 +228,10 @@ class OrderCardShimmer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ShimmerLoader(width: 80, height: 16),
-                ShimmerLoader(width: 100, height: 36, borderRadius: BorderRadius.all(Radius.circular(8))),
+                ShimmerLoader(
+                    width: 100,
+                    height: 36,
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
               ],
             ),
           ],

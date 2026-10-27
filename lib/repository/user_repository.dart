@@ -22,7 +22,7 @@ class UserRepository {
 
     try {
       final doc = await _firestore.collection('users').doc(user.uid).get();
-      
+
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         data['id'] = doc.id;

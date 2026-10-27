@@ -3,6 +3,7 @@ import '../../core/constants/app_colors.dart';
 import 'network_image_widget.dart';
 import '../../features/shops/data/shop_model.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 class ShopCard extends StatelessWidget {
   final ShopModel shop;
   final VoidCallback onTap;
@@ -18,7 +19,8 @@ class ShopCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Semantics(
-      label: 'Shop: ${shop.name}, Rating: ${shop.rating}, Distance: ${shop.distance} kilometers away',
+      label:
+          'Shop: ${shop.name}, Rating: ${shop.rating}, Distance: ${shop.distance} kilometers away',
       button: true,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -49,15 +51,19 @@ class ShopCard extends StatelessWidget {
                       imageUrl: shop.coverImageUrl,
                       height: 120,
                       width: double.infinity,
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
                     ),
                     Positioned(
                       top: 12,
                       right: 12,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: shop.isOpen ? AppColors.success : AppColors.error,
+                          color:
+                              shop.isOpen ? AppColors.success : AppColors.error,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -75,7 +81,8 @@ class ShopCard extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.background, width: 3),
+                          border:
+                              Border.all(color: AppColors.background, width: 3),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.1),
@@ -87,7 +94,8 @@ class ShopCard extends StatelessWidget {
                           imageUrl: shop.logoUrl,
                           width: 48,
                           height: 48,
-                          borderRadius: const BorderRadius.all(Radius.circular(24)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(24)),
                         ),
                       ),
                     ),
@@ -106,16 +114,20 @@ class ShopCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               shop.name,
-                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.star, size: 16, color: AppColors.primary),
+                              const Icon(Icons.star,
+                                  size: 16, color: AppColors.primary),
                               const SizedBox(width: 4),
-                              Text('${shop.rating}', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
+                              Text('${shop.rating}',
+                                  style: theme.textTheme.labelLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -123,13 +135,19 @@ class ShopCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 14, color: AppColors.textLight),
+                          const Icon(Icons.location_on,
+                              size: 14, color: AppColors.textLight),
                           const SizedBox(width: 4),
-                          Text(shop.address, style: theme.textTheme.labelMedium?.copyWith(color: AppColors.textLight)),
+                          Text(shop.address,
+                              style: theme.textTheme.labelMedium
+                                  ?.copyWith(color: AppColors.textLight)),
                           const SizedBox(width: 16),
-                          const Icon(Icons.directions_walk, size: 14, color: AppColors.textLight),
+                          const Icon(Icons.directions_walk,
+                              size: 14, color: AppColors.textLight),
                           const SizedBox(width: 4),
-                          Text('${shop.distance} away', style: theme.textTheme.labelMedium?.copyWith(color: AppColors.textLight)),
+                          Text('${shop.distance} away',
+                              style: theme.textTheme.labelMedium
+                                  ?.copyWith(color: AppColors.textLight)),
                         ],
                       ),
                     ],
@@ -140,6 +158,9 @@ class ShopCard extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOut);
+    )
+        .animate()
+        .fadeIn(duration: 400.ms)
+        .slideY(begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOut);
   }
 }

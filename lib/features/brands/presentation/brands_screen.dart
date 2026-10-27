@@ -82,61 +82,100 @@ class _BrandsScreenState extends ConsumerState<BrandsScreen> {
           // Grid
           Expanded(
             child: ref.watch(brandsProvider).when(
-              data: (brands) {
-                final filteredBrands = brands.where((brand) {
-                  final query = _searchQuery.trim().toLowerCase();
-                  if (query.isNotEmpty && 
-                      !brand.name.toLowerCase().contains(query) && 
-                      !brand.id.toLowerCase().contains(query)) {
-                    return false;
-                  }
+                  data: (brands) {
+                    final filteredBrands = brands.where((brand) {
+                      final query = _searchQuery.trim().toLowerCase();
+                      if (query.isNotEmpty &&
+                          !brand.name.toLowerCase().contains(query) &&
+                          !brand.id.toLowerCase().contains(query)) {
+                        return false;
+                      }
 
-                  if (_selectedFilterIndex != 0) {
-                    final name = brand.name.toLowerCase();
-                    final id = brand.id.toLowerCase();
-                    final isCement = ['acc', 'kcp', 'penna', 'ramco', 'ultratech', 'cement', 'ambuja', 'priya'].any((k) => name.contains(k) || id.contains(k));
-                    final isSteel = ['jsw', 'tata', 'vizag', 'sail', 'steel'].any((k) => name.contains(k) || id.contains(k));
-                    final isPaint = ['asian', 'berger', 'nippon', 'nerolac', 'paint'].any((k) => name.contains(k) || id.contains(k));
-                    final isPlumbing = ['jaquar', 'astral', 'supreme', 'plumb', 'pipe'].any((k) => name.contains(k) || id.contains(k));
-                    final isDoors = ['century', 'fenesta', 'saint', 'door', 'glass'].any((k) => name.contains(k) || id.contains(k));
-                    final isWood = ['greenply', 'wood', 'board', 'ply'].any((k) => name.contains(k) || id.contains(k));
-                    
-                    if (_selectedFilterIndex == 1 && !isCement) return false;
-                    if (_selectedFilterIndex == 2 && !isSteel) return false;
-                    if (_selectedFilterIndex == 3 && !isPaint) return false;
-                    if (_selectedFilterIndex == 4 && !isPlumbing) return false;
-                    if (_selectedFilterIndex == 5 && !isDoors) return false;
-                    if (_selectedFilterIndex == 6 && !isWood) return false;
-                  }
-                  return true;
-                }).toList();
+                      if (_selectedFilterIndex != 0) {
+                        final name = brand.name.toLowerCase();
+                        final id = brand.id.toLowerCase();
+                        final isCement = [
+                          'acc',
+                          'kcp',
+                          'penna',
+                          'ramco',
+                          'ultratech',
+                          'cement',
+                          'ambuja',
+                          'priya'
+                        ].any((k) => name.contains(k) || id.contains(k));
+                        final isSteel = [
+                          'jsw',
+                          'tata',
+                          'vizag',
+                          'sail',
+                          'steel'
+                        ].any((k) => name.contains(k) || id.contains(k));
+                        final isPaint = [
+                          'asian',
+                          'berger',
+                          'nippon',
+                          'nerolac',
+                          'paint'
+                        ].any((k) => name.contains(k) || id.contains(k));
+                        final isPlumbing = [
+                          'jaquar',
+                          'astral',
+                          'supreme',
+                          'plumb',
+                          'pipe'
+                        ].any((k) => name.contains(k) || id.contains(k));
+                        final isDoors = [
+                          'century',
+                          'fenesta',
+                          'saint',
+                          'door',
+                          'glass'
+                        ].any((k) => name.contains(k) || id.contains(k));
+                        final isWood = ['greenply', 'wood', 'board', 'ply']
+                            .any((k) => name.contains(k) || id.contains(k));
 
-                if (filteredBrands.isEmpty) {
-                  return const Center(child: Text('No brands found.'));
-                }
+                        if (_selectedFilterIndex == 1 && !isCement)
+                          return false;
+                        if (_selectedFilterIndex == 2 && !isSteel) return false;
+                        if (_selectedFilterIndex == 3 && !isPaint) return false;
+                        if (_selectedFilterIndex == 4 && !isPlumbing)
+                          return false;
+                        if (_selectedFilterIndex == 5 && !isDoors) return false;
+                        if (_selectedFilterIndex == 6 && !isWood) return false;
+                      }
+                      return true;
+                    }).toList();
 
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: filteredBrands.length,
-                  itemBuilder: (context, index) {
-                    final brand = filteredBrands[index];
-                    return BrandCard(
-                      name: brand.name,
-                      logoUrl: brand.logoUrl,
-                      onTap: () => context.push('/products?brandId=${brand.id}'),
+                    if (filteredBrands.isEmpty) {
+                      return const Center(child: Text('No brands found.'));
+                    }
+
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(16),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: filteredBrands.length,
+                      itemBuilder: (context, index) {
+                        final brand = filteredBrands[index];
+                        return BrandCard(
+                          name: brand.name,
+                          logoUrl: brand.logoUrl,
+                          onTap: () =>
+                              context.push('/products?brandId=${brand.id}'),
+                        );
+                      },
                     );
                   },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
           ),
         ],
       ),
@@ -163,7 +202,8 @@ class _BrandsScreenState extends ConsumerState<BrandsScreen> {
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: isSelected ? AppColors.primary : AppColors.border),
+          side: BorderSide(
+              color: isSelected ? AppColors.primary : AppColors.border),
         ),
       ),
     );

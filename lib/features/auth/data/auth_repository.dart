@@ -15,7 +15,7 @@ class AuthRepository {
 
   Future<String?> loginWithPhone(String phoneNumber) async {
     final completer = Completer<String?>();
-    
+
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -48,8 +48,8 @@ class AuthRepository {
           _verificationId = verificationId;
         },
       );
-      
-      return completer.future;
+
+      return await completer.future;
     } catch (e) {
       debugPrint('Error sending OTP: $e');
       return e.toString();
@@ -61,36 +61,36 @@ class AuthRepository {
       debugPrint('Verification ID is null. Cannot verify OTP.');
       return false;
     }
-    
+
     try {
       final credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
         smsCode: otp,
       );
-      
+
       final userCredential = await _auth.signInWithCredential(credential);
-      
-        if (userCredential.user != null) {
-          final user = userCredential.user!;
-          final token = await user.getIdToken();
-          if (token != null) {
-            await _storage.saveToken(token);
-          }
-          await _storage.saveUserId(user.uid);
-          
-          // Create user document if it doesn't exist
-          final doc = await _firestore.collection('users').doc(user.uid).get();
-          if (!doc.exists) {
-            await _firestore.collection('users').doc(user.uid).set({
-              'email': user.email ?? '',
-              'name': user.displayName ?? 'New User',
-              'phone': user.phoneNumber ?? phoneNumber,
-              'profileImageUrl': user.photoURL ?? '',
-            });
-          }
-          
-          return true;
+
+      if (userCredential.user != null) {
+        final user = userCredential.user!;
+        final token = await user.getIdToken();
+        if (token != null) {
+          await _storage.saveToken(token);
         }
+        await _storage.saveUserId(user.uid);
+
+        // Create user document if it doesn't exist
+        final doc = await _firestore.collection('users').doc(user.uid).get();
+        if (!doc.exists) {
+          await _firestore.collection('users').doc(user.uid).set({
+            'email': user.email ?? '',
+            'name': user.displayName ?? 'New User',
+            'phone': user.phoneNumber ?? phoneNumber,
+            'profileImageUrl': user.photoURL ?? '',
+          });
+        }
+
+        return true;
+      }
       return false;
     } catch (e) {
       debugPrint('OTP Verification error: $e');
@@ -102,15 +102,16 @@ class AuthRepository {
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account != null) {
-        final GoogleSignInAuthentication googleAuth = await account.authentication;
-        
+        final GoogleSignInAuthentication googleAuth =
+            await account.authentication;
+
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        
+
         final userCredential = await _auth.signInWithCredential(credential);
-        
+
         if (userCredential.user != null) {
           final user = userCredential.user!;
           final token = await user.getIdToken();
@@ -118,7 +119,7 @@ class AuthRepository {
             await _storage.saveToken(token);
           }
           await _storage.saveUserId(user.uid);
-          
+
           // Create user document if it doesn't exist
           final doc = await _firestore.collection('users').doc(user.uid).get();
           if (!doc.exists) {
@@ -129,7 +130,7 @@ class AuthRepository {
               'profileImageUrl': user.photoURL ?? '',
             });
           }
-          
+
           return true;
         }
       }
@@ -146,7 +147,7 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      
+
       if (userCredential.user != null) {
         final user = userCredential.user!;
         final token = await user.getIdToken();
@@ -154,7 +155,7 @@ class AuthRepository {
           await _storage.saveToken(token);
         }
         await _storage.saveUserId(user.uid);
-        
+
         // Create user document if it doesn't exist
         final doc = await _firestore.collection('users').doc(user.uid).get();
         if (!doc.exists) {
@@ -178,25 +179,26 @@ class AuthRepository {
     }
   }
 
-  Future<String?> signUpWithEmail(String email, String password, String name) async {
+  Future<String?> signUpWithEmail(
+      String email, String password, String name) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       if (userCredential.user != null) {
         final user = userCredential.user!;
-        
+
         // Update display name
         await user.updateDisplayName(name);
-        
+
         final token = await user.getIdToken();
         if (token != null) {
           await _storage.saveToken(token);
         }
         await _storage.saveUserId(user.uid);
-        
+
         // Create user document
         await _firestore.collection('users').doc(user.uid).set({
           'email': email,
@@ -204,7 +206,7 @@ class AuthRepository {
           'phone': '',
           'profileImageUrl': '',
         });
-        
+
         return null; // Success
       }
       return 'Sign up failed';
@@ -247,7 +249,7 @@ class AuthRepository {
     if (user != null) {
       return true;
     }
-    
+
     final token = await _storage.getToken();
     return token != null && token.isNotEmpty;
   }

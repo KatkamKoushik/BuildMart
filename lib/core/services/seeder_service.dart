@@ -9,7 +9,8 @@ class SeederService {
   Future<void> seedDatabase() async {
     try {
       debugPrint('Loading seeded_data.json...');
-      final String jsonString = await rootBundle.loadString('assets/seeded_data.json');
+      final String jsonString =
+          await rootBundle.loadString('assets/seeded_data.json');
       final Map<String, dynamic> data = jsonDecode(jsonString);
 
       debugPrint('Seeding Brands...');
@@ -22,12 +23,16 @@ class SeederService {
       }
 
       debugPrint('Seeding Categories...');
-      final categoriesSnapshot = await _firestore.collection('categories').get();
+      final categoriesSnapshot =
+          await _firestore.collection('categories').get();
       for (var doc in categoriesSnapshot.docs) {
         await doc.reference.delete();
       }
       for (var category in data['categories']) {
-        await _firestore.collection('categories').doc(category['id']).set(category);
+        await _firestore
+            .collection('categories')
+            .doc(category['id'])
+            .set(category);
       }
 
       debugPrint('Seeding Products...');

@@ -12,8 +12,15 @@ class CitySearchModal extends StatefulWidget {
 class _CitySearchModalState extends State<CitySearchModal> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _popularCities = [
-    'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 
-    'Ahmedabad', 'Chennai', 'Kolkata', 'Surat', 'Pune'
+    'Mumbai',
+    'Delhi',
+    'Bangalore',
+    'Hyderabad',
+    'Ahmedabad',
+    'Chennai',
+    'Kolkata',
+    'Surat',
+    'Pune'
   ];
   List<String> _filteredCities = [];
 
@@ -58,7 +65,10 @@ class _CitySearchModalState extends State<CitySearchModal> {
             children: [
               Text(
                 'Select City',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -80,7 +90,8 @@ class _CitySearchModalState extends State<CitySearchModal> {
               itemBuilder: (context, index) {
                 final city = _filteredCities[index];
                 return ListTile(
-                  leading: const Icon(Icons.location_city, color: AppColors.primary),
+                  leading:
+                      const Icon(Icons.location_city, color: AppColors.primary),
                   title: Text(city),
                   onTap: () {
                     Navigator.pop(context, city);

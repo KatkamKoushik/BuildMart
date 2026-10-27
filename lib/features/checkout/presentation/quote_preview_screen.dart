@@ -14,7 +14,7 @@ class QuotePreviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final userId = userState.value?.id;
-    
+
     if (userId == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Quote Preview')),
@@ -38,7 +38,8 @@ class QuotePreviewScreen extends ConsumerWidget {
             return const Center(child: Text('Your cart is empty.'));
           }
 
-          final subtotal = items.fold<double>(0, (sum, item) => sum + (item.price * item.quantity));
+          final subtotal = items.fold<double>(
+              0, (sum, item) => sum + (item.price * item.quantity));
           final coupon = ref.watch(couponProvider);
           final discount = coupon != null ? 50.0 : 0.0;
           final discountAmount = discount > subtotal ? subtotal : discount;

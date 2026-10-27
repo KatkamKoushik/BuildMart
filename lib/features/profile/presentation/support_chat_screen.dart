@@ -13,7 +13,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   final List<Map<String, dynamic>> _messages = [
     {
       'isUser': false,
-      'text': 'Hi there! 👋 Welcome to BuildMart Support. How can we help you today?',
+      'text':
+          'Hi there! 👋 Welcome to BuildMart Support. How can we help you today?',
       'time': '10:00 AM'
     },
   ];
@@ -37,7 +38,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         setState(() {
           _messages.add({
             'isUser': false,
-            'text': 'Thanks for reaching out! An agent will join this chat shortly to assist you.',
+            'text':
+                'Thanks for reaching out! An agent will join this chat shortly to assist you.',
             'time': 'Just now',
           });
         });
@@ -78,7 +80,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Text('Online', style: TextStyle(fontSize: 12, color: AppColors.success)),
+                    const Text('Online',
+                        style:
+                            TextStyle(fontSize: 12, color: AppColors.success)),
                   ],
                 ),
               ],
@@ -95,17 +99,20 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               itemBuilder: (context, index) {
                 final message = _messages[index];
                 final isUser = message['isUser'] as bool;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Row(
-                    mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    mainAxisAlignment: isUser
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
                     children: [
                       if (!isUser) ...[
                         const CircleAvatar(
                           backgroundColor: AppColors.primary,
                           radius: 12,
-                          child: Icon(Icons.support_agent, color: Colors.white, size: 14),
+                          child: Icon(Icons.support_agent,
+                              color: Colors.white, size: 14),
                         ),
                         const SizedBox(width: 8),
                       ],
@@ -113,10 +120,18 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: isUser ? AppColors.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: isUser
+                                ? AppColors.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(16).copyWith(
-                              bottomRight: isUser ? const Radius.circular(0) : const Radius.circular(16),
-                              bottomLeft: !isUser ? const Radius.circular(0) : const Radius.circular(16),
+                              bottomRight: isUser
+                                  ? const Radius.circular(0)
+                                  : const Radius.circular(16),
+                              bottomLeft: !isUser
+                                  ? const Radius.circular(0)
+                                  : const Radius.circular(16),
                             ),
                           ),
                           child: Column(
@@ -125,7 +140,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                               Text(
                                 message['text'] as String,
                                 style: TextStyle(
-                                  color: isUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                                  color: isUser
+                                      ? Colors.white
+                                      : Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -133,14 +150,19 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                 message['time'] as String,
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: isUser ? Colors.white70 : Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: isUser
+                                      ? Colors.white70
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      if (isUser) const SizedBox(width: 20), // Balance the avatar space
+                      if (isUser)
+                        const SizedBox(width: 20), // Balance the avatar space
                     ],
                   ),
                 );
@@ -172,8 +194,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        fillColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       onSubmitted: (_) => _sendMessage(),
                     ),

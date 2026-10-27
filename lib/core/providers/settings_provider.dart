@@ -26,16 +26,17 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   Future<void> setThemeMode(ThemeMode mode) async {
     final prefs = ref.read(sharedPreferencesProvider);
     state = mode;
-    
+
     String themeStr = 'system';
     if (mode == ThemeMode.light) themeStr = 'light';
     if (mode == ThemeMode.dark) themeStr = 'dark';
-    
+
     await prefs.setString(_themeKey, themeStr);
   }
 }
 
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
+final themeModeProvider =
+    StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
   return ThemeModeNotifier(ref);
 });
 

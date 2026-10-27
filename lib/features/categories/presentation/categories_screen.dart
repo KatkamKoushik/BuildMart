@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../data/category_repository.dart';
 import '../../../shared/widgets/network_image_widget.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/utils/category_translator.dart';
 
@@ -35,7 +34,8 @@ class CategoriesScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final category = categories[index];
               return GestureDetector(
-                onTap: () => context.push('/products?categoryId=${category.id}'),
+                onTap: () =>
+                    context.push('/products?categoryId=${category.id}'),
                 child: Column(
                   children: [
                     Expanded(
@@ -64,7 +64,10 @@ class CategoriesScreen extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Text(
                       translateCategory(context, category.name),
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, fontSize: 11),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(fontWeight: FontWeight.w600, fontSize: 11),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

@@ -12,9 +12,10 @@ class OrderTrackingScreen extends StatefulWidget {
 }
 
 class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
-  final LatLng _agentLocation = const LatLng(17.4359, 78.4042); // Example Jubilee Hills
+  final LatLng _agentLocation =
+      const LatLng(17.4359, 78.4042); // Example Jubilee Hills
   final LatLng _destinationLocation = const LatLng(17.4330, 78.4010);
-  
+
   late GoogleMapController mapController;
 
   void _onMapCreated(GoogleMapController controller) {
@@ -29,7 +30,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         actions: [
           TextButton(
             onPressed: () {},
-            child: const Text('Help', style: TextStyle(color: AppColors.primary)),
+            child:
+                const Text('Help', style: TextStyle(color: AppColors.primary)),
           ),
         ],
       ),
@@ -48,8 +50,16 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 zoom: 15.0,
               ),
               markers: {
-                Marker(markerId: const MarkerId('agent'), position: _agentLocation, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow)),
-                Marker(markerId: const MarkerId('destination'), position: _destinationLocation, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)),
+                Marker(
+                    markerId: const MarkerId('agent'),
+                    position: _agentLocation,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueYellow)),
+                Marker(
+                    markerId: const MarkerId('destination'),
+                    position: _destinationLocation,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueRed)),
               },
               polylines: {
                 Polyline(
@@ -63,7 +73,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               myLocationButtonEnabled: false,
             ),
           ),
-          
+
           // Draggable Sheet overlay
           DraggableScrollableSheet(
             initialChildSize: 0.6,
@@ -74,7 +84,12 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 decoration: const BoxDecoration(
                   color: AppColors.background,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, -5))
+                  ],
                 ),
                 child: CustomScrollView(
                   controller: scrollController,
@@ -99,37 +114,68 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Status Header
-                            Text('Arriving in 15 mins', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                            Text('Arriving in 15 mins',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
-                            Text('Your order is out for delivery', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textLight)),
+                            Text('Your order is out for delivery',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: AppColors.textLight)),
                             const SizedBox(height: 24),
-                            
+
                             // Delivery Agent Details
                             BuildMartCard(
                               child: Row(
                                 children: [
                                   const CircleAvatar(
                                     radius: 24,
-                                    backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                                    backgroundImage: NetworkImage(
+                                        'https://via.placeholder.com/150'),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Ramesh Kumar', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                        const Text('Ramesh Kumar',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16)),
                                         Row(
                                           children: [
-                                            const Text('TS09 AB 1234', style: TextStyle(color: AppColors.textLight, fontSize: 12)),
+                                            const Text('TS09 AB 1234',
+                                                style: TextStyle(
+                                                    color: AppColors.textLight,
+                                                    fontSize: 12)),
                                             const SizedBox(width: 8),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.primary
+                                                      .withValues(alpha: 0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4)),
                                               child: const Row(
                                                 children: [
-                                                  Icon(Icons.star, size: 12, color: AppColors.primary),
+                                                  Icon(Icons.star,
+                                                      size: 12,
+                                                      color: AppColors.primary),
                                                   SizedBox(width: 2),
-                                                  Text('4.9', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary)),
+                                                  Text('4.9',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: AppColors
+                                                              .primary)),
                                                 ],
                                               ),
                                             ),
@@ -144,7 +190,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                     child: CircleAvatar(
                                       backgroundColor: AppColors.primary,
                                       child: IconButton(
-                                        icon: const Icon(Icons.call, color: AppColors.accent),
+                                        icon: const Icon(Icons.call,
+                                            color: AppColors.accent),
                                         onPressed: () {},
                                       ),
                                     ),
@@ -153,7 +200,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            
+
                             // OTP Verification
                             Container(
                               padding: const EdgeInsets.all(16),
@@ -163,34 +210,60 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                 border: Border.all(color: AppColors.border),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('Delivery OTP', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.textLight)),
+                                      Text('Delivery OTP',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall
+                                              ?.copyWith(
+                                                  color: AppColors.textLight)),
                                       const SizedBox(height: 4),
-                                      Text('8 4 9 2', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 4)),
+                                      Text('8 4 9 2',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 4)),
                                     ],
                                   ),
                                   ElevatedButton(
                                     // Normally disabled until agent marks as arrived, used here to advance flow
-                                    onPressed: () => context.push('/delivery-success'),
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: AppColors.accent),
+                                    onPressed: () =>
+                                        context.push('/delivery-success'),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        foregroundColor: AppColors.accent),
                                     child: const Text('Verify (Demo)'),
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 24),
-                            
+
                             // Order Timeline
-                            Text('Order Timeline', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                            Text('Order Timeline',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 16),
-                            _buildTimelineStep(context, 'Order Confirmed', '10:30 AM, 12 Oct', true),
-                            _buildTimelineStep(context, 'Order Packed', '11:15 AM, 12 Oct', true),
-                            _buildTimelineStep(context, 'Out for Delivery', '12:00 PM, 12 Oct', true, isActive: true),
-                            _buildTimelineStep(context, 'Delivered', 'Pending', false, isLast: true),
+                            _buildTimelineStep(context, 'Order Confirmed',
+                                '10:30 AM, 12 Oct', true),
+                            _buildTimelineStep(context, 'Order Packed',
+                                '11:15 AM, 12 Oct', true),
+                            _buildTimelineStep(context, 'Out for Delivery',
+                                '12:00 PM, 12 Oct', true,
+                                isActive: true),
+                            _buildTimelineStep(
+                                context, 'Delivered', 'Pending', false,
+                                isLast: true),
                             const SizedBox(height: 40),
                           ],
                         ),
@@ -206,7 +279,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
     );
   }
 
-  Widget _buildTimelineStep(BuildContext context, String title, String subtitle, bool isCompleted, {bool isLast = false, bool isActive = false}) {
+  Widget _buildTimelineStep(
+      BuildContext context, String title, String subtitle, bool isCompleted,
+      {bool isLast = false, bool isActive = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,10 +292,16 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               height: 24,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isCompleted ? AppColors.success : AppColors.secondaryBackground,
-                border: isCompleted ? null : Border.all(color: AppColors.border),
+                color: isCompleted
+                    ? AppColors.success
+                    : AppColors.secondaryBackground,
+                border:
+                    isCompleted ? null : Border.all(color: AppColors.border),
               ),
-              child: isCompleted ? const Icon(Icons.check, size: 16, color: AppColors.background) : null,
+              child: isCompleted
+                  ? const Icon(Icons.check,
+                      size: 16, color: AppColors.background)
+                  : null,
             ),
             if (!isLast)
               Container(
@@ -237,14 +318,19 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                color: isCompleted || isActive ? AppColors.text : AppColors.textLight,
-              ),
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                    color: isCompleted || isActive
+                        ? AppColors.text
+                        : AppColors.textLight,
+                  ),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textLight),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: AppColors.textLight),
             ),
           ],
         ),

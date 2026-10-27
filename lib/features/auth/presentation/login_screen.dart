@@ -15,6 +15,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 enum AuthMethod { phone, email }
+
 enum AuthMode { login, signup }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
@@ -88,9 +89,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     String? error;
 
     if (_authMode == AuthMode.login) {
-      error = await repo.loginWithEmail(_emailController.text, _passwordController.text);
+      error = await repo.loginWithEmail(
+          _emailController.text, _passwordController.text);
     } else {
-      error = await repo.signUpWithEmail(_emailController.text, _passwordController.text, _nameController.text);
+      error = await repo.signUpWithEmail(_emailController.text,
+          _passwordController.text, _nameController.text);
     }
 
     if (!mounted) return;
@@ -107,7 +110,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -180,25 +182,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 8.0, top: 4),
+                              padding:
+                                  const EdgeInsets.only(right: 8.0, top: 4),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      final current = ref.read(themeModeProvider);
+                                      final current =
+                                          ref.read(themeModeProvider);
                                       if (current == ThemeMode.dark) {
-                                        ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.light);
+                                        ref
+                                            .read(themeModeProvider.notifier)
+                                            .setThemeMode(ThemeMode.light);
                                       } else if (current == ThemeMode.light) {
-                                        ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.system);
+                                        ref
+                                            .read(themeModeProvider.notifier)
+                                            .setThemeMode(ThemeMode.system);
                                       } else {
-                                        ref.read(themeModeProvider.notifier).setThemeMode(ThemeMode.dark);
+                                        ref
+                                            .read(themeModeProvider.notifier)
+                                            .setThemeMode(ThemeMode.dark);
                                       }
                                     },
                                     icon: Icon(
-                                      ref.watch(themeModeProvider) == ThemeMode.dark
+                                      ref.watch(themeModeProvider) ==
+                                              ThemeMode.dark
                                           ? Icons.dark_mode
-                                          : ref.watch(themeModeProvider) == ThemeMode.light
+                                          : ref.watch(themeModeProvider) ==
+                                                  ThemeMode.light
                                               ? Icons.light_mode
                                               : Icons.brightness_auto,
                                       color: Colors.white70,
@@ -206,14 +218,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                                   ),
                                   PopupMenuButton<String>(
-                                    icon: const Icon(Icons.language, color: Colors.white70, size: 20),
+                                    icon: const Icon(Icons.language,
+                                        color: Colors.white70, size: 20),
                                     onSelected: (val) {
-                                      ref.read(localeProvider.notifier).setLocale(Locale(val));
+                                      ref
+                                          .read(localeProvider.notifier)
+                                          .setLocale(Locale(val));
                                     },
                                     itemBuilder: (context) => [
-                                      const PopupMenuItem(value: 'en', child: Text('English')),
-                                      const PopupMenuItem(value: 'hi', child: Text('हिंदी')),
-                                      const PopupMenuItem(value: 'te', child: Text('తెలుగు')),
+                                      const PopupMenuItem(
+                                          value: 'en', child: Text('English')),
+                                      const PopupMenuItem(
+                                          value: 'hi', child: Text('हिंदी')),
+                                      const PopupMenuItem(
+                                          value: 'te', child: Text('తెలుగు')),
                                     ],
                                   ),
                                 ],
@@ -280,9 +298,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             color: Colors.white60,
                             letterSpacing: 3.5,
                           ),
-                        )
-                            .animate()
-                            .fade(delay: 250.ms, duration: 400.ms),
+                        ).animate().fade(delay: 250.ms, duration: 400.ms),
 
                         const Spacer(),
                       ],
@@ -303,7 +319,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           // Section headline
                           Text(
-                            _authMode == AuthMode.login ? 'Sign In to Your Account' : 'Create an Account',
+                            _authMode == AuthMode.login
+                                ? 'Sign In to Your Account'
+                                : 'Create an Account',
                             style: const TextStyle(
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w700,
@@ -318,9 +336,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           const SizedBox(height: 4),
 
                           Text(
-                            _authMethod == AuthMethod.phone 
+                            _authMethod == AuthMethod.phone
                                 ? 'Enter your mobile number to continue'
-                                : _authMode == AuthMode.login 
+                                : _authMode == AuthMode.login
                                     ? 'Enter your email and password to sign in'
                                     : 'Fill in your details to create an account',
                             style: const TextStyle(
@@ -329,7 +347,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: Colors.white54,
                             ),
                           )
-                              .animate(key: ValueKey('subtitle_$_authMethod$_authMode'))
+                              .animate(
+                                  key: ValueKey(
+                                      'subtitle_$_authMethod$_authMode'))
                               .fade(duration: 300.ms),
 
                           const SizedBox(height: 24),
@@ -344,11 +364,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               children: [
                                 Expanded(
                                   child: GestureDetector(
-                                    onTap: () => setState(() => _authMethod = AuthMethod.phone),
+                                    onTap: () => setState(
+                                        () => _authMethod = AuthMethod.phone),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
                                       decoration: BoxDecoration(
-                                        color: _authMethod == AuthMethod.phone ? AppColors.primary : Colors.transparent,
+                                        color: _authMethod == AuthMethod.phone
+                                            ? AppColors.primary
+                                            : Colors.transparent,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       alignment: Alignment.center,
@@ -356,7 +380,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         'Phone',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          color: _authMethod == AuthMethod.phone ? Colors.black : Colors.white,
+                                          color: _authMethod == AuthMethod.phone
+                                              ? Colors.black
+                                              : Colors.white,
                                         ),
                                       ),
                                     ),
@@ -364,11 +390,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                                 Expanded(
                                   child: GestureDetector(
-                                    onTap: () => setState(() => _authMethod = AuthMethod.email),
+                                    onTap: () => setState(
+                                        () => _authMethod = AuthMethod.email),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
                                       decoration: BoxDecoration(
-                                        color: _authMethod == AuthMethod.email ? AppColors.primary : Colors.transparent,
+                                        color: _authMethod == AuthMethod.email
+                                            ? AppColors.primary
+                                            : Colors.transparent,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       alignment: Alignment.center,
@@ -376,7 +406,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         'Email',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          color: _authMethod == AuthMethod.email ? Colors.black : Colors.white,
+                                          color: _authMethod == AuthMethod.email
+                                              ? Colors.black
+                                              : Colors.white,
                                         ),
                                       ),
                                     ),
@@ -456,7 +488,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: _isLoading ? null : (_authMethod == AuthMethod.phone ? _onLogin : _onEmailAuth),
+                              onPressed: _isLoading
+                                  ? null
+                                  : (_authMethod == AuthMethod.phone
+                                      ? _onLogin
+                                      : _onEmailAuth),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.black,
@@ -477,10 +513,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       ),
                                     )
                                   : Text(
-                                      _authMethod == AuthMethod.phone 
+                                      _authMethod == AuthMethod.phone
                                           ? 'Continue'
-                                          : _authMode == AuthMode.login 
-                                              ? 'Sign In' 
+                                          : _authMode == AuthMode.login
+                                              ? 'Sign In'
                                               : 'Create Account',
                                       style: const TextStyle(
                                         fontFamily: 'Roboto',
@@ -491,7 +527,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ),
                             ),
                           )
-                              .animate(key: ValueKey('btn_$_authMethod$_authMode'))
+                              .animate(
+                                  key: ValueKey('btn_$_authMethod$_authMode'))
                               .fade(duration: 400.ms)
                               .slideY(begin: 0.2, curve: Curves.easeOut),
 
@@ -501,12 +538,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    _authMode = _authMode == AuthMode.login ? AuthMode.signup : AuthMode.login;
+                                    _authMode = _authMode == AuthMode.login
+                                        ? AuthMode.signup
+                                        : AuthMode.login;
                                   });
                                 },
                                 child: Text(
-                                  _authMode == AuthMode.login 
-                                      ? "Don't have an account? Sign Up" 
+                                  _authMode == AuthMode.login
+                                      ? "Don't have an account? Sign Up"
                                       : 'Already have an account? Sign In',
                                   style: const TextStyle(color: Colors.white70),
                                 ),
@@ -521,11 +560,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               Expanded(
                                 child: Divider(
-                                    color: Colors.white.withValues(alpha: 0.15)),
+                                    color:
+                                        Colors.white.withValues(alpha: 0.15)),
                               ),
                               const Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 14.0),
+                                padding: EdgeInsets.symmetric(horizontal: 14.0),
                                 child: Text(
                                   'OR',
                                   style: TextStyle(
@@ -538,7 +577,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                               Expanded(
                                 child: Divider(
-                                    color: Colors.white.withValues(alpha: 0.15)),
+                                    color:
+                                        Colors.white.withValues(alpha: 0.15)),
                               ),
                             ],
                           ).animate().fade(delay: 580.ms, duration: 400.ms),
@@ -671,18 +711,16 @@ class _DarkTextField extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              BorderSide(color: Colors.white.withValues(alpha: 0.15), width: 1.2),
+          borderSide: BorderSide(
+              color: Colors.white.withValues(alpha: 0.15), width: 1.2),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: AppColors.primary, width: 1.8),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: AppColors.error, width: 1.2),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.2),
         ),
       ),
     );

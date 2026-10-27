@@ -3,7 +3,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'delivery_model.freezed.dart';
 part 'delivery_model.g.dart';
 
-enum DeliveryStatus { assigned, pickedUp, inTransit, outForDelivery, delivered, failed }
+enum DeliveryStatus {
+  assigned,
+  pickedUp,
+  inTransit,
+  outForDelivery,
+  delivered,
+  failed
+}
 
 @freezed
 class DeliveryAgentModel with _$DeliveryAgentModel {
@@ -16,7 +23,8 @@ class DeliveryAgentModel with _$DeliveryAgentModel {
     String? photoUrl,
   }) = _DeliveryAgentModel;
 
-  factory DeliveryAgentModel.fromJson(Map<String, dynamic> json) => _$DeliveryAgentModelFromJson(json);
+  factory DeliveryAgentModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryAgentModelFromJson(json);
 }
 
 @freezed
@@ -33,5 +41,6 @@ class DeliveryModel with _$DeliveryModel {
     DeliveryAgentModel? agent,
   }) = _DeliveryModel;
 
-  factory DeliveryModel.fromJson(Map<String, dynamic> json) => _$DeliveryModelFromJson(json);
+  factory DeliveryModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryModelFromJson(json);
 }

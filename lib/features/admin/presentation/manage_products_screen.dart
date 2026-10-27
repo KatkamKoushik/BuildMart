@@ -46,7 +46,9 @@ class ManageProductsScreen extends ConsumerWidget {
                   width: 50,
                   height: 50,
                   child: NetworkImageWidget(
-                    imageUrl: product.imageUrls.isNotEmpty ? product.imageUrls.first : '',
+                    imageUrl: product.imageUrls.isNotEmpty
+                        ? product.imageUrls.first
+                        : '',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -59,7 +61,8 @@ class ManageProductsScreen extends ConsumerWidget {
                       icon: const Icon(Icons.edit, color: Colors.blue),
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Edit feature coming soon!')),
+                          const SnackBar(
+                              content: Text('Edit feature coming soon!')),
                         );
                       },
                     ),
@@ -79,9 +82,9 @@ class ManageProductsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
         onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Add Product feature coming soon!')),
-            );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Add Product feature coming soon!')),
+          );
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -93,7 +96,8 @@ class ManageProductsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Product'),
-        content: const Text('Are you sure you want to delete this product? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to delete this product? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -103,10 +107,14 @@ class ManageProductsScreen extends ConsumerWidget {
             onPressed: () async {
               Navigator.pop(context);
               try {
-                await FirebaseFirestore.instance.collection('products').doc(productId).delete();
+                await FirebaseFirestore.instance
+                    .collection('products')
+                    .doc(productId)
+                    .delete();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Product deleted successfully.')),
+                    const SnackBar(
+                        content: Text('Product deleted successfully.')),
                   );
                 }
               } catch (e) {

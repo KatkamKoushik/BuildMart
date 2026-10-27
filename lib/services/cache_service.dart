@@ -34,7 +34,7 @@ class CacheService {
     final box = Hive.box(boxName);
     await box.delete(key);
   }
-  
+
   // Clear all
   Future<void> clearAll() async {
     await Hive.box(_userBox).clear();

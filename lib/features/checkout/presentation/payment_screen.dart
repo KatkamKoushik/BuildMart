@@ -20,7 +20,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool _isProcessing = false;
 
   final List<Map<String, dynamic>> _methods = [
-    {'title': 'Razorpay (UPI, Cards, NetBanking)', 'icon': Icons.account_balance_wallet},
+    {
+      'title': 'Razorpay (UPI, Cards, NetBanking)',
+      'icon': Icons.account_balance_wallet
+    },
     {'title': 'Cash on Delivery', 'icon': Icons.local_shipping},
   ];
 
@@ -47,14 +50,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _handlePaymentError(PaymentFailureResponse response) {
     setState(() => _isProcessing = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Payment Failed: ${response.message}', style: const TextStyle(color: Colors.white)), backgroundColor: AppColors.error),
+      SnackBar(
+          content: Text('Payment Failed: ${response.message}',
+              style: const TextStyle(color: Colors.white)),
+          backgroundColor: AppColors.error),
     );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     setState(() => _isProcessing = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('External Wallet Selected: ${response.walletName}')),
+      SnackBar(
+          content: Text('External Wallet Selected: ${response.walletName}')),
     );
   }
 
@@ -67,7 +74,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     // Razorpay Flow
     setState(() => _isProcessing = true);
-    
+
     // In a real app, you would fetch the order_id from your backend here.
     // We are proceeding with a client-side mock for the prototype.
     var options = {
@@ -76,10 +83,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       'amount': (widget.amount * 100).toInt(), // Amount in paise
       'name': 'BuildMart',
       'description': 'Order Payment',
-      'prefill': {
-        'contact': '9876543210',
-        'email': 'customer@buildmart.com'
-      },
+      'prefill': {'contact': '9876543210', 'email': 'customer@buildmart.com'},
       'theme': {
         'color': '#FFC107' // App primary color
       }
@@ -104,11 +108,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Amount to Pay', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.textLight)),
+            Text('Amount to Pay',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: AppColors.textLight)),
             const SizedBox(height: 4),
-            Text('₹${widget.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)),
+            Text('₹${widget.amount.toStringAsFixed(2)}',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold, color: AppColors.primary)),
             const SizedBox(height: 32),
-            Text('Select Payment Method', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Select Payment Method',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ...List.generate(_methods.length, (index) {
               return PaymentMethodCard(

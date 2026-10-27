@@ -42,33 +42,40 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
           throw Exception('Location permissions are denied');
         }
       }
-      
+
       if (permission == LocationPermission.deniedForever) {
         throw Exception('Location permissions are permanently denied.');
-      } 
+      }
 
       Position position = await Geolocator.getCurrentPosition();
-      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-      
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        final detectedLoc = '${place.locality ?? ''}, ${place.administrativeArea ?? ''} ${place.postalCode ?? ''}';
-        
+        final detectedLoc =
+            '${place.locality ?? ''}, ${place.administrativeArea ?? ''} ${place.postalCode ?? ''}';
+
         final user = ref.read(userProvider).value;
         if (user != null) {
-          await ref.read(userRepositoryProvider).addSavedAddress(user.id, detectedLoc);
+          await ref
+              .read(userRepositoryProvider)
+              .addSavedAddress(user.id, detectedLoc);
         }
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Detected: $detectedLoc'), backgroundColor: AppColors.success),
+            SnackBar(
+                content: Text('Detected: $detectedLoc'),
+                backgroundColor: AppColors.success),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error),
+          SnackBar(
+              content: Text('Error: $e'), backgroundColor: AppColors.error),
         );
       }
     } finally {
@@ -81,19 +88,25 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   void _submitPincode(String pincode) async {
     if (pincode.isEmpty || pincode.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid pincode'), backgroundColor: AppColors.error),
+        const SnackBar(
+            content: Text('Please enter a valid pincode'),
+            backgroundColor: AppColors.error),
       );
       return;
     }
-    
+
     final user = ref.read(userProvider).value;
     if (user != null) {
-      await ref.read(userRepositoryProvider).addSavedAddress(user.id, 'Pincode: $pincode');
+      await ref
+          .read(userRepositoryProvider)
+          .addSavedAddress(user.id, 'Pincode: $pincode');
     }
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pincode $pincode applied!'), backgroundColor: AppColors.success),
+        SnackBar(
+            content: Text('Pincode $pincode applied!'),
+            backgroundColor: AppColors.success),
       );
     }
   }
@@ -121,7 +134,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                 Expanded(child: Divider(color: AppColors.border)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text('OR', style: TextStyle(color: AppColors.textLight)),
+                  child:
+                      Text('OR', style: TextStyle(color: AppColors.textLight)),
                 ),
                 Expanded(child: Divider(color: AppColors.border)),
               ],
@@ -129,7 +143,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
             const SizedBox(height: 24),
             Text(
               'Enter Pincode',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
@@ -150,8 +167,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.background,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Apply'),
                 ),
@@ -160,7 +179,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
             const SizedBox(height: 24),
             Text(
               'Select City Manually',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Container(
@@ -185,15 +207,19 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       child: const CitySearchModal(),
                     ),
                   );
-                  
+
                   if (selectedCity != null && mounted) {
                     final user = ref.read(userProvider).value;
                     if (user != null) {
-                      await ref.read(userRepositoryProvider).addSavedAddress(user.id, selectedCity);
+                      await ref
+                          .read(userRepositoryProvider)
+                          .addSavedAddress(user.id, selectedCity);
                     }
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('City selected: $selectedCity'), backgroundColor: AppColors.success),
+                        SnackBar(
+                            content: Text('City selected: $selectedCity'),
+                            backgroundColor: AppColors.success),
                       );
                     }
                   }
@@ -203,7 +229,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
             const SizedBox(height: 32),
             Text(
               'Saved Locations',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ...ref.watch(addressesProvider).map((addr) => _buildSavedLocation(
@@ -211,7 +240,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                   ref,
                   addr.title,
                   addr.addressLine.replaceAll('\n', ', '),
-                  addr.title.toLowerCase().contains('home') ? Icons.home : Icons.work,
+                  addr.title.toLowerCase().contains('home')
+                      ? Icons.home
+                      : Icons.work,
                   addr,
                 )),
           ],
@@ -220,22 +251,29 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     );
   }
 
-  Widget _buildSavedLocation(BuildContext context, WidgetRef ref, String title, String address, IconData icon, AddressModel addr) {
+  Widget _buildSavedLocation(BuildContext context, WidgetRef ref, String title,
+      String address, IconData icon, AddressModel addr) {
     final selectedAddress = ref.watch(selectedAddressProvider);
     final isSelected = selectedAddress.id == addr.id;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : AppColors.background,
-        border: Border.all(color: isSelected ? AppColors.primary : AppColors.border),
+        color: isSelected
+            ? AppColors.primary.withValues(alpha: 0.1)
+            : AppColors.background,
+        border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.border),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
         leading: Icon(icon, color: AppColors.primary),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(address, style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
-        trailing: isSelected ? const Icon(Icons.check_circle, color: AppColors.primary) : const Icon(Icons.more_vert),
+        subtitle: Text(address,
+            style: const TextStyle(color: AppColors.textLight, fontSize: 12)),
+        trailing: isSelected
+            ? const Icon(Icons.check_circle, color: AppColors.primary)
+            : const Icon(Icons.more_vert),
         onTap: () {
           ref.read(selectedAddressIdProvider.notifier).state = addr.id;
         },

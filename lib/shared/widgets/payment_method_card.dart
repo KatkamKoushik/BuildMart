@@ -18,19 +18,26 @@ class PaymentMethodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Theme.of(context).colorScheme.surface,
+        color: isSelected
+            ? AppColors.primary.withValues(alpha: 0.1)
+            : Theme.of(context).colorScheme.surface,
         border: Border.all(
-          color: isSelected ? AppColors.primary : (isDarkMode ? AppColors.darkBorder : AppColors.border),
+          color: isSelected
+              ? AppColors.primary
+              : (isDarkMode ? AppColors.darkBorder : AppColors.border),
           width: isSelected ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: Icon(icon, color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.onSurfaceVariant),
+        leading: Icon(icon,
+            color: isSelected
+                ? AppColors.primary
+                : Theme.of(context).colorScheme.onSurfaceVariant),
         title: Text(
           title,
           style: TextStyle(
@@ -40,7 +47,8 @@ class PaymentMethodCard extends StatelessWidget {
         ),
         trailing: isSelected
             ? const Icon(Icons.check_circle, color: AppColors.primary)
-            : Icon(Icons.radio_button_unchecked, color: isDarkMode ? AppColors.darkBorder : AppColors.border),
+            : Icon(Icons.radio_button_unchecked,
+                color: isDarkMode ? AppColors.darkBorder : AppColors.border),
         onTap: onTap,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),

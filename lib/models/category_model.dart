@@ -12,5 +12,6 @@ class CategoryModel with _$CategoryModel {
     @Default([]) List<String> subcategories,
   }) = _CategoryModel;
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) => _$CategoryModelFromJson(json);
+  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
+      _$CategoryModelFromJson(json);
 }

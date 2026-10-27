@@ -17,5 +17,6 @@ class CartItemModel with _$CartItemModel {
     @Default('unknown') String shopId,
   }) = _CartItemModel;
 
-  factory CartItemModel.fromJson(Map<String, dynamic> json) => _$CartItemModelFromJson(json);
+  factory CartItemModel.fromJson(Map<String, dynamic> json) =>
+      _$CartItemModelFromJson(json);
 }

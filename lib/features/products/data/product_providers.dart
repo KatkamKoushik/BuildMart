@@ -18,7 +18,8 @@ class WishlistNotifier extends StateNotifier<Set<String>> {
   final FirebaseAuth _auth;
   static const String _key = 'wishlist_ids';
 
-  WishlistNotifier(this._prefs, this._firestore, this._auth) : super(_load(_prefs)) {
+  WishlistNotifier(this._prefs, this._firestore, this._auth)
+      : super(_load(_prefs)) {
     _syncFromCloud();
   }
 
@@ -71,7 +72,8 @@ class WishlistNotifier extends StateNotifier<Set<String>> {
   }
 }
 
-final wishlistProvider = StateNotifierProvider<WishlistNotifier, Set<String>>((ref) {
+final wishlistProvider =
+    StateNotifierProvider<WishlistNotifier, Set<String>>((ref) {
   return WishlistNotifier(
     ref.watch(sharedPreferencesProvider),
     FirebaseFirestore.instance,
@@ -86,7 +88,8 @@ class RecentlyViewedNotifier extends StateNotifier<List<ProductModel>> {
   final FirebaseAuth _auth;
   static const String _key = 'recently_viewed_products';
 
-  RecentlyViewedNotifier(this._prefs, this._firestore, this._auth) : super(_load(_prefs)) {
+  RecentlyViewedNotifier(this._prefs, this._firestore, this._auth)
+      : super(_load(_prefs)) {
     _syncFromCloud();
   }
 
@@ -104,11 +107,12 @@ class RecentlyViewedNotifier extends StateNotifier<List<ProductModel>> {
           final cloudList = (doc.data()!['recently_viewed'] as List)
               .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
               .toList();
-          
+
           // Merge logic: keep local if more recent, otherwise use cloud (simplified: just use cloud if available and larger)
           if (cloudList.length > state.length) {
             state = cloudList;
-            _prefs.setStringList(_key, state.map((p) => jsonEncode(p.toJson())).toList());
+            _prefs.setStringList(
+                _key, state.map((p) => jsonEncode(p.toJson())).toList());
           }
         }
       } catch (e) {
@@ -134,20 +138,22 @@ class RecentlyViewedNotifier extends StateNotifier<List<ProductModel>> {
     // Remove if already exists so we can move it to the front
     final currentList = state.where((p) => p.id != product.id).toList();
     currentList.insert(0, product);
-    
+
     // Keep only the last 15 products
     if (currentList.length > 15) {
       state = currentList.sublist(0, 15);
     } else {
       state = currentList;
     }
-    
-    _prefs.setStringList(_key, state.map((p) => jsonEncode(p.toJson())).toList());
+
+    _prefs.setStringList(
+        _key, state.map((p) => jsonEncode(p.toJson())).toList());
     _syncToCloud();
   }
 }
 
-final recentlyViewedProvider = StateNotifierProvider<RecentlyViewedNotifier, List<ProductModel>>((ref) {
+final recentlyViewedProvider =
+    StateNotifierProvider<RecentlyViewedNotifier, List<ProductModel>>((ref) {
   return RecentlyViewedNotifier(
     ref.watch(sharedPreferencesProvider),
     FirebaseFirestore.instance,
@@ -174,6 +180,7 @@ class CompareProductsNotifier extends StateNotifier<List<ProductModel>> {
   }
 }
 
-final compareProductsProvider = StateNotifierProvider<CompareProductsNotifier, List<ProductModel>>((ref) {
+final compareProductsProvider =
+    StateNotifierProvider<CompareProductsNotifier, List<ProductModel>>((ref) {
   return CompareProductsNotifier();
 });

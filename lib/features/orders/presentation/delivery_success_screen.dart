@@ -35,7 +35,10 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
               const SizedBox(height: 24),
               Text(
                 'Delivered Successfully!',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -45,9 +48,10 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
               const SizedBox(height: 40),
               const Divider(),
               const SizedBox(height: 24),
-              
+
               // Rating Section
-              const Text('How was your experience?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              const Text('How was your experience?',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +71,7 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
                 }),
               ),
               const SizedBox(height: 16),
-              
+
               if (_rating > 0) ...[
                 const BuildMartTextField(
                   hintText: 'Write a review (optional)',
@@ -78,20 +82,25 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Review Submitted!')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Review Submitted!')));
                     },
-                    child: const Text('Submit Review', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+                    child: const Text('Submit Review',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary)),
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 40),
-              
+
               // Action Buttons
               BuildMartButton(
                 text: 'Repeat Order',
                 icon: Icons.replay,
-                onPressed: () => context.go('/cart'), // Navigates to cart as mock for repeat
+                onPressed: () =>
+                    context.go('/cart'), // Navigates to cart as mock for repeat
               ),
               const SizedBox(height: 16),
               BuildMartButton(

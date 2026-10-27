@@ -6,7 +6,8 @@ import '../models/order_model.dart';
 import '../core/error/failures.dart';
 
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
-  return OrderRepository(FirebaseFirestore.instance, ref.read(cacheServiceProvider));
+  return OrderRepository(
+      FirebaseFirestore.instance, ref.read(cacheServiceProvider));
 });
 
 class OrderRepository {
@@ -17,9 +18,10 @@ class OrderRepository {
 
   Future<OrderModel> getOrderById(String orderId) async {
     final cacheKey = 'order_$orderId';
-    
+
     // Check Cache
-    final cachedData = _cacheService.readData(_cacheService.ordersBox, cacheKey);
+    final cachedData =
+        _cacheService.readData(_cacheService.ordersBox, cacheKey);
     if (cachedData != null) {
       try {
         return OrderModel.fromJson(jsonDecode(cachedData));
@@ -31,19 +33,19 @@ class OrderRepository {
     // Network Request
     try {
       final doc = await _firestore.collection('orders').doc(orderId).get();
-      
+
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         data['id'] = doc.id;
         final order = OrderModel.fromJson(data);
-        
+
         // Update Cache
         await _cacheService.writeData(
-          _cacheService.ordersBox, 
-          cacheKey, 
+          _cacheService.ordersBox,
+          cacheKey,
           jsonEncode(data),
         );
-        
+
         return order;
       } else {
         throw const ServerFailure('Failed to fetch order');
@@ -60,10 +62,12 @@ class OrderRepository {
         final Map<String, DocumentSnapshot> productDocs = {};
         for (final group in order.shopGroups) {
           for (final item in group.items) {
-            final docRef = _firestore.collection('products').doc(item.product.id);
+            final docRef =
+                _firestore.collection('products').doc(item.product.id);
             final docSnapshot = await transaction.get(docRef);
             if (!docSnapshot.exists) {
-              throw ServerFailure('Product ${item.product.name} no longer exists');
+              throw ServerFailure(
+                  'Product ${item.product.name} no longer exists');
             }
             productDocs[item.product.id] = docSnapshot;
           }
@@ -72,9 +76,11 @@ class OrderRepository {
         // 2. Verify stock
         for (final group in order.shopGroups) {
           for (final item in group.items) {
-            final docData = productDocs[item.product.id]!.data() as Map<String, dynamic>;
-            final currentStock = (docData['stockQuantity'] as num?)?.toInt() ?? 0;
-            
+            final docData =
+                productDocs[item.product.id]!.data() as Map<String, dynamic>;
+            final currentStock =
+                (docData['stockQuantity'] as num?)?.toInt() ?? 0;
+
             if (currentStock < item.quantity) {
               throw ServerFailure('Not enough stock for ${item.product.name}');
             }
@@ -84,10 +90,13 @@ class OrderRepository {
         // 3. Decrement stock
         for (final group in order.shopGroups) {
           for (final item in group.items) {
-            final docRef = _firestore.collection('products').doc(item.product.id);
-            final docData = productDocs[item.product.id]!.data() as Map<String, dynamic>;
-            final currentStock = (docData['stockQuantity'] as num?)?.toInt() ?? 0;
-            
+            final docRef =
+                _firestore.collection('products').doc(item.product.id);
+            final docData =
+                productDocs[item.product.id]!.data() as Map<String, dynamic>;
+            final currentStock =
+                (docData['stockQuantity'] as num?)?.toInt() ?? 0;
+
             transaction.update(docRef, {
               'stockQuantity': currentStock - item.quantity,
               'inStock': (currentStock - item.quantity) > 0,
@@ -102,8 +111,8 @@ class OrderRepository {
 
       // Save locally to reflect immediately
       await _cacheService.writeData(
-        _cacheService.ordersBox, 
-        'order_${order.id}', 
+        _cacheService.ordersBox,
+        'order_${order.id}',
         jsonEncode(order.toJson()),
       );
     } catch (e) {

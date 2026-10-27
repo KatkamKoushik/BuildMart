@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final favoriteShopsProvider = StateNotifierProvider<FavoriteShopsNotifier, Set<String>>((ref) {
+final favoriteShopsProvider =
+    StateNotifierProvider<FavoriteShopsNotifier, Set<String>>((ref) {
   return FavoriteShopsNotifier();
 });
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/buildmart_card.dart';
 import '../../../shared/widgets/buildmart_button.dart';
@@ -22,7 +21,7 @@ class CheckoutScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final userId = userState.value?.id;
-    
+
     if (userId == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Checkout')),
@@ -40,7 +39,7 @@ class CheckoutScreen extends ConsumerWidget {
         ),
       );
     }
-    
+
     final cartAsync = ref.watch(cartStreamProvider(userId));
     final selectedAddress = ref.watch(selectedAddressProvider);
     final selectedSlot = ref.watch(selectedDeliverySlotProvider);
@@ -53,7 +52,11 @@ class CheckoutScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Delivery Address', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Delivery Address',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             BuildMartCard(
               child: Column(
@@ -65,11 +68,16 @@ class CheckoutScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Icon(
-                            selectedAddress.title.toLowerCase() == 'home' ? Icons.home : Icons.work, 
-                            color: AppColors.primary
-                          ),
+                              selectedAddress.title.toLowerCase() == 'home'
+                                  ? Icons.home
+                                  : Icons.work,
+                              color: AppColors.primary),
                           const SizedBox(width: 8),
-                          Text(selectedAddress.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(selectedAddress.title,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       Semantics(
@@ -79,7 +87,8 @@ class CheckoutScreen extends ConsumerWidget {
                           onPressed: () {
                             _showAddressSelectionSheet(context, ref);
                           },
-                          style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+                          style: TextButton.styleFrom(
+                              foregroundColor: AppColors.primary),
                           child: const Text('Change'),
                         ),
                       ),
@@ -88,23 +97,31 @@ class CheckoutScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(
                     selectedAddress.addressLine,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textLight, height: 1.5),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: AppColors.textLight, height: 1.5),
                   ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Delivery Slot
-            Text('Delivery Slot', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Delivery Slot',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             BuildMartCard(
               padding: EdgeInsets.zero,
               child: DropdownButtonFormField<String>(
                 initialValue: selectedSlot,
                 decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   border: InputBorder.none,
                 ),
                 items: deliverySlots.map((slot) {
@@ -117,11 +134,15 @@ class CheckoutScreen extends ConsumerWidget {
                 },
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Order Notes
-            Text('Order Notes', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Order Notes',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             BuildMartTextField(
               hintText: 'Any special instructions for delivery?',
@@ -130,44 +151,58 @@ class CheckoutScreen extends ConsumerWidget {
                 ref.read(orderNotesProvider.notifier).state = val;
               },
             ),
-            
+
             const SizedBox(height: 24),
 
-            
             // Order Summary
-            Text('Order Summary', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Order Summary',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             BuildMartCard(
               child: cartAsync.when(
                 data: (items) {
-                  final subtotal = items.fold<double>(0, (sum, item) => sum + (item.price * item.quantity));
-                  final delivery = items.isEmpty ? 0.0 : (subtotal > 500 ? 0.0 : 40.0);
-                  
+                  final subtotal = items.fold<double>(
+                      0, (sum, item) => sum + (item.price * item.quantity));
+                  final delivery =
+                      items.isEmpty ? 0.0 : (subtotal > 500 ? 0.0 : 40.0);
+
                   final coupon = ref.watch(couponProvider);
                   final discount = coupon != null ? 50.0 : 0.0;
-                  final discountAmount = discount > subtotal ? subtotal : discount;
-                  
+                  final discountAmount =
+                      discount > subtotal ? subtotal : discount;
+
                   final taxableAmount = subtotal - discountAmount;
                   final gst = taxableAmount * 0.18;
                   final total = taxableAmount + delivery + gst;
 
                   return Column(
                     children: [
-                      _buildSummaryRow(context, 'Subtotal', '₹${subtotal.toStringAsFixed(2)}'),
+                      _buildSummaryRow(context, 'Subtotal',
+                          '₹${subtotal.toStringAsFixed(2)}'),
                       const SizedBox(height: 12),
-                      _buildSummaryRow(context, 'Delivery Charges', '₹${delivery.toStringAsFixed(2)}'),
+                      _buildSummaryRow(context, 'Delivery Charges',
+                          '₹${delivery.toStringAsFixed(2)}'),
                       const SizedBox(height: 12),
-                      _buildSummaryRow(context, 'GST (18%)', '₹${gst.toStringAsFixed(2)}'),
+                      _buildSummaryRow(
+                          context, 'GST (18%)', '₹${gst.toStringAsFixed(2)}'),
                       const SizedBox(height: 12),
                       if (discountAmount > 0)
-                        _buildSummaryRow(context, 'Coupon Discount', '- ₹${discountAmount.toStringAsFixed(2)}', color: AppColors.success)
+                        _buildSummaryRow(context, 'Coupon Discount',
+                            '- ₹${discountAmount.toStringAsFixed(2)}',
+                            color: AppColors.success)
                       else
-                        _buildSummaryRow(context, 'Coupon Discount', '- ₹0.00', color: AppColors.success),
+                        _buildSummaryRow(context, 'Coupon Discount', '- ₹0.00',
+                            color: AppColors.success),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         child: Divider(),
                       ),
-                      _buildSummaryRow(context, 'Grand Total', '₹${total.toStringAsFixed(2)}', isTotal: true),
+                      _buildSummaryRow(context, 'Grand Total',
+                          '₹${total.toStringAsFixed(2)}',
+                          isTotal: true),
                     ],
                   );
                 },
@@ -191,19 +226,23 @@ class CheckoutScreen extends ConsumerWidget {
             onPressed: () {
               final items = cartAsync.valueOrNull;
               if (items != null) {
-                final subtotal = items.fold<double>(0, (sum, item) => sum + (item.price * item.quantity));
-                final delivery = items.isEmpty ? 0.0 : (subtotal > 500 ? 0.0 : 40.0);
-                
+                final subtotal = items.fold<double>(
+                    0, (sum, item) => sum + (item.price * item.quantity));
+                final delivery =
+                    items.isEmpty ? 0.0 : (subtotal > 500 ? 0.0 : 40.0);
+
                 final coupon = ref.read(couponProvider);
                 final discount = coupon != null ? 50.0 : 0.0;
-                final discountAmount = discount > subtotal ? subtotal : discount;
-                
+                final discountAmount =
+                    discount > subtotal ? subtotal : discount;
+
                 final taxableAmount = subtotal - discountAmount;
                 final gst = taxableAmount * 0.18;
                 final total = taxableAmount + delivery + gst;
                 context.push('/payment', extra: total);
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cart is still loading...')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Cart is still loading...')));
               }
             },
           ),
@@ -212,28 +251,32 @@ class CheckoutScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(BuildContext context, String label, String amount, {bool isTotal = false, Color? color}) {
+  Widget _buildSummaryRow(BuildContext context, String label, String amount,
+      {bool isTotal = false, Color? color}) {
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     final labelColor = isDark ? AppColors.darkTextLight : AppColors.textLight;
     final valueColor = color ?? (isDark ? AppColors.darkText : AppColors.text);
-    final totalValueColor = color ?? (isDark ? AppColors.primary : AppColors.primaryDark);
+    final totalValueColor =
+        color ?? (isDark ? AppColors.primary : AppColors.primaryDark);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: isTotal 
+          style: isTotal
               ? textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
               : textTheme.bodyMedium?.copyWith(color: labelColor),
         ),
         Text(
           amount,
           style: isTotal
-              ? textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: totalValueColor)
-              : textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: valueColor),
+              ? textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold, color: totalValueColor)
+              : textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w600, color: valueColor),
         ),
       ],
     );
@@ -241,11 +284,11 @@ class CheckoutScreen extends ConsumerWidget {
 
   void _showAddressSelectionSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (ctx) {
-        return Consumer(
-          builder: (context, ref, child) {
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        builder: (ctx) {
+          return Consumer(builder: (context, ref, child) {
             final addresses = ref.watch(addressesProvider);
             return Container(
               padding: const EdgeInsets.all(24),
@@ -257,18 +300,35 @@ class CheckoutScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Select Address', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  Text('Select Address',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   ...addresses.map((addr) {
-                    final isSelected = ref.watch(selectedAddressProvider).id == addr.id;
+                    final isSelected =
+                        ref.watch(selectedAddressProvider).id == addr.id;
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Icon(addr.title.toLowerCase() == 'home' ? Icons.home : Icons.work, color: isSelected ? AppColors.primary : AppColors.textLight),
-                      title: Text(addr.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text(addr.addressLine, maxLines: 2, overflow: TextOverflow.ellipsis),
-                      trailing: isSelected ? const Icon(Icons.check_circle, color: AppColors.primary) : null,
+                      leading: Icon(
+                          addr.title.toLowerCase() == 'home'
+                              ? Icons.home
+                              : Icons.work,
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.textLight),
+                      title: Text(addr.title,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(addr.addressLine,
+                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle,
+                              color: AppColors.primary)
+                          : null,
                       onTap: () {
-                        ref.read(selectedAddressIdProvider.notifier).state = addr.id;
+                        ref.read(selectedAddressIdProvider.notifier).state =
+                            addr.id;
                         Navigator.pop(ctx);
                       },
                     );
@@ -279,15 +339,14 @@ class CheckoutScreen extends ConsumerWidget {
                     isOutlined: true,
                     onPressed: () {
                       Navigator.pop(ctx);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Add address flow coming soon!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Add address flow coming soon!')));
                     },
                   )
                 ],
               ),
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 }

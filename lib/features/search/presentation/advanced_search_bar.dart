@@ -17,7 +17,7 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
   final TextEditingController _searchController = TextEditingController();
   final SpeechToText _speechToText = SpeechToText();
   bool _isListening = false;
-  
+
   List<String> _suggestions = [];
   static const String _recentSearchesKey = 'recent_searches';
 
@@ -37,21 +37,21 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
 
   Future<void> _saveSearchTerm(String term) async {
     if (term.trim().isEmpty) return;
-    
+
     final prefs = await SharedPreferences.getInstance();
     List<String> searches = prefs.getStringList(_recentSearchesKey) ?? [];
-    
+
     // Remove if exists to move to top
     searches.removeWhere((s) => s.toLowerCase() == term.toLowerCase());
-    
+
     // Add to top
     searches.insert(0, term.trim());
-    
+
     // Keep only last 10
     if (searches.length > 10) {
       searches = searches.sublist(0, 10);
     }
-    
+
     await prefs.setStringList(_recentSearchesKey, searches);
     if (mounted) {
       setState(() {
@@ -114,7 +114,7 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
         ),
       ),
     );
-    
+
     // Simulate AI delay
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted && Navigator.of(context).canPop()) {
@@ -134,7 +134,8 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
+        border: Border(
+            bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
       ),
       child: Row(
         children: [
@@ -144,7 +145,8 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+                border:
+                    Border.all(color: AppColors.border.withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -158,7 +160,9 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
                           return const Iterable<String>.empty();
                         }
                         return _suggestions.where((String option) {
-                          return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                          return option
+                              .toLowerCase()
+                              .contains(textEditingValue.text.toLowerCase());
                         });
                       },
                       onSelected: (String selection) {
@@ -166,7 +170,8 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
                         _saveSearchTerm(selection);
                         context.push('/products?q=$selection');
                       },
-                      fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                      fieldViewBuilder:
+                          (context, controller, focusNode, onEditingComplete) {
                         // Sync controller
                         if (_searchController.text != controller.text) {
                           controller.text = _searchController.text;
@@ -174,7 +179,7 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
                         controller.addListener(() {
                           _searchController.text = controller.text;
                         });
-                        
+
                         return TextField(
                           controller: controller,
                           focusNode: focusNode,
@@ -204,21 +209,26 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxHeight: 200,
-                                maxWidth: MediaQuery.of(context).size.width - 32 - 100, // Approximate width
+                                maxWidth: MediaQuery.of(context).size.width -
+                                    32 -
+                                    100, // Approximate width
                               ),
                               child: ListView.builder(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
                                 itemCount: options.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final String option = options.elementAt(index);
+                                  final String option =
+                                      options.elementAt(index);
                                   return InkWell(
                                     onTap: () => onSelected(option),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.history, size: 16, color: AppColors.textLight),
+                                          const Icon(Icons.history,
+                                              size: 16,
+                                              color: AppColors.textLight),
                                           const SizedBox(width: 8),
                                           Text(option),
                                         ],
@@ -234,8 +244,23 @@ class _AdvancedSearchBarState extends State<AdvancedSearchBar> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(_isListening ? Icons.mic : Icons.mic_none, color: _isListening ? AppColors.primary : AppColors.textLight),
-                    onPressed: _speechToText.isNotListening ? _startListening : _stopListening,
+                    icon: const Icon(Icons.qr_code_scanner,
+                        color: AppColors.textLight),
+                    onPressed: _openBarcodeScanner,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.camera_alt_outlined,
+                        color: AppColors.textLight),
+                    onPressed: _pickImage,
+                  ),
+                  IconButton(
+                    icon: Icon(_isListening ? Icons.mic : Icons.mic_none,
+                        color: _isListening
+                            ? AppColors.primary
+                            : AppColors.textLight),
+                    onPressed: _speechToText.isNotListening
+                        ? _startListening
+                        : _stopListening,
                   ),
                 ],
               ),

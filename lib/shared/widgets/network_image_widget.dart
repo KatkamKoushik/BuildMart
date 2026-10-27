@@ -33,19 +33,21 @@ class NetworkImageWidget extends StatelessWidget {
               width: width,
               height: height,
               fit: fit,
-              errorBuilder: (context, error, stackTrace) => errorWidget ?? Container(
-                width: width,
-                height: height,
-                color: AppColors.secondaryBackground,
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/empty_state_illustrations/empty_delivery_box_illustration.jpeg',
-                    width: width != null ? width! * 0.5 : 50,
-                    height: height != null ? height! * 0.5 : 50,
-                    fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+                  errorWidget ??
+                  Container(
+                    width: width,
+                    height: height,
+                    color: AppColors.secondaryBackground,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/empty_state_illustrations/empty_delivery_box_illustration.jpeg',
+                        width: width != null ? width! * 0.5 : 50,
+                        height: height != null ? height! * 0.5 : 50,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
             )
           : CachedNetworkImage(
               imageUrl: imageUrl,
@@ -57,19 +59,21 @@ class NetworkImageWidget extends StatelessWidget {
                 height: height ?? double.infinity,
                 borderRadius: BorderRadius.zero,
               ),
-              errorWidget: (context, url, error) => errorWidget ?? Container(
-                width: width,
-                height: height,
-                color: AppColors.secondaryBackground,
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/empty_state_illustrations/empty_delivery_box_illustration.jpeg',
-                    width: width != null ? width! * 0.5 : 50,
-                    height: height != null ? height! * 0.5 : 50,
-                    fit: BoxFit.contain,
+              errorWidget: (context, url, error) =>
+                  errorWidget ??
+                  Container(
+                    width: width,
+                    height: height,
+                    color: AppColors.secondaryBackground,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/empty_state_illustrations/empty_delivery_box_illustration.jpeg',
+                        width: width != null ? width! * 0.5 : 50,
+                        height: height != null ? height! * 0.5 : 50,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ),
     );
   }

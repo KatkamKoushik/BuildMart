@@ -6,7 +6,8 @@ import 'package:image_picker/image_picker.dart';
 class CloudinaryService {
   static const String _cloudName = 'snwiu5gv';
   static const String _uploadPreset = 'buildmart';
-  static const String _apiUrl = 'https://api.cloudinary.com/v1_1/$_cloudName/image/upload';
+  static const String _apiUrl =
+      'https://api.cloudinary.com/v1_1/$_cloudName/image/upload';
 
   Future<String?> uploadImage(XFile imageFile) async {
     try {

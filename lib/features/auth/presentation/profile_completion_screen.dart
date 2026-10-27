@@ -11,10 +11,12 @@ class ProfileCompletionScreen extends ConsumerStatefulWidget {
   const ProfileCompletionScreen({super.key});
 
   @override
-  ConsumerState<ProfileCompletionScreen> createState() => _ProfileCompletionScreenState();
+  ConsumerState<ProfileCompletionScreen> createState() =>
+      _ProfileCompletionScreenState();
 }
 
-class _ProfileCompletionScreenState extends ConsumerState<ProfileCompletionScreen> {
+class _ProfileCompletionScreenState
+    extends ConsumerState<ProfileCompletionScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   bool _isLoading = false;
@@ -26,12 +28,13 @@ class _ProfileCompletionScreenState extends ConsumerState<ProfileCompletionScree
       );
       return;
     }
-    
+
     setState(() => _isLoading = true);
-    
+
     final repo = ref.read(authRepositoryProvider);
-    final success = await repo.completeProfile(_nameController.text, _emailController.text);
-    
+    final success =
+        await repo.completeProfile(_nameController.text, _emailController.text);
+
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
@@ -58,7 +61,8 @@ class _ProfileCompletionScreenState extends ConsumerState<ProfileCompletionScree
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Complete Profile', style: TextStyle(color: AppColors.text)),
+        title: const Text('Complete Profile',
+            style: TextStyle(color: AppColors.text)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -77,9 +81,12 @@ class _ProfileCompletionScreenState extends ConsumerState<ProfileCompletionScree
                     decoration: BoxDecoration(
                       color: AppColors.secondaryBackground,
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2), width: 2),
+                      border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                          width: 2),
                     ),
-                    child: const Icon(Icons.person, size: 60, color: AppColors.textLight),
+                    child: const Icon(Icons.person,
+                        size: 60, color: AppColors.textLight),
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -87,28 +94,24 @@ class _ProfileCompletionScreenState extends ConsumerState<ProfileCompletionScree
                       color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.camera_alt, color: AppColors.background, size: 20),
+                    child: const Icon(Icons.camera_alt,
+                        color: AppColors.background, size: 20),
                   ),
                 ],
               ).animate().fade(duration: 400.ms).scale(),
-              
               const SizedBox(height: 40),
-              
               BuildMartTextField(
                 controller: _nameController,
                 hintText: 'Full Name',
                 prefixIcon: const Icon(Icons.person_outline),
               ).animate().fade(delay: 200.ms).slideY(begin: 0.2),
-              
               const SizedBox(height: 16),
-              
               BuildMartTextField(
                 controller: _emailController,
                 hintText: 'Email Address (Optional)',
                 prefixIcon: const Icon(Icons.email_outlined),
                 keyboardType: TextInputType.emailAddress,
               ).animate().fade(delay: 300.ms).slideY(begin: 0.2),
-              
               const SizedBox(height: 40),
               BuildMartButton(
                 text: 'Save and Continue',

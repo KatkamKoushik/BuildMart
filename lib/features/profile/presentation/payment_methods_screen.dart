@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/payment_method_card.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../shared/widgets/payment_method_card.dart';
 
 class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});
@@ -84,7 +83,9 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
           ElevatedButton.icon(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Add new payment method feature coming soon!')),
+                const SnackBar(
+                    content:
+                        Text('Add new payment method feature coming soon!')),
               );
             },
             icon: const Icon(Icons.add),
@@ -93,7 +94,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textStyle:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ],

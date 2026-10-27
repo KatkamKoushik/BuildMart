@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'shop_model.freezed.dart';
 part 'shop_model.g.dart';
@@ -19,5 +18,6 @@ class ShopModel with _$ShopModel {
     @Default([]) List<String> categories,
   }) = _ShopModel;
 
-  factory ShopModel.fromJson(Map<String, dynamic> json) => _$ShopModelFromJson(json);
+  factory ShopModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopModelFromJson(json);
 }

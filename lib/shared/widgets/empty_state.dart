@@ -72,7 +72,8 @@ class EmptyState extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.background,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -83,6 +84,10 @@ class EmptyState extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1), duration: 400.ms, curve: Curves.easeOut);
+    ).animate().fadeIn(duration: 400.ms).scale(
+        begin: const Offset(0.95, 0.95),
+        end: const Offset(1, 1),
+        duration: 400.ms,
+        curve: Curves.easeOut);
   }
 }

@@ -33,12 +33,18 @@ import '../features/notifications/presentation/notifications_screen.dart';
 import '../features/search/presentation/barcode_scanner_screen.dart';
 import 'main_scaffold.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final GlobalKey<NavigatorState> _categoriesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'categories');
-final GlobalKey<NavigatorState> _cartNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'cart');
-final GlobalKey<NavigatorState> _ordersNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'orders');
-final GlobalKey<NavigatorState> _profileNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'profile');
+final GlobalKey<NavigatorState> _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _homeNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'home');
+final GlobalKey<NavigatorState> _categoriesNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'categories');
+final GlobalKey<NavigatorState> _cartNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'cart');
+final GlobalKey<NavigatorState> _ordersNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'orders');
+final GlobalKey<NavigatorState> _profileNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'profile');
 
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -46,9 +52,8 @@ final appRouter = GoRouter(
   redirect: (context, state) {
     final isLoggedIn = FirebaseAuth.instance.currentUser != null;
     final path = state.uri.path;
-    final isAuthRoute = path == '/welcome' ||
-        path == '/login' ||
-        path == '/otp';
+    final isAuthRoute =
+        path == '/welcome' || path == '/login' || path == '/otp';
 
     // Routes that require authentication to access
     final authRequiredRoutes = [
@@ -63,8 +68,9 @@ final appRouter = GoRouter(
       '/wishlist',
       '/recently-viewed',
     ];
-    
-    final requiresAuth = authRequiredRoutes.any((route) => path.startsWith(route));
+
+    final requiresAuth =
+        authRequiredRoutes.any((route) => path.startsWith(route));
 
     // If user tries to access an auth-required route without being logged in,
     // redirect to login
@@ -123,10 +129,10 @@ final appRouter = GoRouter(
       path: '/shops',
       builder: (context, state) => const NearbyShopsScreen(),
     ),
-
     GoRoute(
       path: '/product-details/:id',
-      builder: (context, state) => ProductDetailsScreen(productId: state.pathParameters['id']!),
+      builder: (context, state) =>
+          ProductDetailsScreen(productId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: '/shop-details',
