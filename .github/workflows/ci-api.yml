@@ -45,4 +45,6 @@ jobs:
         run: python -m app.seed
 
       - name: Run Pytest Suite
-        run: pytest -v --tb=short
+        run: python -m pytest -v --tb=short
+        env:
+          PYTHONPATH: .
