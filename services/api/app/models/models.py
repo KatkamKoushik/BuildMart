@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import (
     Column,
     String,
@@ -17,6 +17,9 @@ from app.db.session import Base
 def generate_uuid() -> str:
     return str(uuid.uuid4())
 
+def utc_now():
+    return datetime.now(timezone.utc)
+
 class User(Base):
     __tablename__ = "users"
 
@@ -28,8 +31,8 @@ class User(Base):
     role = Column(String(20), default="buyer", nullable=False) # buyer, vendor, admin
     profile_image_url = Column(Text, nullable=True)
     saved_addresses = Column(JSON, default=list)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
     cart_items = relationship("CartItem", back_populates="user", cascade="all, delete-orphan")
@@ -50,7 +53,7 @@ class Shop(Base):
     is_open = Column(Boolean, default=True)
     categories = Column(JSON, default=list)
     phone = Column(String(30), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
 
     products = relationship("Product", back_populates="shop")
 
@@ -94,7 +97,7 @@ class Product(Base):
     stock_quantity = Column(Integer, default=100)
     unit = Column(String(50), default="unit")
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
 
     category = relationship("Category", back_populates="products")
     shop = relationship("Shop", back_populates="products")
@@ -107,7 +110,7 @@ class CartItem(Base):
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     product_id = Column(String(36), ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
     quantity = Column(Integer, default=1, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
 
     user = relationship("User", back_populates="cart_items")
     product = relationship("Product")
@@ -122,15 +125,17 @@ class Order(Base):
     tax = Column(Float, default=0.0)
     delivery_fee = Column(Float, default=0.0)
     total_amount = Column(Float, nullable=False)
-    status = Column(String(50), default="confirmed", index=True) # pending, confirmed, processing, dispatched, delivered, cancelled
+    status = Column(String(50), default="pending", index=True) # pending, confirmed, processing, dispatched, delivered, cancelled
     payment_method = Column(String(50), default="razorpay") # razorpay, cod, upi, netbanking, card
-    payment_status = Column(String(50), default="paid") # pending, paid, failed, refunded
+    payment_status = Column(String(50), default="pending") # pending, paid, failed, refunded
     razorpay_order_id = Column(String(100), nullable=True, index=True)
     razorpay_payment_id = Column(String(100), nullable=True)
+    razorpay_signature = Column(String(255), nullable=True)
+    idempotency_key = Column(String(100), nullable=True, index=True)
     delivery_address = Column(JSON, nullable=False)
     estimated_delivery = Column(String(50), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
@@ -173,4 +178,15 @@ class QuoteRequest(Base):
     items = Column(JSON, default=list)
     estimated_total = Column(Float, default=0.0)
     status = Column(String(50), default="submitted") # draft, submitted, approved, rejected
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now)
+
+class WebhookEvent(Base):
+    __tablename__ = "webhook_events"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    event_id = Column(String(128), unique=True, index=True, nullable=False)
+    event_type = Column(String(100), nullable=False)
+    payload = Column(JSON, default=dict)
+    status = Column(String(50), default="processed") # processed, ignored, failed
+    processed_at = Column(DateTime, default=utc_now)
+

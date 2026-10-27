@@ -20,9 +20,10 @@ from app.models.models import (
 )
 from app.core.security import get_or_create_default_user
 
-async def seed_database():
+async def seed_database(session_factory=None):
+    target_engine = session_factory.kw["bind"] if (session_factory and hasattr(session_factory, "kw") and "bind" in session_factory.kw) else engine
     print("[Seed] Initializing database schema...")
-    async with engine.begin() as conn:
+    async with target_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     # Locate seeded_data.json
@@ -46,10 +47,14 @@ async def seed_database():
     with open(seed_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    async with AsyncSessionLocal() as session:
-        # 1. Create or get Default User
-        print("[Seed] Seeding default demo user...")
-        await get_or_create_default_user(session)
+    session_maker = session_factory or AsyncSessionLocal
+    async with session_maker() as session:
+
+        # 1. Create or get Default Users (Buyer, Admin, Seller)
+        print("[Seed] Seeding default demo users...")
+        await get_or_create_default_user(session, email="buyer@buildmart.dev", role="buyer", name="BuildMart Demo Buyer")
+        await get_or_create_default_user(session, email="admin@buildmart.dev", role="admin", name="BuildMart Super Admin")
+        await get_or_create_default_user(session, email="seller@buildmart.dev", role="seller", name="Sri Lakshmi Steels Manager")
 
         # 2. Categories
         print(f"[Seed] Seeding {len(data.get('categories', []))} categories...")

@@ -1,5 +1,5 @@
 import time
-from typing import List
+from typing import List, Optional
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,21 +7,38 @@ from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
 from app.db.session import get_db
 from app.models.models import Order, OrderItem, CartItem, Product, User
-from app.schemas.schemas import OrderCreate, OrderResponse
-from app.core.security import get_current_user
+from app.schemas.schemas import OrderCreate, OrderResponse, OrderStatusUpdate
+from app.core.security import get_current_user, require_authenticated_user, require_admin
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
 def generate_order_number() -> str:
-    timestamp = int(time.time())
+    timestamp = int(time.time() * 1000)
     return f"BM-{timestamp}"
+
+# Allowed order lifecycle transitions
+VALID_TRANSITIONS = {
+    "pending": ["confirmed", "cancelled"],
+    "confirmed": ["processing", "cancelled"],
+    "processing": ["dispatched", "cancelled"],
+    "dispatched": ["delivered"],
+    "delivered": [], # Terminal state
+    "cancelled": []  # Terminal state
+}
 
 @router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
     payload: OrderCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    F-01, F-11 & F-13: Server-authoritative order creation.
+    - Validates quantity > 0 and stock availability.
+    - Re-fetches prices from DB (ignoring any client-submitted prices).
+    - Enforces 18% GST and standard delivery fee rules.
+    - Never marks online orders as 'paid' at creation time.
+    """
     # Fetch user's cart items if explicit items not provided
     cart_res = await db.execute(
         select(CartItem, Product)
@@ -36,9 +53,14 @@ async def create_order(
     subtotal = 0.0
     order_items_to_create = []
 
-    if cart_rows:
+    if cart_rows and not payload.items:
         for cart_item, product in cart_rows:
-            item_total = product.price * cart_item.quantity
+            if cart_item.quantity <= 0:
+                raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
+            if not product.is_active:
+                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
+
+            item_total = round(product.price * cart_item.quantity, 2)
             subtotal += item_total
             order_items_to_create.append(
                 OrderItem(
@@ -53,12 +75,18 @@ async def create_order(
     elif payload.items:
         for item in payload.items:
             prod_id = item.get("productId") or item.get("product_id")
+            qty = item.get("quantity", 1)
+            if not isinstance(qty, int) or qty <= 0:
+                raise HTTPException(status_code=422, detail="Item quantity must be a positive integer")
+
             prod_res = await db.execute(select(Product).where(Product.id == prod_id))
             product = prod_res.scalars().first()
             if not product:
-                continue
-            qty = item.get("quantity", 1)
-            item_total = product.price * qty
+                raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
+            if not product.is_active:
+                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
+
+            item_total = round(product.price * qty, 2)
             subtotal += item_total
             order_items_to_create.append(
                 OrderItem(
@@ -71,10 +99,20 @@ async def create_order(
                 )
             )
 
+    if not order_items_to_create:
+        raise HTTPException(status_code=400, detail="Order must contain at least one valid product")
+
+    # Authoritative calculation: 18% GST and delivery policy
+    subtotal = round(subtotal, 2)
     tax = round(subtotal * 0.18, 2)
     delivery_fee = 0.0 if subtotal >= 5000 else 250.0
     total_amount = round(subtotal + tax + delivery_fee, 2)
     estimated_delivery = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%d %b %Y")
+
+    # Payment status: COD is pending payment on delivery; Razorpay is pending online verification
+    payment_method = payload.payment_method.lower()
+    initial_status = "confirmed" if payment_method == "cod" else "pending"
+    initial_payment_status = "pending"
 
     order = Order(
         order_number=generate_order_number(),
@@ -83,9 +121,9 @@ async def create_order(
         tax=tax,
         delivery_fee=delivery_fee,
         total_amount=total_amount,
-        status="confirmed",
-        payment_method=payload.payment_method,
-        payment_status="paid" if payload.payment_method != "cod" else "pending",
+        status=initial_status,
+        payment_method=payment_method,
+        payment_status=initial_payment_status,
         delivery_address=payload.delivery_address,
         estimated_delivery=estimated_delivery
     )
@@ -110,9 +148,12 @@ async def create_order(
 
 @router.get("", response_model=List[OrderResponse])
 async def list_orders(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    List orders for the authenticated user only.
+    """
     result = await db.execute(
         select(Order)
         .options(selectinload(Order.items))
@@ -124,41 +165,100 @@ async def list_orders(
 @router.get("/{order_id}", response_model=OrderResponse)
 async def get_order(
     order_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    F-02 & F-10: Resource ownership enforcement.
+    Users cannot access other users' orders. Administrators may access any order.
+    """
     result = await db.execute(
         select(Order)
         .options(selectinload(Order.items))
-        .where(
-            (Order.id == order_id) | (Order.order_number == order_id),
-            Order.user_id == current_user.id
-        )
+        .where((Order.id == order_id) | (Order.order_number == order_id))
     )
     order = result.scalars().first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+
+    if order.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: You do not have permission to view this order"
+        )
+
     return order
 
 @router.post("/{order_id}/cancel", response_model=OrderResponse)
 async def cancel_order(
     order_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    F-11: Authoritative Order Lifecycle - Cancellation.
+    - Owner or admin only.
+    - Cannot cancel once dispatched or delivered.
+    """
     result = await db.execute(
         select(Order)
         .options(selectinload(Order.items))
-        .where(Order.id == order_id, Order.user_id == current_user.id)
+        .where((Order.id == order_id) | (Order.order_number == order_id))
     )
     order = result.scalars().first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
+    if order.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: You do not have permission to cancel this order"
+        )
+
     if order.status in ["dispatched", "delivered"]:
         raise HTTPException(status_code=400, detail="Cannot cancel order once dispatched or delivered")
 
+    if order.status == "cancelled":
+        return order
+
     order.status = "cancelled"
+    if order.payment_status == "paid":
+        order.payment_status = "refunded"
+
+    await db.commit()
+    await db.refresh(order)
+    return order
+
+@router.put("/{order_id}/status", response_model=OrderResponse)
+async def update_order_status(
+    order_id: str,
+    payload: OrderStatusUpdate,
+    admin_user: User = Depends(require_admin),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    F-02 & F-11: Admin-only order status transition with state machine validation.
+    """
+    new_status = payload.status.lower()
+    result = await db.execute(
+        select(Order)
+        .options(selectinload(Order.items))
+        .where((Order.id == order_id) | (Order.order_number == order_id))
+    )
+    order = result.scalars().first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    current_status = order.status
+    allowed_next_states = VALID_TRANSITIONS.get(current_status, [])
+
+    if new_status != current_status and new_status not in allowed_next_states:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid state transition: Cannot move order from '{current_status}' to '{new_status}'. Allowed: {allowed_next_states}"
+        )
+
+    order.status = new_status
     await db.commit()
     await db.refresh(order)
     return order

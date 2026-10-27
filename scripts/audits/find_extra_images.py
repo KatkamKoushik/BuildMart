@@ -2,10 +2,12 @@ import json
 import cloudinary
 import cloudinary.api
 
+import os
+
 cloudinary.config(
-  cloud_name = 'snwiu5gv',
-  api_key = '969328414263883',
-  api_secret = 'oLK_6m_Z6iTG78ZWK5CVcVtFAxI'
+  cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME', 'snwiu5gv'),
+  api_key = os.getenv('CLOUDINARY_API_KEY', ''),
+  api_secret = os.getenv('CLOUDINARY_API_SECRET', '')
 )
 
 # 1. Get all URLs from JSON

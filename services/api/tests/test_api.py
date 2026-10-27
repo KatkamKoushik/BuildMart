@@ -80,10 +80,19 @@ async def test_cart_workflow(async_client):
 
 @pytest.mark.asyncio
 async def test_order_creation_and_history(async_client):
+    # Obtain auth token
+    tok_res = await async_client.post("/api/v1/auth/token", json={"email": "order_tester@buildmart.dev", "role": "buyer"})
+    token = tok_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
     # Add product to cart first
     prod_res = await async_client.get("/api/v1/products?limit=1")
     test_prod = prod_res.json()[0]
-    await async_client.post("/api/v1/cart/items", json={"product_id": test_prod["id"], "quantity": 1})
+    await async_client.post(
+        "/api/v1/cart/items",
+        json={"product_id": test_prod["id"], "quantity": 1},
+        headers=headers
+    )
 
     # Create order
     order_payload = {
@@ -97,14 +106,14 @@ async def test_order_creation_and_history(async_client):
         },
         "payment_method": "cod"
     }
-    order_res = await async_client.post("/api/v1/orders", json=order_payload)
+    order_res = await async_client.post("/api/v1/orders", json=order_payload, headers=headers)
     assert order_res.status_code == 201
     order = order_res.json()
     assert order["status"] == "confirmed"
     assert order["order_number"].startswith("BM-")
 
     # List orders
-    list_res = await async_client.get("/api/v1/orders")
+    list_res = await async_client.get("/api/v1/orders", headers=headers)
     assert list_res.status_code == 200
     orders_list = list_res.json()
     assert len(orders_list) > 0

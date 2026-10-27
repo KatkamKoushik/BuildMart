@@ -2,6 +2,23 @@
 
 Production-grade construction materials marketplace and commercial procurement platform managed as a pnpm monorepo with a Next.js 15 frontend, FastAPI Python backend, shared TypeScript library, and retained Flutter mobile application.
 
+[![Web CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-web.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-web.yml)
+[![API CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-api.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-api.yml)
+[![Mobile CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/KatkamKoushik/BuildMart?color=blue&logo=github)](https://github.com/KatkamKoushik/BuildMart/releases)
+[![Pytest Suite](https://img.shields.io/badge/pytest-15%20passed-success?logo=pytest&logoColor=white)](forensic-report/TEST_EXECUTION_REPORT.md)
+[![Code Coverage](https://img.shields.io/badge/coverage-69%25-green?logo=pytest)](forensic-report/TEST_EXECUTION_REPORT.md)
+[![Catalog Audit](https://img.shields.io/badge/catalog%20audit-210%20verified-blue)](scripts/audits/catalog_audit_report.json)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-12.4-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Turborepo](https://img.shields.io/badge/Turborepo-2.x-EF4444?logo=turborepo&logoColor=white)](https://turbo.build/)
+
 ---
 
 ## Architecture Overview
@@ -198,14 +215,20 @@ All endpoints are versioned under `/api/v1`:
 | `DELETE` | `/cart` | Clear entire cart |
 | `POST` | `/checkout/razorpay/create-order` | Generate Razorpay order ID |
 | `POST` | `/checkout/razorpay/verify` | Verify Razorpay payment signature via HMAC-SHA256 |
+| `POST` | `/checkout/razorpay/webhook` | Process Razorpay raw-body webhooks with replay deduplication |
 | `POST` | `/orders` | Place new order with site delivery address |
 | `GET` | `/orders` | List user order history |
 | `GET` | `/orders/{id}` | Retrieve order status and tracking timeline |
 | `POST` | `/orders/{id}/cancel` | Cancel eligible pending or confirmed order |
+| `PUT` | `/orders/{id}/status` | Update order lifecycle status (Admin only) |
 | `POST` | `/quotes` | Submit commercial project quote request |
 | `GET` | `/quotes/{id}/pdf` | Download dynamically generated branded PDF quotation |
+| `POST` | `/auth/token` | Obtain signed JWT access token |
 | `GET` | `/auth/me` | Retrieve active user profile |
 | `POST` | `/auth/address` | Add delivery address to user account |
+| `GET` | `/admin/metrics` | Retrieve platform KPI summary and sales metrics (Admin only) |
+| `GET` | `/admin/orders` | List all platform orders across all users (Admin only) |
+| `POST/PUT/DELETE` | `/admin/products` | Manage product catalog entries (Admin only) |
 
 ---
 

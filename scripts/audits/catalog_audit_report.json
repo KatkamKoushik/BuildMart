@@ -1,0 +1,20 @@
+{
+  "summary": {
+    "total_categories": 16,
+    "total_brands": 18,
+    "total_products": 210,
+    "total_shops": 3,
+    "total_banners": 8
+  },
+  "integrity_checks": {
+    "duplicate_product_ids": [],
+    "missing_titles": [],
+    "invalid_prices": [],
+    "invalid_stock": [],
+    "broken_category_fks": [],
+    "broken_brand_fks": [],
+    "missing_or_invalid_images": []
+  },
+  "warnings": [],
+  "passed": true
+}

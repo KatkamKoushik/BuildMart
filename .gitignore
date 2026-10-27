@@ -32,8 +32,17 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
 /coverage/
+
+# Android keystore & release secrets
+key.properties
+*.jks
+*.keystore
+
+# Built binaries
+*.apk
+*.aab
 
 # Symbolication related
 app.*.symbols

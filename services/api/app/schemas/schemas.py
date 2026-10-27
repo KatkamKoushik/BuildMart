@@ -214,3 +214,51 @@ class QuoteRequestResponse(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+# Admin & Product Management Schemas
+class ProductCreate(BaseModel):
+    title: str = Field(..., min_length=2)
+    description: Optional[str] = None
+    price: float = Field(..., gt=0)
+    original_price: Optional[float] = None
+    category_id: str
+    shop_id: Optional[str] = None
+    brand_id: Optional[str] = None
+    image_urls: List[str] = []
+    specifications: Dict[str, Any] = {}
+    stock_quantity: int = Field(default=100, ge=0)
+    unit: str = "unit"
+    is_active: bool = True
+
+class ProductUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = Field(None, gt=0)
+    original_price: Optional[float] = None
+    category_id: Optional[str] = None
+    shop_id: Optional[str] = None
+    brand_id: Optional[str] = None
+    image_urls: Optional[List[str]] = None
+    specifications: Optional[Dict[str, Any]] = None
+    stock_quantity: Optional[int] = Field(None, ge=0)
+    unit: Optional[str] = None
+    is_active: Optional[bool] = None
+
+class OrderStatusUpdate(BaseModel):
+    status: str = Field(..., description="pending, confirmed, processing, dispatched, delivered, cancelled")
+
+# Token & Auth Schemas
+class TokenRequest(BaseModel):
+    email: EmailStr
+    role: Optional[str] = "buyer"
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+
+class WebhookResponse(BaseModel):
+    status: str
+    event_id: str
+    message: str
+

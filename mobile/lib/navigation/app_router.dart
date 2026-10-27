@@ -50,12 +50,18 @@ final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/welcome',
   redirect: (context, state) {
-    final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    bool isLoggedIn = false;
+    try {
+      isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    } catch (_) {
+      // Safe fallback when Firebase is not initialized or offline
+      isLoggedIn = false;
+    }
     final path = state.uri.path;
     final isAuthRoute =
         path == '/welcome' || path == '/login' || path == '/otp';
 
-    // Routes that require authentication to access
+    // Routes that require authentication to access (F-02 & F-14)
     final authRequiredRoutes = [
       '/checkout',
       '/payment',
@@ -67,6 +73,8 @@ final appRouter = GoRouter(
       '/profile-completion',
       '/wishlist',
       '/recently-viewed',
+      '/admin',
+      '/admin/manage-products',
     ];
 
     final requiresAuth =

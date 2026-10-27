@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exception_handlers import http_exception_handler
 
 from app.core.config import settings
 from app.db.session import engine, Base
@@ -16,7 +17,8 @@ from app.api.v1 import (
     checkout,
     orders,
     quotes,
-    auth
+    auth,
+    admin
 )
 from app.seed import seed_database
 
@@ -28,7 +30,7 @@ async def lifespan(app: FastAPI):
     try:
         await seed_database()
     except Exception as e:
-        print(f"[Lifespan] Seeding skipped or notice: {e}")
+        print(f"[Lifespan] Seeding notice: {e}")
     yield
     # Shutdown
     await engine.dispose()
@@ -44,9 +46,10 @@ app = FastAPI(
 )
 
 # CORS configuration
+origins = settings.cors_origins if settings.ENVIRONMENT.lower() == "production" else ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In dev allow all; settings.cors_origins in production
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,10 +68,15 @@ api_v1_routers = [
     orders.router,
     quotes.router,
     auth.router,
+    admin.router,
 ]
 
 for router in api_v1_routers:
     app.include_router(router, prefix=settings.API_V1_PREFIX)
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request: Request, exc: HTTPException):
+    return await http_exception_handler(request, exc)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

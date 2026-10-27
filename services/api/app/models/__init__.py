@@ -8,7 +8,8 @@ from app.models.models import (
     Order,
     OrderItem,
     Banner,
-    QuoteRequest
+    QuoteRequest,
+    WebhookEvent
 )
 
 __all__ = [
@@ -21,5 +22,7 @@ __all__ = [
     "Order",
     "OrderItem",
     "Banner",
-    "QuoteRequest"
+    "QuoteRequest",
+    "WebhookEvent"
 ]
+
