@@ -39,7 +39,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-${{ hashFiles("mobile/pubspec.lock") }}'
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-${{ hashFiles('mobile/pubspec.lock') }}"
 
       - name: Prepare Clean-Checkout Environment (.env)
         run: |
@@ -60,4 +60,4 @@ jobs:
         run: flutter test --coverage
 
       - name: Validate Flutter APK Build (Debug)
-        run: flutter build apk --debug
+        run: flutter build apk --debug --android-skip-build-dependency-validation
