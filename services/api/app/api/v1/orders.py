@@ -1,16 +1,72 @@
 import time
-from typing import List, Optional
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
+
+from app.core.security import (
+    require_admin,
+    require_authenticated_user,
+)
 from app.db.session import get_db
-from app.models.models import Order, OrderItem, CartItem, Product, User
+from app.models.models import CartItem, Order, OrderItem, Product, User
 from app.schemas.schemas import OrderCreate, OrderResponse, OrderStatusUpdate
-from app.core.security import get_current_user, require_authenticated_user, require_admin
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
+
+def _process_cart_rows(cart_rows) -> tuple[float, list[OrderItem]]:
+    subtotal = 0.0
+    order_items_to_create = []
+    for cart_item, product in cart_rows:
+        if cart_item.quantity <= 0:
+            raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
+        if not product.is_active:
+            raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
+
+        item_total = round(product.price * cart_item.quantity, 2)
+        subtotal += item_total
+        order_items_to_create.append(
+            OrderItem(
+                product_id=product.id,
+                title=product.title,
+                price=product.price,
+                quantity=cart_item.quantity,
+                unit=product.unit,
+                image_url=product.image_urls[0] if product.image_urls else ""
+            )
+        )
+    return subtotal, order_items_to_create
+
+def _process_payload_items(payload_items: list[dict], products: dict[str, Product]) -> tuple[float, list[OrderItem]]:
+    subtotal = 0.0
+    order_items_to_create = []
+    for item in payload_items:
+        prod_id = item.get("productId") or item.get("product_id")
+        qty = item.get("quantity", 1)
+        if not isinstance(qty, int) or qty <= 0:
+            raise HTTPException(status_code=422, detail="Item quantity must be a positive integer")
+
+        product = products.get(prod_id)
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
+        if not product.is_active:
+            raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
+
+        item_total = round(product.price * qty, 2)
+        subtotal += item_total
+        order_items_to_create.append(
+            OrderItem(
+                product_id=product.id,
+                title=product.title,
+                price=product.price,
+                quantity=qty,
+                unit=product.unit,
+                image_url=product.image_urls[0] if product.image_urls else ""
+            )
+        )
+    return subtotal, order_items_to_create
 
 def generate_order_number() -> str:
     timestamp = int(time.time() * 1000)
@@ -29,8 +85,8 @@ VALID_TRANSITIONS = {
 @router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
     payload: OrderCreate,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-01, F-11 & F-13: Server-authoritative order creation.
@@ -54,50 +110,12 @@ async def create_order(
     order_items_to_create = []
 
     if cart_rows and not payload.items:
-        for cart_item, product in cart_rows:
-            if cart_item.quantity <= 0:
-                raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
-            if not product.is_active:
-                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
-
-            item_total = round(product.price * cart_item.quantity, 2)
-            subtotal += item_total
-            order_items_to_create.append(
-                OrderItem(
-                    product_id=product.id,
-                    title=product.title,
-                    price=product.price,
-                    quantity=cart_item.quantity,
-                    unit=product.unit,
-                    image_url=product.image_urls[0] if product.image_urls else ""
-                )
-            )
+        subtotal, order_items_to_create = _process_cart_rows(cart_rows)
     elif payload.items:
-        for item in payload.items:
-            prod_id = item.get("productId") or item.get("product_id")
-            qty = item.get("quantity", 1)
-            if not isinstance(qty, int) or qty <= 0:
-                raise HTTPException(status_code=422, detail="Item quantity must be a positive integer")
-
-            prod_res = await db.execute(select(Product).where(Product.id == prod_id))
-            product = prod_res.scalars().first()
-            if not product:
-                raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
-            if not product.is_active:
-                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
-
-            item_total = round(product.price * qty, 2)
-            subtotal += item_total
-            order_items_to_create.append(
-                OrderItem(
-                    product_id=product.id,
-                    title=product.title,
-                    price=product.price,
-                    quantity=qty,
-                    unit=product.unit,
-                    image_url=product.image_urls[0] if product.image_urls else ""
-                )
-            )
+        product_ids = [item.get("productId") or item.get("product_id") for item in payload.items]
+        prod_res = await db.execute(select(Product).where(Product.id.in_(product_ids)))
+        products_dict = {p.id: p for p in prod_res.scalars().all()}
+        subtotal, order_items_to_create = _process_payload_items(payload.items, products_dict)
 
     if not order_items_to_create:
         raise HTTPException(status_code=400, detail="Order must contain at least one valid product")
@@ -107,7 +125,7 @@ async def create_order(
     tax = round(subtotal * 0.18, 2)
     delivery_fee = 0.0 if subtotal >= 5000 else 250.0
     total_amount = round(subtotal + tax + delivery_fee, 2)
-    estimated_delivery = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%d %b %Y")
+    estimated_delivery = (datetime.now(UTC) + timedelta(days=2)).strftime("%d %b %Y")
 
     # Payment status: COD is pending payment on delivery; Razorpay is pending online verification
     payment_method = payload.payment_method.lower()
@@ -146,10 +164,10 @@ async def create_order(
     final_order = res.scalars().first()
     return final_order
 
-@router.get("", response_model=List[OrderResponse])
+@router.get("", response_model=list[OrderResponse])
 async def list_orders(
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     List orders for the authenticated user only.
@@ -165,8 +183,8 @@ async def list_orders(
 @router.get("/{order_id}", response_model=OrderResponse)
 async def get_order(
     order_id: str,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02 & F-10: Resource ownership enforcement.
@@ -192,8 +210,8 @@ async def get_order(
 @router.post("/{order_id}/cancel", response_model=OrderResponse)
 async def cancel_order(
     order_id: str,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-11: Authoritative Order Lifecycle - Cancellation.
@@ -233,8 +251,8 @@ async def cancel_order(
 async def update_order_status(
     order_id: str,
     payload: OrderStatusUpdate,
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02 & F-11: Admin-only order status transition with state machine validation.

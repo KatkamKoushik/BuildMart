@@ -1,15 +1,16 @@
-from typing import List
+
 from fastapi import APIRouter, Depends
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+
 from app.db.session import get_db
 from app.models.models import Category, Product
 from app.schemas.schemas import CategoryResponse
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
-@router.get("", response_model=List[CategoryResponse])
-async def list_categories(db: AsyncSession = Depends(get_db)):
+@router.get("", response_model=list[CategoryResponse])
+async def list_categories(db: AsyncSession = Depends(get_db)):  # noqa: B008
     result = await db.execute(select(Category).order_by(Category.sort_order, Category.name))
     categories = result.scalars().all()
     
@@ -32,7 +33,7 @@ async def list_categories(db: AsyncSession = Depends(get_db)):
     return response
 
 @router.get("/{category_id}", response_model=CategoryResponse)
-async def get_category(category_id: str, db: AsyncSession = Depends(get_db)):
+async def get_category(category_id: str, db: AsyncSession = Depends(get_db)):  # noqa: B008
     result = await db.execute(select(Category).where(Category.id == category_id))
     cat = result.scalars().first()
     if not cat:

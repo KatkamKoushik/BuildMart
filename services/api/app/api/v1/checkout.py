@@ -1,30 +1,50 @@
-import hmac
 import hashlib
-import time
+import hmac
 import json
-from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Request, Header, status
-from sqlalchemy.ext.asyncio import AsyncSession
+import time
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlalchemy import select
-from app.db.session import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import settings
-from app.schemas.schemas import RazorpayOrderCreate, RazorpayVerifyRequest, WebhookResponse
 from app.core.security import require_authenticated_user
-from app.models.models import User, Order, WebhookEvent
+from app.db.session import get_db
+from app.models.models import Order, User, WebhookEvent
+from app.schemas.schemas import (
+    RazorpayOrderCreate,
+    RazorpayVerifyRequest,
+    WebhookResponse,
+)
 
 router = APIRouter(prefix="/checkout", tags=["Checkout"])
 
 @router.post("/razorpay/create-order")
 async def create_razorpay_order(
     payload: RazorpayOrderCreate,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-01: Creates Razorpay order for online payment.
     Amount is strictly determined server-side in paise.
     """
-    amount_in_paise = int(round(payload.amount * 100))
+    result = await db.execute(
+        select(Order).where(
+            (Order.id == payload.order_id) | (Order.order_number == payload.order_id)
+        )
+    )
+    order = result.scalars().first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    if order.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: You do not own this order"
+        )
+
+    amount_in_paise = round(order.total_amount * 100)
     if amount_in_paise <= 0:
         raise HTTPException(status_code=400, detail="Payment amount must be greater than zero")
 
@@ -52,8 +72,8 @@ async def create_razorpay_order(
                 "currency": rzp_order["currency"],
                 "key_id": settings.RAZORPAY_KEY_ID
             }
-        except Exception as e:
-            raise HTTPException(status_code=502, detail=f"Razorpay provider error: {str(e)}")
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=502, detail=f"Razorpay provider error: {e!s}")
 
     # Deterministic development / test sandbox order ID
     mock_order_id = f"order_{int(time.time())}_{current_user.id[:8]}"
@@ -67,8 +87,8 @@ async def create_razorpay_order(
 @router.post("/razorpay/verify")
 async def verify_razorpay_payment(
     payload: RazorpayVerifyRequest,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-01 & F-11: Authoritative Payment Verification.
@@ -134,8 +154,8 @@ async def verify_razorpay_payment(
 @router.post("/razorpay/webhook", response_model=WebhookResponse)
 async def razorpay_webhook(
     request: Request,
-    x_razorpay_signature: Optional[str] = Header(None),
-    db: AsyncSession = Depends(get_db)
+    x_razorpay_signature: str | None = Header(None),
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-01: Razorpay Webhook Verification with raw request body HMAC-SHA256
@@ -162,7 +182,7 @@ async def razorpay_webhook(
 
     try:
         event_data = json.loads(raw_body.decode("utf-8"))
-    except Exception:
+    except Exception:  # noqa: BLE001
         raise HTTPException(status_code=400, detail="Invalid JSON webhook payload")
 
     event_id = event_data.get("id") or event_data.get("event_id") or f"evt_{int(time.time()*1000)}"

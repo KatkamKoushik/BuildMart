@@ -1,27 +1,27 @@
 from app.db.session import Base
 from app.models.models import (
-    User,
-    Shop,
-    Category,
+    Banner,
     Brand,
-    Product,
     CartItem,
+    Category,
     Order,
     OrderItem,
-    Banner,
-    QuoteRequest
+    Product,
+    QuoteRequest,
+    Shop,
+    User,
 )
 
 __all__ = [
+    "Banner",
     "Base",
-    "User",
-    "Shop",
-    "Category",
     "Brand",
-    "Product",
     "CartItem",
+    "Category",
     "Order",
     "OrderItem",
-    "Banner",
-    "QuoteRequest"
+    "Product",
+    "QuoteRequest",
+    "Shop",
+    "User"
 ]

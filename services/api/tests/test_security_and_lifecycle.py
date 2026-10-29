@@ -1,8 +1,11 @@
-import hmac
 import hashlib
+import hmac
 import json
+
 import pytest
+
 from app.core.config import Settings, settings
+
 
 @pytest.mark.asyncio
 async def test_unauthenticated_protected_routes(async_client):

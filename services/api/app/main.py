@@ -1,26 +1,28 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, HTTPException
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.exception_handlers import http_exception_handler
 
-from app.core.config import settings
-from app.db.session import engine, Base
 from app.api.v1 import (
-    health,
-    categories,
-    brands,
-    banners,
-    shops,
-    products,
-    cart,
-    checkout,
-    orders,
-    quotes,
+    admin,
     auth,
-    admin
+    banners,
+    brands,
+    cart,
+    categories,
+    checkout,
+    health,
+    orders,
+    products,
+    quotes,
+    shops,
 )
+from app.core.config import settings
+from app.db.session import Base, engine
 from app.seed import seed_database
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,7 +31,7 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     try:
         await seed_database()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"[Lifespan] Seeding notice: {e}")
     yield
     # Shutdown

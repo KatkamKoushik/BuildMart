@@ -1,25 +1,26 @@
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import asc, desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_, desc, asc
+
 from app.db.session import get_db
-from app.models.models import Product, Category, Shop, Brand
+from app.models.models import Product
 from app.schemas.schemas import ProductResponse
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-@router.get("", response_model=List[ProductResponse])
+@router.get("", response_model=list[ProductResponse])
 async def list_products(
-    category_id: Optional[str] = Query(None),
-    brand_id: Optional[str] = Query(None),
-    shop_id: Optional[str] = Query(None),
-    q: Optional[str] = Query(None, description="Search term for title or description"),
-    min_price: Optional[float] = Query(None),
-    max_price: Optional[float] = Query(None),
-    sort_by: Optional[str] = Query("popular", description="popular, price_low, price_high, rating"),
+    category_id: str | None = Query(None),
+    brand_id: str | None = Query(None),
+    shop_id: str | None = Query(None),
+    q: str | None = Query(None, description="Search term for title or description"),
+    min_price: float | None = Query(None),
+    max_price: float | None = Query(None),
+    sort_by: str | None = Query("popular", description="popular, price_low, price_high, rating"),
     limit: int = Query(50, ge=1, le=250),
     page: int = Query(1, ge=1),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     query = select(Product).where(Product.is_active == True)
 
@@ -61,7 +62,7 @@ async def list_products(
     return products
 
 @router.get("/{product_id}", response_model=ProductResponse)
-async def get_product(product_id: str, db: AsyncSession = Depends(get_db)):
+async def get_product(product_id: str, db: AsyncSession = Depends(get_db)):  # noqa: B008
     result = await db.execute(select(Product).where(Product.id == product_id))
     product = result.scalars().first()
     if not product:

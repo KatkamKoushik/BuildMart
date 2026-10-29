@@ -1,28 +1,29 @@
+
 from app.models.models import (
-    User,
-    Shop,
-    Category,
+    Banner,
     Brand,
-    Product,
     CartItem,
+    Category,
     Order,
     OrderItem,
-    Banner,
+    Product,
     QuoteRequest,
-    WebhookEvent
+    Shop,
+    User,
+    WebhookEvent,
 )
 
 __all__ = [
-    "User",
-    "Shop",
-    "Category",
+    "Banner",
     "Brand",
-    "Product",
     "CartItem",
+    "Category",
     "Order",
     "OrderItem",
-    "Banner",
+    "Product",
     "QuoteRequest",
+    "Shop",
+    "User",
     "WebhookEvent"
 ]
 

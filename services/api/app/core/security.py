@@ -1,13 +1,15 @@
+from datetime import UTC, datetime, timedelta
+from typing import Any
+
 import jwt
-from datetime import datetime, timedelta, timezone
-from typing import Optional, List, Dict, Any
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.config import settings
 from app.db.session import get_db
 from app.models.models import User
-from app.core.config import settings
 
 security_scheme = HTTPBearer(auto_error=False)
 
@@ -20,12 +22,12 @@ SELLER_USER_EMAIL = "seller@buildmart.dev"
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
-def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = None) -> str:
     """
     Creates a signed JWT access token with standard claims.
     """
     to_encode = data.copy()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     if expires_delta:
         expire = now + expires_delta
     else:
@@ -34,7 +36,7 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
     return encoded_jwt
 
-def decode_access_token(token: str) -> Dict[str, Any]:
+def decode_access_token(token: str) -> dict[str, Any]:
     """
     Decodes and validates a JWT access token.
     Raises HTTPException(401) on expired or invalid token.
@@ -127,8 +129,8 @@ async def get_current_user_from_token(token: str, db: AsyncSession) -> User:
     return user
 
 async def get_current_user(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
-    db: AsyncSession = Depends(get_db)
+    credentials: HTTPAuthorizationCredentials | None = Depends(security_scheme),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ) -> User:
     """
     Resolves the current user.
@@ -151,8 +153,8 @@ async def get_current_user(
     )
 
 async def require_authenticated_user(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
-    db: AsyncSession = Depends(get_db)
+    credentials: HTTPAuthorizationCredentials | None = Depends(security_scheme),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ) -> User:
     """
     Strict authentication dependency. Fails fast with 401 if unauthenticated,
@@ -166,12 +168,12 @@ async def require_authenticated_user(
         )
     return await get_current_user_from_token(credentials.credentials, db)
 
-def require_role(allowed_roles: List[str]):
+def require_role(allowed_roles: list[str]):
     """
     F-02: Role-based authorization guard.
     Rejects unauthorized roles with 403 Forbidden.
     """
-    async def role_checker(current_user: User = Depends(require_authenticated_user)) -> User:
+    async def role_checker(current_user: User = Depends(require_authenticated_user)) -> User:  # noqa: B008
         if current_user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

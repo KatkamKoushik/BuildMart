@@ -1,11 +1,17 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+
+from app.core.security import get_current_user
 from app.db.session import get_db
 from app.models.models import CartItem, Product, User
-from app.schemas.schemas import CartItemAdd, CartItemUpdate, CartResponse, CartItemDetail
-from app.core.security import get_current_user
+from app.schemas.schemas import (
+    CartItemAdd,
+    CartItemDetail,
+    CartItemUpdate,
+    CartResponse,
+)
 
 router = APIRouter(prefix="/cart", tags=["Cart"])
 
@@ -17,7 +23,7 @@ async def calculate_cart_summary(db: AsyncSession, user_id: str) -> CartResponse
     )
     rows = result.all()
 
-    items: List[CartItemDetail] = []
+    items: list[CartItemDetail] = []
     subtotal = 0.0
     total_count = 0
 
@@ -60,16 +66,16 @@ async def calculate_cart_summary(db: AsyncSession, user_id: str) -> CartResponse
 
 @router.get("", response_model=CartResponse)
 async def get_cart(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     return await calculate_cart_summary(db, current_user.id)
 
 @router.post("/items", response_model=CartResponse)
 async def add_to_cart(
     payload: CartItemAdd,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     # Verify product exists
     prod_res = await db.execute(select(Product).where(Product.id == payload.product_id))
@@ -103,8 +109,8 @@ async def add_to_cart(
 async def update_cart_item(
     item_id: str,
     payload: CartItemUpdate,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     item_res = await db.execute(
         select(CartItem).where(CartItem.id == item_id, CartItem.user_id == current_user.id)
@@ -124,8 +130,8 @@ async def update_cart_item(
 @router.delete("/items/{item_id}", response_model=CartResponse)
 async def remove_cart_item(
     item_id: str,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     item_res = await db.execute(
         select(CartItem).where(CartItem.id == item_id, CartItem.user_id == current_user.id)
@@ -138,9 +144,8 @@ async def remove_cart_item(
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT)
 async def clear_cart(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     await db.execute(delete(CartItem).where(CartItem.user_id == current_user.id))
     await db.commit()
-    return None

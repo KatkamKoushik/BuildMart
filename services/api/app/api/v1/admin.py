@@ -1,26 +1,24 @@
-from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, desc, delete
 from sqlalchemy.orm import selectinload
-from app.db.session import get_db
-from app.models.models import User, Product, Order, Category, Brand, Shop
-from app.schemas.schemas import (
-    ProductResponse,
-    ProductCreate,
-    ProductUpdate,
-    OrderResponse,
-    OrderStatusUpdate,
-    UserResponse
-)
+
 from app.core.security import require_admin
+from app.db.session import get_db
+from app.models.models import Brand, Category, Order, Product, User
+from app.schemas.schemas import (
+    OrderResponse,
+    ProductCreate,
+    ProductResponse,
+    ProductUpdate,
+)
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 @router.get("/metrics")
 async def get_admin_metrics(
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02: Admin-only platform metrics and KPI summary.
@@ -38,13 +36,13 @@ async def get_admin_metrics(
         "admin_caller": admin_user.email
     }
 
-@router.get("/orders", response_model=List[OrderResponse])
+@router.get("/orders", response_model=list[OrderResponse])
 async def list_all_orders_admin(
-    status_filter: Optional[str] = Query(None),
+    status_filter: str | None = Query(None),
     limit: int = Query(50, ge=1, le=200),
     page: int = Query(1, ge=1),
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02: Admin-only access to view all system orders.
@@ -62,8 +60,8 @@ async def list_all_orders_admin(
 @router.post("/products", response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
 async def create_product_admin(
     payload: ProductCreate,
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02: Admin-only product creation.
@@ -102,8 +100,8 @@ async def create_product_admin(
 async def update_product_admin(
     product_id: str,
     payload: ProductUpdate,
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02: Admin-only product modification.
@@ -124,8 +122,8 @@ async def update_product_admin(
 @router.delete("/products/{product_id}", status_code=status.HTTP_200_OK)
 async def delete_product_admin(
     product_id: str,
-    admin_user: User = Depends(require_admin),
-    db: AsyncSession = Depends(get_db)
+    admin_user: User = Depends(require_admin),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     F-02: Admin-only product deletion.

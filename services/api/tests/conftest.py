@@ -1,14 +1,12 @@
-import pytest
-import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-
-from app.main import app
-from app.db.session import Base, get_db
-from app.models.models import User
-from app.seed import seed_database
-
 from pathlib import Path
+
+import pytest_asyncio
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+from app.db.session import Base, get_db
+from app.main import app
+from app.seed import seed_database
 
 TEST_DB_FILE = Path(__file__).resolve().parent.parent / "test_buildmart.db"
 TEST_DATABASE_URL = f"sqlite+aiosqlite:///{TEST_DB_FILE}"

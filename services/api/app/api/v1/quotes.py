@@ -1,8 +1,10 @@
 import io
 import time
+
 from fastapi import APIRouter, Depends, HTTPException, Response
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.db.session import get_db
 from app.models.models import QuoteRequest
 from app.schemas.schemas import QuoteRequestCreate, QuoteRequestResponse
@@ -12,7 +14,7 @@ router = APIRouter(prefix="/quotes", tags=["Quotes"])
 @router.post("", response_model=QuoteRequestResponse)
 async def create_quote_request(
     payload: QuoteRequestCreate,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     timestamp = int(time.time())
     quote_number = f"QT-{timestamp}"
@@ -41,7 +43,7 @@ async def create_quote_request(
 @router.get("/{quote_id}/pdf")
 async def download_quote_pdf(
     quote_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     result = await db.execute(
         select(QuoteRequest).where(
@@ -54,10 +56,16 @@ async def download_quote_pdf(
 
     # Generate PDF using ReportLab
     try:
-        from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+        from reportlab.platypus import (
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
 
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
@@ -119,5 +127,5 @@ async def download_quote_pdf(
             media_type="application/pdf",
             headers={"Content-Disposition": f"attachment; filename=quote_{quote.quote_number}.pdf"}
         )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate PDF: {str(e)}")
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"Failed to generate PDF: {e!s}")

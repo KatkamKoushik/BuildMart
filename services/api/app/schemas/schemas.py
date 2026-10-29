@@ -1,34 +1,36 @@
-from typing import List, Optional, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
 
 # Common Address Schema
 class AddressSchema(BaseModel):
-    id: Optional[str] = None
+    id: str | None = None
     fullName: str
     addressLine1: str
-    addressLine2: Optional[str] = None
+    addressLine2: str | None = None
     city: str
     state: str
     postalCode: str
     phone: str
-    isDefault: Optional[bool] = False
+    isDefault: bool | None = False
 
 # User Schemas
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    phone: Optional[str] = None
+    phone: str | None = None
     role: str = "buyer"
-    profile_image_url: Optional[str] = None
+    profile_image_url: str | None = None
 
 class UserCreate(UserBase):
-    firebase_uid: Optional[str] = None
+    firebase_uid: str | None = None
 
 class UserResponse(UserBase):
     id: str
-    firebase_uid: Optional[str] = None
-    saved_addresses: List[Dict[str, Any]] = []
+    firebase_uid: str | None = None
+    saved_addresses: list[dict[str, Any]] = []
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
@@ -39,7 +41,7 @@ class CategoryResponse(BaseModel):
     name: str
     image_url: str
     sort_order: int = 0
-    product_count: Optional[int] = 0
+    product_count: int | None = 0
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -48,7 +50,7 @@ class BrandResponse(BaseModel):
     id: str
     name: str
     image_url: str
-    category_id: Optional[str] = None
+    category_id: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -56,17 +58,17 @@ class BrandResponse(BaseModel):
 class ShopResponse(BaseModel):
     id: str
     name: str
-    logo_url: Optional[str] = None
-    cover_image_url: Optional[str] = None
+    logo_url: str | None = None
+    cover_image_url: str | None = None
     rating: float = 4.5
     review_count: int = 0
     address: str
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
-    distance_km: Optional[float] = 1.5
+    latitude: float | None = None
+    longitude: float | None = None
+    distance_km: float | None = 1.5
     is_open: bool = True
-    categories: List[str] = []
-    phone: Optional[str] = None
+    categories: list[str] = []
+    phone: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -74,17 +76,17 @@ class ShopResponse(BaseModel):
 class ProductResponse(BaseModel):
     id: str
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     price: float
-    original_price: Optional[float] = None
+    original_price: float | None = None
     category_id: str
-    category_name: Optional[str] = None
-    shop_id: Optional[str] = None
-    shop_name: Optional[str] = None
-    brand_id: Optional[str] = None
-    brand_name: Optional[str] = None
-    image_urls: List[str] = []
-    specifications: Dict[str, Any] = {}
+    category_name: str | None = None
+    shop_id: str | None = None
+    shop_name: str | None = None
+    brand_id: str | None = None
+    brand_name: str | None = None
+    image_urls: list[str] = []
+    specifications: dict[str, Any] = {}
     rating: float = 4.5
     total_reviews: int = 0
     stock_quantity: int = 100
@@ -98,10 +100,10 @@ class ProductResponse(BaseModel):
 class BannerResponse(BaseModel):
     id: str
     title: str
-    subtitle: Optional[str] = None
+    subtitle: str | None = None
     image_url: str
-    target_category: Optional[str] = None
-    discount_text: Optional[str] = None
+    target_category: str | None = None
+    discount_text: str | None = None
     is_featured: bool = True
 
     model_config = ConfigDict(from_attributes=True)
@@ -122,11 +124,11 @@ class CartItemDetail(BaseModel):
     quantity: int
     image_url: str
     unit: str
-    shop_id: Optional[str] = None
+    shop_id: str | None = None
     subtotal: float
 
 class CartResponse(BaseModel):
-    items: List[CartItemDetail]
+    items: list[CartItemDetail]
     subtotal: float
     tax: float
     delivery_fee: float
@@ -137,19 +139,19 @@ class CartResponse(BaseModel):
 # Order Schemas
 class OrderItemResponse(BaseModel):
     id: str
-    product_id: Optional[str] = None
+    product_id: str | None = None
     title: str
     price: float
     quantity: int
     unit: str
-    image_url: Optional[str] = None
+    image_url: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 class OrderCreate(BaseModel):
-    delivery_address: Dict[str, Any]
+    delivery_address: dict[str, Any]
     payment_method: str = "razorpay"
-    items: Optional[List[Dict[str, Any]]] = None
+    items: list[dict[str, Any]] | None = None
 
 class OrderResponse(BaseModel):
     id: str
@@ -162,10 +164,10 @@ class OrderResponse(BaseModel):
     status: str
     payment_method: str
     payment_status: str
-    razorpay_order_id: Optional[str] = None
-    delivery_address: Dict[str, Any]
-    estimated_delivery: Optional[str] = None
-    items: List[OrderItemResponse] = []
+    razorpay_order_id: str | None = None
+    delivery_address: dict[str, Any]
+    estimated_delivery: str | None = None
+    items: list[OrderItemResponse] = []
     created_at: datetime
     updated_at: datetime
 
@@ -173,32 +175,32 @@ class OrderResponse(BaseModel):
 
 # Payment Verification
 class RazorpayOrderCreate(BaseModel):
-    amount: float
+    order_id: str
     currency: str = "INR"
-    receipt: Optional[str] = None
+    receipt: str | None = None
 
 class RazorpayVerifyRequest(BaseModel):
     razorpay_order_id: str
     razorpay_payment_id: str
     razorpay_signature: str
-    order_id: Optional[str] = None
+    order_id: str | None = None
 
 # Quote Schemas
 class QuoteItemSchema(BaseModel):
-    product_id: Optional[str] = None
+    product_id: str | None = None
     title: str
     quantity: float
     unit: str = "units"
-    category: Optional[str] = None
-    notes: Optional[str] = None
+    category: str | None = None
+    notes: str | None = None
 
 class QuoteRequestCreate(BaseModel):
     customer_name: str
     email: EmailStr
     phone: str
-    project_name: Optional[str] = None
+    project_name: str | None = None
     delivery_pincode: str
-    items: List[QuoteItemSchema]
+    items: list[QuoteItemSchema]
 
 class QuoteRequestResponse(BaseModel):
     id: str
@@ -206,9 +208,9 @@ class QuoteRequestResponse(BaseModel):
     customer_name: str
     email: str
     phone: str
-    project_name: Optional[str] = None
+    project_name: str | None = None
     delivery_pincode: str
-    items: List[Dict[str, Any]]
+    items: list[dict[str, Any]]
     estimated_total: float
     status: str
     created_at: datetime
@@ -218,31 +220,31 @@ class QuoteRequestResponse(BaseModel):
 # Admin & Product Management Schemas
 class ProductCreate(BaseModel):
     title: str = Field(..., min_length=2)
-    description: Optional[str] = None
+    description: str | None = None
     price: float = Field(..., gt=0)
-    original_price: Optional[float] = None
+    original_price: float | None = None
     category_id: str
-    shop_id: Optional[str] = None
-    brand_id: Optional[str] = None
-    image_urls: List[str] = []
-    specifications: Dict[str, Any] = {}
+    shop_id: str | None = None
+    brand_id: str | None = None
+    image_urls: list[str] = []
+    specifications: dict[str, Any] = {}
     stock_quantity: int = Field(default=100, ge=0)
     unit: str = "unit"
     is_active: bool = True
 
 class ProductUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    price: Optional[float] = Field(None, gt=0)
-    original_price: Optional[float] = None
-    category_id: Optional[str] = None
-    shop_id: Optional[str] = None
-    brand_id: Optional[str] = None
-    image_urls: Optional[List[str]] = None
-    specifications: Optional[Dict[str, Any]] = None
-    stock_quantity: Optional[int] = Field(None, ge=0)
-    unit: Optional[str] = None
-    is_active: Optional[bool] = None
+    title: str | None = None
+    description: str | None = None
+    price: float | None = Field(None, gt=0)
+    original_price: float | None = None
+    category_id: str | None = None
+    shop_id: str | None = None
+    brand_id: str | None = None
+    image_urls: list[str] | None = None
+    specifications: dict[str, Any] | None = None
+    stock_quantity: int | None = Field(None, ge=0)
+    unit: str | None = None
+    is_active: bool | None = None
 
 class OrderStatusUpdate(BaseModel):
     status: str = Field(..., description="pending, confirmed, processing, dispatched, delivered, cancelled")
@@ -250,7 +252,7 @@ class OrderStatusUpdate(BaseModel):
 # Token & Auth Schemas
 class TokenRequest(BaseModel):
     email: EmailStr
-    role: Optional[str] = "buyer"
+    role: str | None = "buyer"
 
 class TokenResponse(BaseModel):
     access_token: str

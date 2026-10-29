@@ -1,19 +1,25 @@
 import uuid
-from typing import Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+
+from fastapi import APIRouter, Depends
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.security import (
+    create_access_token,
+    get_current_user,
+    get_or_create_default_user,
+    require_authenticated_user,
+)
 from app.db.session import get_db
 from app.models.models import User
-from app.schemas.schemas import UserResponse, AddressSchema, TokenRequest, TokenResponse
-from app.core.security import get_current_user, require_authenticated_user, create_access_token, get_or_create_default_user
+from app.schemas.schemas import AddressSchema, TokenRequest, TokenResponse, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/token", response_model=TokenResponse)
 async def login_or_issue_token(
     payload: TokenRequest,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     """
     Issues a signed JWT access token for authentication.
@@ -41,14 +47,14 @@ async def login_or_issue_token(
     )
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_profile(current_user: User = Depends(get_current_user)):
+async def get_current_user_profile(current_user: User = Depends(get_current_user)):  # noqa: B008
     return current_user
 
 @router.post("/address", response_model=UserResponse)
 async def add_saved_address(
     address: AddressSchema,
-    current_user: User = Depends(require_authenticated_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_authenticated_user),  # noqa: B008
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ):
     addr_dict = address.model_dump()
     if not addr_dict.get("id"):
