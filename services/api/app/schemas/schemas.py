@@ -173,7 +173,8 @@ class OrderResponse(BaseModel):
 
 # Payment Verification
 class RazorpayOrderCreate(BaseModel):
-    amount: float
+    order_id: Optional[str] = None
+    amount: Optional[float] = None
     currency: str = "INR"
     receipt: Optional[str] = None
 

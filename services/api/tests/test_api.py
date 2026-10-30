@@ -1,4 +1,7 @@
 import pytest
+from app.seed import seed_database
+from tests.conftest import TestAsyncSession
+
 
 @pytest.mark.asyncio
 async def test_health_check(async_client):
@@ -142,3 +145,54 @@ async def test_quote_request_and_pdf(async_client):
     assert pdf_res.status_code == 200
     assert pdf_res.headers["content-type"] == "application/pdf"
     assert len(pdf_res.content) > 500
+
+
+
+@pytest.mark.asyncio
+async def test_order_creation_with_direct_items(async_client):
+    tok_res = await async_client.post(
+        "/api/v1/auth/token", json={"email": "direct_order@buildmart.dev", "role": "buyer"}
+    )
+    token = tok_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    prod_res = await async_client.get("/api/v1/products?limit=2")
+    products = prod_res.json()
+    assert len(products) >= 2
+
+    # 1. Successful direct order with multiple items (exercises batch product query)
+    order_payload = {
+        "items": [
+            {"product_id": products[0]["id"], "quantity": 2},
+            {"product_id": products[1]["id"], "quantity": 3},
+        ],
+        "delivery_address": {
+            "fullName": "Direct Order Site",
+            "addressLine1": "Plot 55, Gachibowli",
+            "city": "Hyderabad",
+            "state": "Telangana",
+            "postalCode": "500032",
+            "phone": "9876543210",
+        },
+        "payment_method": "cod",
+    }
+    res = await async_client.post("/api/v1/orders", json=order_payload, headers=headers)
+    assert res.status_code == 201
+    data = res.json()
+    assert len(data["items"]) == 2
+    assert data["status"] == "confirmed"
+
+    # 2. Non-existent product ID returns 404
+    bad_payload = {
+        "items": [{"product_id": "non_existent_prod_999", "quantity": 1}],
+        "delivery_address": order_payload["delivery_address"],
+        "payment_method": "cod",
+    }
+    bad_res = await async_client.post("/api/v1/orders", json=bad_payload, headers=headers)
+    assert bad_res.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_seed_database_idempotency():
+    # Re-running seed_database on existing data should be idempotent with 0 errors
+    await seed_database(session_factory=TestAsyncSession)

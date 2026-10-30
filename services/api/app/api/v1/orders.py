@@ -1,5 +1,5 @@
 import time
-from typing import List, Optional
+from typing import List, Tuple
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 from app.db.session import get_db
 from app.models.models import Order, OrderItem, CartItem, Product, User
 from app.schemas.schemas import OrderCreate, OrderResponse, OrderStatusUpdate
-from app.core.security import get_current_user, require_authenticated_user, require_admin
+from app.core.security import require_authenticated_user, require_admin
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -26,6 +26,93 @@ VALID_TRANSITIONS = {
     "cancelled": []  # Terminal state
 }
 
+def calculate_order_financials(subtotal: float) -> Tuple[float, float, float, float]:
+    """
+    Authoritative order calculation enforcing:
+    - 18% GST (standard Indian construction materials tax rate)
+    - Free delivery for orders >= Rs. 5000, otherwise Rs. 250
+    Returns (subtotal, tax, delivery_fee, total_amount).
+    """
+    subtotal = round(subtotal, 2)
+    tax = round(subtotal * 0.18, 2)
+    delivery_fee = 0.0 if subtotal >= 5000 else 250.0
+    total_amount = round(subtotal + tax + delivery_fee, 2)
+    return subtotal, tax, delivery_fee, total_amount
+
+
+def build_items_from_cart(cart_rows) -> Tuple[float, List[OrderItem]]:
+    """
+    Validates cart items and builds OrderItem instances using current product prices.
+    """
+    subtotal = 0.0
+    order_items: List[OrderItem] = []
+    for cart_item, product in cart_rows:
+        if cart_item.quantity <= 0:
+            raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
+        if not product.is_active:
+            raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
+
+        item_total = round(product.price * cart_item.quantity, 2)
+        subtotal += item_total
+        order_items.append(
+            OrderItem(
+                product_id=product.id,
+                title=product.title,
+                price=product.price,
+                quantity=cart_item.quantity,
+                unit=product.unit,
+                image_url=product.image_urls[0] if product.image_urls else ""
+            )
+        )
+    return subtotal, order_items
+
+
+async def build_items_from_payload(
+    items: List[dict], db: AsyncSession
+) -> Tuple[float, List[OrderItem]]:
+    """
+    Batch-fetches products and builds OrderItem instances from direct order items.
+    Prevents N+1 queries by batching product IDs.
+    """
+    product_ids = [
+        item.get("productId") or item.get("product_id")
+        for item in items
+        if item.get("productId") or item.get("product_id")
+    ]
+    products_by_id = {}
+    if product_ids:
+        prod_res = await db.execute(select(Product).where(Product.id.in_(product_ids)))
+        products_by_id = {prod.id: prod for prod in prod_res.scalars().all()}
+
+    subtotal = 0.0
+    order_items: List[OrderItem] = []
+    for item in items:
+        prod_id = item.get("productId") or item.get("product_id")
+        qty = item.get("quantity", 1)
+        if not isinstance(qty, int) or qty <= 0:
+            raise HTTPException(status_code=422, detail="Item quantity must be a positive integer")
+
+        product = products_by_id.get(prod_id)
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
+        if not product.is_active:
+            raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
+
+        item_total = round(product.price * qty, 2)
+        subtotal += item_total
+        order_items.append(
+            OrderItem(
+                product_id=product.id,
+                title=product.title,
+                price=product.price,
+                quantity=qty,
+                unit=product.unit,
+                image_url=product.image_urls[0] if product.image_urls else ""
+            )
+        )
+    return subtotal, order_items
+
+
 @router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
     payload: OrderCreate,
@@ -39,7 +126,6 @@ async def create_order(
     - Enforces 18% GST and standard delivery fee rules.
     - Never marks online orders as 'paid' at creation time.
     """
-    # Fetch user's cart items if explicit items not provided
     cart_res = await db.execute(
         select(CartItem, Product)
         .join(Product, CartItem.product_id == Product.id)
@@ -50,69 +136,19 @@ async def create_order(
     if not cart_rows and not payload.items:
         raise HTTPException(status_code=400, detail="Cannot place order with empty cart")
 
-    subtotal = 0.0
-    order_items_to_create = []
+    if payload.items:
+        subtotal, order_items = await build_items_from_payload(payload.items, db)
+    else:
+        subtotal, order_items = build_items_from_cart(cart_rows)
 
-    if cart_rows and not payload.items:
-        for cart_item, product in cart_rows:
-            if cart_item.quantity <= 0:
-                raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
-            if not product.is_active:
-                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
-
-            item_total = round(product.price * cart_item.quantity, 2)
-            subtotal += item_total
-            order_items_to_create.append(
-                OrderItem(
-                    product_id=product.id,
-                    title=product.title,
-                    price=product.price,
-                    quantity=cart_item.quantity,
-                    unit=product.unit,
-                    image_url=product.image_urls[0] if product.image_urls else ""
-                )
-            )
-    elif payload.items:
-        for item in payload.items:
-            prod_id = item.get("productId") or item.get("product_id")
-            qty = item.get("quantity", 1)
-            if not isinstance(qty, int) or qty <= 0:
-                raise HTTPException(status_code=422, detail="Item quantity must be a positive integer")
-
-            prod_res = await db.execute(select(Product).where(Product.id == prod_id))
-            product = prod_res.scalars().first()
-            if not product:
-                raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
-            if not product.is_active:
-                raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
-
-            item_total = round(product.price * qty, 2)
-            subtotal += item_total
-            order_items_to_create.append(
-                OrderItem(
-                    product_id=product.id,
-                    title=product.title,
-                    price=product.price,
-                    quantity=qty,
-                    unit=product.unit,
-                    image_url=product.image_urls[0] if product.image_urls else ""
-                )
-            )
-
-    if not order_items_to_create:
+    if not order_items:
         raise HTTPException(status_code=400, detail="Order must contain at least one valid product")
 
-    # Authoritative calculation: 18% GST and delivery policy
-    subtotal = round(subtotal, 2)
-    tax = round(subtotal * 0.18, 2)
-    delivery_fee = 0.0 if subtotal >= 5000 else 250.0
-    total_amount = round(subtotal + tax + delivery_fee, 2)
+    subtotal, tax, delivery_fee, total_amount = calculate_order_financials(subtotal)
     estimated_delivery = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%d %b %Y")
 
-    # Payment status: COD is pending payment on delivery; Razorpay is pending online verification
     payment_method = payload.payment_method.lower()
     initial_status = "confirmed" if payment_method == "cod" else "pending"
-    initial_payment_status = "pending"
 
     order = Order(
         order_number=generate_order_number(),
@@ -123,28 +159,26 @@ async def create_order(
         total_amount=total_amount,
         status=initial_status,
         payment_method=payment_method,
-        payment_status=initial_payment_status,
+        payment_status="pending",
         delivery_address=payload.delivery_address,
         estimated_delivery=estimated_delivery
     )
     db.add(order)
     await db.flush()
 
-    for item in order_items_to_create:
+    for item in order_items:
         item.order_id = order.id
         db.add(item)
 
     # Clear user's cart
     await db.execute(delete(CartItem).where(CartItem.user_id == current_user.id))
-
     await db.commit()
 
     # Re-query with eager selectinload
     res = await db.execute(
         select(Order).options(selectinload(Order.items)).where(Order.id == order.id)
     )
-    final_order = res.scalars().first()
-    return final_order
+    return res.scalars().first()
 
 @router.get("", response_model=List[OrderResponse])
 async def list_orders(

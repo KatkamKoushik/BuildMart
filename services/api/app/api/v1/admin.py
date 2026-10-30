@@ -1,17 +1,15 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, desc, delete
+from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from app.db.session import get_db
-from app.models.models import User, Product, Order, Category, Brand, Shop
+from app.models.models import User, Product, Order, Category, Brand
 from app.schemas.schemas import (
     ProductResponse,
     ProductCreate,
     ProductUpdate,
-    OrderResponse,
-    OrderStatusUpdate,
-    UserResponse
+    OrderResponse
 )
 from app.core.security import require_admin
 

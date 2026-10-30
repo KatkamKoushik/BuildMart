@@ -58,7 +58,7 @@ export default function CheckoutPage() {
 
       if (paymentMethod === "razorpay") {
         // 2. Initiate server-side Razorpay order
-        const rzp = await api.createRazorpayOrder(order.total_amount, order.order_number);
+        const rzp = await api.createRazorpayOrder(order.total_amount, order.order_number, order.id);
 
         // 3. Complete server-side verification before confirming payment
         await api.verifyRazorpayPayment({

@@ -138,12 +138,12 @@ export const api = {
   },
 
   // Checkout & Payments
-  async createRazorpayOrder(amount: number, receipt?: string) {
+  async createRazorpayOrder(amount: number, receipt?: string, order_id?: string) {
     return fetchJson<{ order_id: string; amount: number; currency: string; key_id: string }>(
       "/checkout/razorpay/create-order",
       {
         method: "POST",
-        body: JSON.stringify({ amount, currency: "INR", receipt }),
+        body: JSON.stringify({ amount, currency: "INR", receipt, order_id: order_id || receipt }),
       }
     );
   },

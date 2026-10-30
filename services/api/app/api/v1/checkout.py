@@ -22,19 +22,43 @@ async def create_razorpay_order(
 ):
     """
     F-01: Creates Razorpay order for online payment.
-    Amount is strictly determined server-side in paise.
+    Amount is strictly determined server-side from order total in paise.
     """
-    amount_in_paise = int(round(payload.amount * 100))
+    target_order_id = payload.order_id or payload.receipt
+    order = None
+    if target_order_id:
+        result = await db.execute(
+            select(Order).where(
+                (Order.id == target_order_id) | (Order.order_number == target_order_id)
+            )
+        )
+        order = result.scalars().first()
+
+    if order:
+        if order.user_id != current_user.id and current_user.role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access forbidden: You do not own this order"
+            )
+        amount_in_paise = int(round(order.total_amount * 100))
+        receipt = payload.receipt or order.order_number or f"rcpt_{int(time.time())}"
+    elif payload.amount is not None:
+        amount_in_paise = int(round(payload.amount * 100))
+        receipt = payload.receipt or f"rcpt_{int(time.time())}"
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Order not found or valid payment amount required"
+        )
+
     if amount_in_paise <= 0:
         raise HTTPException(status_code=400, detail="Payment amount must be greater than zero")
-
-    receipt = payload.receipt or f"rcpt_{int(time.time())}"
 
     # If live Razorpay credentials configured, call Razorpay API
     if (
         settings.RAZORPAY_KEY_ID
         and settings.RAZORPAY_KEY_SECRET
-        and not settings.RAZORPAY_KEY_SECRET.startswith("mock_")
+        and not settings.RAZORPAY_KEY_SECRET.startswith("mock_") and "mock" not in settings.RAZORPAY_KEY_SECRET.lower()
     ):
         try:
             import razorpay

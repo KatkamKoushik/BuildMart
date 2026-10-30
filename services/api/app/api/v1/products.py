@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, desc, asc
 from app.db.session import get_db
-from app.models.models import Product, Category, Shop, Brand
+from app.models.models import Product
 from app.schemas.schemas import ProductResponse
 
 router = APIRouter(prefix="/products", tags=["Products"])

@@ -68,6 +68,9 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   updateQuantity: async (itemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      return get().removeItem(itemId);
+    }
     try {
       set({ isLoading: true });
       const summary = await api.updateCartItem(itemId, quantity);
