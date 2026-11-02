@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from app.db.session import get_db
+from app.db.mongodb import check_mongo_health
 from app.core.config import settings
 
 router = APIRouter(prefix="/health", tags=["Health"])
@@ -43,9 +44,15 @@ async def health_readiness(db: AsyncSession = Depends(get_db)):
             }
         )
 
-    return {
+    res = {
         "status": "ready",
         "database": "connected",
         "service": settings.PROJECT_NAME,
         "environment": settings.ENVIRONMENT
     }
+
+    if settings.MONGODB_URI:
+        mongo_healthy = check_mongo_health()
+        res["mongodb"] = "connected" if mongo_healthy else "degraded"
+
+    return res

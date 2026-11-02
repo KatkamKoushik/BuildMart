@@ -2,7 +2,7 @@ name: API CI (FastAPI)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, 'feat/**' ]
     paths:
       - 'services/api/**'
       - '.github/workflows/ci-api.yml'

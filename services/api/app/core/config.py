@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str = Field(default="")
     CLOUDINARY_API_SECRET: str = Field(default="")
 
+    # MongoDB / Firestore with MongoDB Compatibility
+    MONGODB_URI: Optional[str] = Field(default=None)
+    MONGODB_DB_NAME: str = Field(default="buildmart")
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

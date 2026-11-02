@@ -2,7 +2,7 @@ name: Mobile CI (Flutter)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, 'feat/**' ]
     paths:
       - 'mobile/**'
       - '.github/workflows/flutter_ci.yml'
@@ -46,6 +46,10 @@ jobs:
           echo "Preparing safe environment configuration from .env.example..."
           cp .env.example .env
           test -f .env && echo ".env successfully instantiated for asset bundling"
+          if [ ! -f android/app/google-services.json ]; then
+            echo "Instantiating placeholder google-services.json from template..."
+            cp android/app/google-services.json.example android/app/google-services.json
+          fi
 
       - name: Install dependencies
         run: flutter pub get
@@ -87,6 +91,10 @@ jobs:
           echo "Preparing safe environment configuration from .env.example..."
           cp .env.example .env
           test -f .env && echo ".env successfully instantiated for asset bundling"
+          if [ ! -f android/app/google-services.json ]; then
+            echo "Instantiating placeholder google-services.json from template..."
+            cp android/app/google-services.json.example android/app/google-services.json
+          fi
 
       - name: Install dependencies
         run: flutter pub get
