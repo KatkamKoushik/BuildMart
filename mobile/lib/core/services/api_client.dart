@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -48,35 +49,63 @@ class ApiClient {
       uri = uri.replace(queryParameters: queryParams);
     }
 
-    final headers = await _headers(includeAuth: auth);
-    final response = await http.get(uri, headers: headers);
+    try {
+      final headers = await _headers(includeAuth: auth);
+      final response = await http
+          .get(uri, headers: headers)
+          .timeout(const Duration(seconds: 15));
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(utf8.decode(response.bodyBytes));
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(utf8.decode(response.bodyBytes));
+      }
+      throw ApiException(
+        statusCode: response.statusCode,
+        message: 'GET $endpoint failed: ${response.body}',
+      );
+    } on TimeoutException {
+      throw ApiException(
+        statusCode: 408,
+        message: 'GET $endpoint timed out after 15 seconds',
+      );
+    } on SocketException catch (e) {
+      throw ApiException(
+        statusCode: 503,
+        message: 'Network unreachable: ${e.message}',
+      );
     }
-    throw ApiException(
-      statusCode: response.statusCode,
-      message: 'GET $endpoint failed: ${response.body}',
-    );
   }
 
   Future<dynamic> post(String endpoint,
       {dynamic body, bool auth = true}) async {
-    final uri = Uri.parse('$baseUrl$endpoint');
-    final headers = await _headers(includeAuth: auth);
-    final response = await http.post(
-      uri,
-      headers: headers,
-      body: body != null ? jsonEncode(body) : null,
-    );
+    try {
+      final uri = Uri.parse('$baseUrl$endpoint');
+      final headers = await _headers(includeAuth: auth);
+      final response = await http
+          .post(
+            uri,
+            headers: headers,
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(const Duration(seconds: 15));
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(utf8.decode(response.bodyBytes));
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(utf8.decode(response.bodyBytes));
+      }
+      throw ApiException(
+        statusCode: response.statusCode,
+        message: 'POST $endpoint failed: ${response.body}',
+      );
+    } on TimeoutException {
+      throw ApiException(
+        statusCode: 408,
+        message: 'POST $endpoint timed out after 15 seconds',
+      );
+    } on SocketException catch (e) {
+      throw ApiException(
+        statusCode: 503,
+        message: 'Network unreachable: ${e.message}',
+      );
     }
-    throw ApiException(
-      statusCode: response.statusCode,
-      message: 'POST $endpoint failed: ${response.body}',
-    );
   }
 
   // Catalog APIs
@@ -100,29 +129,21 @@ class ApiClient {
     return res is List ? res : [];
   }
 
-  Future<List<dynamic>> getProducts({
-    String? categoryId,
-    String? brandId,
-    String? shopId,
-    String? query,
-    int limit = 50,
-  }) async {
-    final params = <String, String>{'limit': limit.toString()};
-    if (categoryId != null) params['category_id'] = categoryId;
-    if (brandId != null) params['brand_id'] = brandId;
-    if (shopId != null) params['shop_id'] = shopId;
-    if (query != null && query.isNotEmpty) params['q'] = query;
-
-    final res = await get('/products', queryParams: params, auth: false);
+  Future<List<dynamic>> getProducts(
+      {String? categoryId, String? search}) async {
+    final Map<String, String> qp = {};
+    if (categoryId != null) qp['category_id'] = categoryId;
+    if (search != null) qp['q'] = search;
+    final res = await get('/products', queryParams: qp, auth: false);
     return res is List ? res : [];
   }
 
-  Future<Map<String, dynamic>> getProduct(String id) async {
+  Future<Map<String, dynamic>?> getProduct(String id) async {
     final res = await get('/products/$id', auth: false);
-    return res is Map<String, dynamic> ? res : {};
+    return res is Map<String, dynamic> ? res : null;
   }
 
-  // Cart & Orders
+  // Cart & Order APIs
   Future<dynamic> getCart() => get('/cart', auth: true);
 
   Future<dynamic> addToCart(String productId, int quantity) =>
@@ -132,15 +153,9 @@ class ApiClient {
   Future<dynamic> createOrder(Map<String, dynamic> orderPayload) =>
       post('/orders', body: orderPayload, auth: true);
 
-  // Health probe
-  Future<bool> checkHealth() async {
-    try {
-      final res = await get('/health', auth: false);
-      return res['status'] == 'healthy';
-    } catch (_) {
-      return false;
-    }
-  }
+  Future<dynamic> initializePayment(int orderId) =>
+      post('/checkout/create-razorpay-order',
+          body: {'order_id': orderId}, auth: true);
 }
 
 class ApiException implements Exception {
@@ -150,7 +165,7 @@ class ApiException implements Exception {
   ApiException({required this.statusCode, required this.message});
 
   @override
-  String toString() => 'ApiException ($statusCode): $message';
+  String toString() => 'ApiException(status: $statusCode, message: $message)';
 }
 
 final apiClient = ApiClient();

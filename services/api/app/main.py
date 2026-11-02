@@ -1,27 +1,29 @@
+import uuid
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.exception_handlers import http_exception_handler
 
-from app.core.config import settings
-from app.db.session import engine, Base
-from app.db.mongodb import close_mongo_connection
 from app.api.v1 import (
-    health,
-    categories,
-    brands,
-    banners,
-    shops,
-    products,
-    cart,
-    checkout,
-    orders,
-    quotes,
+    admin,
     auth,
-    admin
+    banners,
+    brands,
+    cart,
+    categories,
+    checkout,
+    health,
+    orders,
+    products,
+    quotes,
+    shops,
 )
+from app.core.config import settings
+from app.db.mongodb import close_mongo_connection
+from app.db.session import Base, engine
 from app.seed import seed_database
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.exception_handlers import http_exception_handler
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import JSONResponse
 
 MAX_REQUEST_BODY_SIZE = 10 * 1024 * 1024  # 10 MB
 
@@ -64,10 +66,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Security Headers & Request Limit Middleware
 @app.middleware("http")
 async def security_and_limits_middleware(request: Request, call_next):
+    # Correlation ID propagation (Section 28-B011)
+    request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
     # 1. Reject payloads exceeding maximum allowable request size
     content_length = request.headers.get("content-length")
     if content_length:
@@ -92,6 +97,7 @@ async def security_and_limits_middleware(request: Request, call_next):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["X-Request-ID"] = request_id
     
     if settings.ENVIRONMENT.lower() == "production":
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
