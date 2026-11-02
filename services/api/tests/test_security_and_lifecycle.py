@@ -354,3 +354,71 @@ def test_production_config_fail_fast():
             SECRET_KEY="a-very-long-production-key-with-strictly-valid-chars-123456",
             DEBUG=True
         )
+
+
+@pytest.mark.asyncio
+async def test_dev_token_rejected_in_production(async_client, monkeypatch):
+    """
+    Rule 6: Development bypass tokens must be rejected with 401 when running in production.
+    """
+    monkeypatch.setattr(settings, "ENVIRONMENT", "production")
+    monkeypatch.setattr(settings, "DEBUG", False)
+
+    dev_headers = {"Authorization": "Bearer user:custom-buyer-id:buyer:buyer@buildmart.dev"}
+    res = await async_client.get("/api/v1/orders", headers=dev_headers)
+    assert res.status_code == 401
+    assert "prohibited in production" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_razorpay_order_fails_closed_in_production_without_live_keys(async_client, monkeypatch):
+    """
+    Rule 2 & 4: Production checkouts must fail closed (503) instead of faking sandbox order IDs.
+    """
+    # 1. Obtain a valid authenticated buyer JWT
+    token_res = await async_client.post(
+        "/api/v1/auth/token",
+        json={"email": "buyer@buildmart.dev", "role": "buyer"}
+    )
+    assert token_res.status_code == 200
+    buyer_token = token_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {buyer_token}"}
+
+    # 2. Simulate production environment where live Razorpay key is not configured or mock
+    monkeypatch.setattr(settings, "ENVIRONMENT", "production")
+    monkeypatch.setattr(settings, "DEBUG", False)
+    monkeypatch.setattr(settings, "RAZORPAY_KEY_ID", "")
+    monkeypatch.setattr(settings, "RAZORPAY_KEY_SECRET", "")
+
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/create-order",
+        json={"amount": 1500.0, "currency": "INR"},
+        headers=headers
+    )
+    assert res.status_code == 503
+    assert "production payment gateway is unconfigured or unavailable" in res.json()["detail"].lower()
+
+
+@pytest.mark.asyncio
+async def test_auto_seeding_disabled_in_production(monkeypatch):
+    """
+    Rule 7: Auto-seeding production tables with sample data must be disabled.
+    """
+    from app.main import lifespan, app
+    import app.main
+    from tests.conftest import test_engine
+
+    monkeypatch.setattr(settings, "ENVIRONMENT", "production")
+    monkeypatch.setattr(app.main, "engine", test_engine)
+    seeding_called = False
+
+    async def mock_seed():
+        nonlocal seeding_called
+        seeding_called = True
+
+    monkeypatch.setattr(app.main, "seed_database", mock_seed)
+
+    async with lifespan(app):
+        pass
+
+    assert seeding_called is False, "seed_database should not be executed when ENVIRONMENT == 'production'"

@@ -187,19 +187,19 @@ class RazorpayVerifyRequest(BaseModel):
 # Quote Schemas
 class QuoteItemSchema(BaseModel):
     product_id: Optional[str] = None
-    title: str
-    quantity: float
+    title: str = Field(..., min_length=1)
+    quantity: float = Field(..., gt=0, description="Quantity requested must be strictly greater than 0")
     unit: str = "units"
     category: Optional[str] = None
     notes: Optional[str] = None
 
 class QuoteRequestCreate(BaseModel):
-    customer_name: str
+    customer_name: str = Field(..., min_length=2)
     email: EmailStr
-    phone: str
+    phone: str = Field(..., min_length=10, max_length=15, pattern=r"^\+?[0-9\s\-]{10,15}$")
     project_name: Optional[str] = None
-    delivery_pincode: str
-    items: List[QuoteItemSchema]
+    delivery_pincode: str = Field(..., pattern=r"^\d{6}$", description="Valid 6-digit Indian PIN code")
+    items: List[QuoteItemSchema] = Field(..., min_length=1)
 
 class QuoteRequestResponse(BaseModel):
     id: str

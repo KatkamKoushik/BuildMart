@@ -79,6 +79,13 @@ async def create_razorpay_order(
         except Exception as e:
             raise HTTPException(status_code=502, detail=f"Razorpay provider error: {str(e)}")
 
+    # Fail closed in production mode when live payment credentials are absent
+    if settings.ENVIRONMENT.lower() == "production":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Production payment gateway is unconfigured or unavailable. Valid RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET required."
+        )
+
     # Deterministic development / test sandbox order ID
     mock_order_id = f"order_{int(time.time())}_{current_user.id[:8]}"
     return {

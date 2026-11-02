@@ -1,3 +1,4 @@
+import uuid
 import io
 import time
 from fastapi import APIRouter, Depends, HTTPException, Response
@@ -15,10 +16,21 @@ async def create_quote_request(
     db: AsyncSession = Depends(get_db)
 ):
     timestamp = int(time.time())
-    quote_number = f"QT-{timestamp}"
+    quote_number = f"QT-{timestamp}-{uuid.uuid4().hex[:6].upper()}"
 
-    # Calculate rough estimate if products provided
-    estimated_total = sum(item.quantity * 500 for item in payload.items)
+    # Look up catalog prices for linked products or default to 0.0 (pending vendor quote)
+    product_ids = [item.product_id for item in payload.items if item.product_id]
+    product_map = {}
+    if product_ids:
+        from app.models.models import Product
+        prod_result = await db.execute(select(Product).where(Product.id.in_(product_ids)))
+        for p in prod_result.scalars().all():
+            product_map[p.id] = float(p.price)
+
+    estimated_total = 0.0
+    for item in payload.items:
+        unit_price = product_map.get(item.product_id, 0.0) if item.product_id else 0.0
+        estimated_total += float(item.quantity * unit_price)
 
     items_data = [item.model_dump() for item in payload.items]
 

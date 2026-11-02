@@ -328,3 +328,61 @@ async def test_razorpay_order_creation_provider_error(async_client, monkeypatch)
     )
     assert response.status_code == 502
     assert "razorpay provider error" in response.json()["detail"].lower()
+
+
+@pytest.mark.asyncio
+async def test_quote_request_validation_errors(async_client):
+    """
+    Rule 8: Verify quote request input validation on quantities, pincodes, and phone numbers.
+    """
+    # 1. Non-positive quantity should fail with 422
+    payload_bad_qty = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "9876543210",
+        "delivery_pincode": "500081",
+        "items": [{"title": "Steel Rods", "quantity": 0, "unit": "tonnes"}]
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_bad_qty)
+    assert res.status_code == 422
+
+    # 2. Invalid pincode should fail with 422
+    payload_bad_pin = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "9876543210",
+        "delivery_pincode": "12345",  # 5 digits instead of 6
+        "items": [{"title": "Steel Rods", "quantity": 5, "unit": "tonnes"}]
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_bad_pin)
+    assert res.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_quote_request_catalog_price_estimation(async_client):
+    """
+    Rule 2 & 8: Verify quotes estimate price accurately based on catalog products.
+    """
+    prod_res = await async_client.get("/api/v1/products?limit=1")
+    assert prod_res.status_code == 200
+    prod = prod_res.json()[0]
+
+    quote_payload = {
+        "customer_name": "Enterprise Contracting",
+        "email": "procurement@contracting.com",
+        "phone": "9876543210",
+        "delivery_pincode": "500081",
+        "items": [
+            {
+                "product_id": prod["id"],
+                "title": prod["title"],
+                "quantity": 4,
+                "unit": prod["unit"]
+            }
+        ]
+    }
+    create_res = await async_client.post("/api/v1/quotes", json=quote_payload)
+    assert create_res.status_code == 200
+    quote = create_res.json()
+    expected_estimate = float(prod["price"] * 4)
+    assert abs(quote["estimated_total"] - expected_estimate) < 0.01

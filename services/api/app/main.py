@@ -27,10 +27,13 @@ async def lifespan(app: FastAPI):
     # Startup: ensure tables exist and run seeder if initial setup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    try:
-        await seed_database()
-    except Exception as e:
-        print(f"[Lifespan] Seeding notice: {e}")
+    if settings.ENVIRONMENT.lower() != "production":
+        try:
+            await seed_database()
+        except Exception as e:
+            print(f"[Lifespan] Seeding notice: {e}")
+    else:
+        print("[Lifespan] Production mode: Automatic database seeding is disabled.")
     yield
     # Shutdown
     await engine.dispose()
@@ -46,7 +49,10 @@ app = FastAPI(
 )
 
 # CORS configuration
-origins = settings.cors_origins if settings.ENVIRONMENT.lower() == "production" else ["*"]
+origins = settings.cors_origins
+if not origins or (settings.ENVIRONMENT.lower() != "production" and "*" in origins):
+    origins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

@@ -50,7 +50,7 @@ def live_servers():
     # 2. Start Next.js frontend if not already running
     if not is_port_open(WEB_PORT):
         web_proc = subprocess.Popen(
-            ["cmd.exe", "/c", "pnpm", "--filter", "@buildmart/web", "start", "-p", str(WEB_PORT)],
+            ["cmd.exe", "/c", "pnpm.cmd", "--filter", "@buildmart/web", "start", "-p", str(WEB_PORT)],
             cwd=root_dir,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,

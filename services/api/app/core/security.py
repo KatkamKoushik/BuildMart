@@ -88,8 +88,14 @@ async def get_current_user_from_token(token: str, db: AsyncSession) -> User:
     """
     Resolves a user from a JWT token or developer test token.
     """
-    # 1. Dev token format: user:<email>
+    # 1. Dev token format: user:<email> (Strictly prohibited in production mode)
     if token.startswith("user:"):
+        if settings.ENVIRONMENT.lower() == "production" or not settings.DEBUG:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Development token format is prohibited in production or non-debug environments",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         email = token.replace("user:", "").strip()
         result = await db.execute(select(User).where(User.email == email))
         user = result.scalars().first()
