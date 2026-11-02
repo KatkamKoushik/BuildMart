@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, model_validator
 
@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = Field(default="development")
     DEBUG: bool = Field(default=True)
     SECRET_KEY: str = Field(default="buildmart-dev-secret-key-at-least-32-chars-long")
+    PREVIOUS_SECRET_KEY: Optional[str] = Field(default=None)
+    ADMIN_BOOTSTRAP_SECRET: str = Field(default="dev-admin-bootstrap-secret-min-32-chars")
     
     # Database
     DATABASE_URL: str = Field(default="sqlite+aiosqlite:///./buildmart.db")
@@ -56,11 +58,20 @@ class Settings(BaseSettings):
             if self.DEBUG:
                 raise ValueError("FATAL CONFIG ERROR: DEBUG must be set to False in production.")
             # 3. Reject mock Razorpay credentials in production
-            if self.RAZORPAY_KEY_SECRET.startswith("mock_") or self.RAZORPAY_WEBHOOK_SECRET.startswith("mock_"):
+            if (
+                self.RAZORPAY_KEY_SECRET.startswith("mock_")
+                or self.RAZORPAY_WEBHOOK_SECRET.startswith("mock_")
+                or "mock" in self.RAZORPAY_KEY_SECRET.lower()
+                or "test" in self.RAZORPAY_KEY_ID.lower()
+            ):
                 raise ValueError(
-                    "FATAL CONFIG ERROR: Production mode cannot start with mock Razorpay secrets."
+                    "FATAL CONFIG ERROR: Production mode cannot start with mock or test Razorpay secrets."
+                )
+            # 4. Reject default bootstrap secret
+            if "dev" in self.ADMIN_BOOTSTRAP_SECRET.lower() or len(self.ADMIN_BOOTSTRAP_SECRET) < 32:
+                raise ValueError(
+                    "FATAL CONFIG ERROR: Production mode requires a secure ADMIN_BOOTSTRAP_SECRET with at least 32 characters."
                 )
         return self
 
 settings = Settings()
-

@@ -26,6 +26,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("phone", sa.String(length=20), nullable=True),
+        sa.Column("hashed_password", sa.String(length=255), nullable=True),
         sa.Column("role", sa.String(length=20), nullable=False, server_default="buyer"),
         sa.Column("profile_image_url", sa.Text(), nullable=True),
         sa.Column("saved_addresses", sa.JSON(), nullable=True),

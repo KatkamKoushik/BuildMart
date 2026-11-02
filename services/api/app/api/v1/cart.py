@@ -5,7 +5,7 @@ from sqlalchemy import select, delete
 from app.db.session import get_db
 from app.models.models import CartItem, Product, User
 from app.schemas.schemas import CartItemAdd, CartItemUpdate, CartResponse, CartItemDetail
-from app.core.security import get_current_user
+from app.core.security import require_authenticated_user
 
 router = APIRouter(prefix="/cart", tags=["Cart"])
 
@@ -60,7 +60,7 @@ async def calculate_cart_summary(db: AsyncSession, user_id: str) -> CartResponse
 
 @router.get("", response_model=CartResponse)
 async def get_cart(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
     return await calculate_cart_summary(db, current_user.id)
@@ -68,7 +68,7 @@ async def get_cart(
 @router.post("/items", response_model=CartResponse)
 async def add_to_cart(
     payload: CartItemAdd,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
     # Verify product exists
@@ -103,7 +103,7 @@ async def add_to_cart(
 async def update_cart_item(
     item_id: str,
     payload: CartItemUpdate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
     item_res = await db.execute(
@@ -124,7 +124,7 @@ async def update_cart_item(
 @router.delete("/items/{item_id}", response_model=CartResponse)
 async def remove_cart_item(
     item_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
     item_res = await db.execute(
@@ -138,7 +138,7 @@ async def remove_cart_item(
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT)
 async def clear_cart(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
     await db.execute(delete(CartItem).where(CartItem.user_id == current_user.id))

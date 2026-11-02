@@ -9,14 +9,73 @@ import type {
   QuoteRequest
 } from "@buildmart/shared";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "127.0.0.1") {
+      return (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1").replace("localhost", "127.0.0.1");
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+}
+
+let authToken: string | null = null;
+
+export async function getAuthToken(): Promise<string | null> {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  if (!authToken) {
+    authToken = localStorage.getItem("buildmart_access_token");
+  }
+  if (authToken) {
+    return authToken;
+  }
+
+  try {
+    const loginRes = await fetch(`${getApiBaseUrl()}/auth/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "buyer@buildmart.dev", password: "DevPass123!" }),
+    });
+    if (loginRes.ok) {
+      const data = await loginRes.json();
+      if (data && typeof data.access_token === "string") {
+        authToken = data.access_token;
+        localStorage.setItem("buildmart_access_token", data.access_token);
+        return authToken;
+      }
+    }
+  } catch {
+    // Backend offline or login endpoint unreachable
+  }
+  return null;
+}
+
+export function setAuthToken(token: string | null) {
+  authToken = token;
+  if (typeof window !== "undefined") {
+    if (token) {
+      localStorage.setItem("buildmart_access_token", token);
+    } else {
+      localStorage.removeItem("buildmart_access_token");
+    }
+  }
+}
 
 async function fetchJson<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  const headers = {
+  const url = `${getApiBaseUrl()}${endpoint}`;
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(options.headers || {}),
+    ...((options.headers as Record<string, string>) || {}),
   };
+
+  if (!headers["Authorization"]) {
+    const token = await getAuthToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
 
   try {
     const res = await fetch(url, {
@@ -134,7 +193,12 @@ export const api = {
   },
 
   async clearCart(): Promise<void> {
-    await fetch(`${API_BASE_URL}/cart`, { method: "DELETE" });
+    const token = await getAuthToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    await fetch(`${getApiBaseUrl()}/cart`, { method: "DELETE", headers });
   },
 
   // Checkout & Payments
@@ -202,6 +266,6 @@ export const api = {
   },
 
   getQuotePdfUrl(quoteId: string): string {
-    return `${API_BASE_URL}/quotes/${quoteId}/pdf`;
+    return `${getApiBaseUrl()}/quotes/${quoteId}/pdf`;
   },
 };

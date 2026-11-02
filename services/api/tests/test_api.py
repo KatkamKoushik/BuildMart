@@ -45,8 +45,14 @@ async def test_products_list_and_filter(async_client):
 
 @pytest.mark.asyncio
 async def test_cart_workflow(async_client):
+    # Obtain auth token via login with seeded demo buyer
+    tok_res = await async_client.post("/api/v1/auth/token", json={"email": "buyer@buildmart.dev", "password": "DevPass123!"})
+    assert tok_res.status_code == 200
+    token = tok_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
     # 1. Clear cart
-    await async_client.delete("/api/v1/cart")
+    await async_client.delete("/api/v1/cart", headers=headers)
 
     # 2. Get first product
     prod_res = await async_client.get("/api/v1/products?limit=1")
@@ -57,7 +63,8 @@ async def test_cart_workflow(async_client):
     # 3. Add to cart
     add_res = await async_client.post(
         "/api/v1/cart/items",
-        json={"product_id": test_prod["id"], "quantity": 2}
+        json={"product_id": test_prod["id"], "quantity": 2},
+        headers=headers
     )
     assert add_res.status_code == 200
     cart_data = add_res.json()
@@ -69,22 +76,27 @@ async def test_cart_workflow(async_client):
     item_id = cart_data["items"][0]["id"]
     upd_res = await async_client.put(
         f"/api/v1/cart/items/{item_id}",
-        json={"quantity": 3}
+        json={"quantity": 3},
+        headers=headers
     )
     assert upd_res.status_code == 200
     updated_cart = upd_res.json()
     assert updated_cart["total_count"] == 3
 
     # 5. Remove item
-    del_res = await async_client.delete(f"/api/v1/cart/items/{item_id}")
+    del_res = await async_client.delete(f"/api/v1/cart/items/{item_id}", headers=headers)
     assert del_res.status_code == 200
     empty_cart = del_res.json()
     assert empty_cart["total_count"] == 0
 
 @pytest.mark.asyncio
 async def test_order_creation_and_history(async_client):
-    # Obtain auth token
-    tok_res = await async_client.post("/api/v1/auth/token", json={"email": "order_tester@buildmart.dev", "role": "buyer"})
+    # Obtain auth token via registration
+    tok_res = await async_client.post("/api/v1/auth/register", json={
+        "name": "Order Tester",
+        "email": "order_tester@buildmart.dev",
+        "password": "DevPass123!"
+    })
     token = tok_res.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
@@ -150,9 +162,11 @@ async def test_quote_request_and_pdf(async_client):
 
 @pytest.mark.asyncio
 async def test_order_creation_with_direct_items(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "direct_order@buildmart.dev", "role": "buyer"}
-    )
+    tok_res = await async_client.post("/api/v1/auth/register", json={
+        "name": "Direct Order Tester",
+        "email": "direct_order@buildmart.dev",
+        "password": "DevPass123!"
+    })
     token = tok_res.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 

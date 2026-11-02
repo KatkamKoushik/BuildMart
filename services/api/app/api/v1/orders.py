@@ -52,6 +52,13 @@ def build_items_from_cart(cart_rows) -> Tuple[float, List[OrderItem]]:
         if not product.is_active:
             raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
 
+        if product.stock_quantity < cart_item.quantity:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Insufficient inventory for '{product.title}'. Requested: {cart_item.quantity}, available: {product.stock_quantity}"
+            )
+        product.stock_quantity -= cart_item.quantity
+
         item_total = round(product.price * cart_item.quantity, 2)
         subtotal += item_total
         order_items.append(
@@ -97,6 +104,13 @@ async def build_items_from_payload(
             raise HTTPException(status_code=404, detail=f"Product with ID '{prod_id}' not found")
         if not product.is_active:
             raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently inactive")
+
+        if product.stock_quantity < qty:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Insufficient inventory for '{product.title}'. Requested: {qty}, available: {product.stock_quantity}"
+            )
+        product.stock_quantity -= qty
 
         item_total = round(product.price * qty, 2)
         subtotal += item_total
@@ -258,6 +272,16 @@ async def cancel_order(
     order.status = "cancelled"
     if order.payment_status == "paid":
         order.payment_status = "refunded"
+
+    # Restore inventory quantities
+    if order.items:
+        prod_ids = [item.product_id for item in order.items if item.product_id]
+        if prod_ids:
+            res = await db.execute(select(Product).where(Product.id.in_(prod_ids)))
+            prod_map = {p.id: p for p in res.scalars().all()}
+            for item in order.items:
+                if item.product_id and item.product_id in prod_map:
+                    prod_map[item.product_id].stock_quantity += item.quantity
 
     await db.commit()
     await db.refresh(order)
