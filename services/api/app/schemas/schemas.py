@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from pydantic import BaseModel, Field, EmailStr, ConfigDict, field_validator
 
 # Common Address Schema
 class AddressSchema(BaseModel):
@@ -249,14 +249,57 @@ class OrderStatusUpdate(BaseModel):
     status: str = Field(..., description="pending, confirmed, processing, dispatched, delivered, cancelled")
 
 # Token & Auth Schemas
+class RegisterRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+    phone: Optional[str] = Field(None, max_length=20)
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_strength(cls, v: str) -> str:
+        if not any(c.isupper() for c in v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not any(c.islower() for c in v):
+            raise ValueError("Password must contain at least one lowercase letter")
+        if not any(c.isdigit() or not c.isalnum() for c in v):
+            raise ValueError("Password must contain at least one number or special character")
+        return v
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=1)
+
 class TokenRequest(BaseModel):
     email: EmailStr
+    password: Optional[str] = None
     role: Optional[str] = "buyer"
 
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
+
+class AdminBootstrapRequest(BaseModel):
+    admin_secret: str
+    target_email: EmailStr
+
+class RoleUpdateRequest(BaseModel):
+    role: str = Field(..., description="Role must be one of: buyer, seller, vendor, admin")
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, v: str) -> str:
+        if v not in ["buyer", "seller", "vendor", "admin"]:
+            raise ValueError("Role must be one of: buyer, seller, vendor, admin")
+        return v
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8, max_length=128)
 
 class WebhookResponse(BaseModel):
     status: str

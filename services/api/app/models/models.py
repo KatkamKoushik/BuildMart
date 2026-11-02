@@ -28,6 +28,7 @@ class User(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
     phone = Column(String(20), nullable=True)
+    hashed_password = Column(String(255), nullable=True)
     role = Column(String(20), default="buyer", nullable=False) # buyer, vendor, admin
     profile_image_url = Column(Text, nullable=True)
     saved_addresses = Column(JSON, default=list)

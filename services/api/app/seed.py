@@ -2,7 +2,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.core.security import get_or_create_default_user
+from app.core.security import hash_password
 from app.db.session import AsyncSessionLocal, Base, engine
 from app.models.models import (
     Banner,
@@ -10,8 +10,43 @@ from app.models.models import (
     Category,
     Product,
     Shop,
+    User,
 )
 from sqlalchemy import select
+
+DEFAULT_DEV_PASSWORD = "DevPass123!"
+
+async def get_or_create_seed_user(session, email: str, role: str, name: str) -> User:
+    res = await session.execute(select(User).where(User.email == email))
+    user = res.scalars().first()
+    if not user:
+        user = User(
+            id=f"usr_{role}_{email.split('@')[0]}",
+            name=name,
+            email=email,
+            phone="9876543210",
+            hashed_password=hash_password(DEFAULT_DEV_PASSWORD),
+            role=role,
+            saved_addresses=[
+                {
+                    "id": "addr_001",
+                    "fullName": name,
+                    "addressLine1": "Plot 42, Hitec City Phase 2",
+                    "addressLine2": "Near Cyber Towers",
+                    "city": "Hyderabad",
+                    "state": "Telangana",
+                    "postalCode": "500081",
+                    "phone": "9876543210",
+                    "isDefault": True
+                }
+            ]
+        )
+        session.add(user)
+        await session.commit()
+    elif not user.hashed_password:
+        user.hashed_password = hash_password(DEFAULT_DEV_PASSWORD)
+        await session.commit()
+    return user
 
 
 async def seed_database(session_factory=None):
@@ -24,7 +59,7 @@ async def seed_database(session_factory=None):
     async with target_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    # Locate seeded_data.json
+    # Resolve seed file path safely across local, container, and test environments
     possible_paths = [
         Path("mobile/assets/seeded_data.json"),
         Path("../../mobile/assets/seeded_data.json"),
@@ -47,15 +82,15 @@ async def seed_database(session_factory=None):
 
     session_maker = session_factory or AsyncSessionLocal
     async with session_maker() as session:
-        # 1. Create or get Default Users (Buyer, Admin, Seller)
-        print("[Seed] Seeding default demo users...")
-        await get_or_create_default_user(
+        # 1. Create or get Default Demo Users (Buyer, Admin, Seller)
+        print("[Seed] Seeding default demo users with secure bcrypt hashes...")
+        await get_or_create_seed_user(
             session, email="buyer@buildmart.dev", role="buyer", name="BuildMart Demo Buyer"
         )
-        await get_or_create_default_user(
+        await get_or_create_seed_user(
             session, email="admin@buildmart.dev", role="admin", name="BuildMart Super Admin"
         )
-        await get_or_create_default_user(
+        await get_or_create_seed_user(
             session, email="seller@buildmart.dev", role="seller", name="Sri Lakshmi Steels Manager"
         )
 
@@ -68,143 +103,126 @@ async def seed_database(session_factory=None):
             res = await session.execute(select(Category.id).where(Category.id.in_(cat_ids)))
             existing_cat_ids = set(res.scalars().all())
 
-        for i, cat in enumerate(categories_data):
+        for cat in categories_data:
             cat_id = cat.get("id")
-            if cat_id and cat_id not in existing_cat_ids:
-                session.add(
-                    Category(
-                        id=cat_id,
-                        name=cat.get("name", cat_id.replace("_", " ").title()),
-                        image_url=cat.get("imageUrl", ""),
-                        sort_order=i,
-                    )
+            if cat_id not in existing_cat_ids:
+                category = Category(
+                    id=cat_id,
+                    name=cat.get("name"),
+                    image_url=cat.get("imageUrl") or "",
+                    sort_order=cat.get("sortOrder", 0)
                 )
-                existing_cat_ids.add(cat_id)
+                session.add(category)
+        await session.commit()
 
         # 3. Brands
         brands_data = data.get("brands", [])
         print(f"[Seed] Seeding {len(brands_data)} brands...")
-        brand_ids = [brand.get("id") for brand in brands_data if brand.get("id")]
+        brand_ids = [b.get("id") for b in brands_data if b.get("id")]
         existing_brand_ids = set()
         if brand_ids:
             res = await session.execute(select(Brand.id).where(Brand.id.in_(brand_ids)))
             existing_brand_ids = set(res.scalars().all())
 
-        for brand in brands_data:
-            brand_id = brand.get("id")
-            if brand_id and brand_id not in existing_brand_ids:
-                session.add(
-                    Brand(
-                        id=brand_id,
-                        name=brand.get("name", brand_id.replace("_", " ").title()),
-                        image_url=brand.get("imageUrl", ""),
-                        category_id=brand.get("categoryId"),
-                    )
+        for b in brands_data:
+            b_id = b.get("id")
+            if b_id not in existing_brand_ids:
+                brand = Brand(
+                    id=b_id,
+                    name=b.get("name"),
+                    image_url=b.get("imageUrl") or "",
+                    category_id=b.get("categoryId")
                 )
-                existing_brand_ids.add(brand_id)
+                session.add(brand)
+        await session.commit()
 
-        # 4. Shops
+        # 4. Shops / Yards
         shops_data = data.get("shops", [])
         print(f"[Seed] Seeding {len(shops_data)} shops...")
-        shop_ids = [shop.get("id") for shop in shops_data if shop.get("id")]
+        shop_ids = [s.get("id") for s in shops_data if s.get("id")]
         existing_shop_ids = set()
         if shop_ids:
             res = await session.execute(select(Shop.id).where(Shop.id.in_(shop_ids)))
             existing_shop_ids = set(res.scalars().all())
 
-        for shop in shops_data:
-            shop_id = shop.get("id")
-            if not shop_id or shop_id in existing_shop_ids:
-                continue
-
-            dist_val = 1.5
-            try:
-                dist_val = float(shop.get("distance", "1.5"))
-            except (ValueError, TypeError):
-                dist_val = 1.5
-
-            session.add(
-                Shop(
-                    id=shop_id,
-                    name=shop.get("name"),
-                    logo_url=shop.get("logoUrl"),
-                    cover_image_url=shop.get("coverImageUrl"),
-                    rating=float(shop.get("rating", 4.5)),
-                    review_count=int(shop.get("reviewCount", 50)),
-                    address=shop.get("address", "Hyderabad"),
-                    distance_km=dist_val,
-                    is_open=shop.get("isOpen", True),
-                    categories=shop.get("categories", []),
-                    phone="+91 98480 22338",
+        for s in shops_data:
+            s_id = s.get("id")
+            if s_id not in existing_shop_ids:
+                shop = Shop(
+                    id=s_id,
+                    name=s.get("name"),
+                    logo_url=s.get("logoUrl"),
+                    cover_image_url=s.get("coverImageUrl"),
+                    rating=s.get("rating", 4.5),
+                    review_count=s.get("reviewCount", 0),
+                    address=s.get("address", ""),
+                    latitude=s.get("latitude"),
+                    longitude=s.get("longitude"),
+                    distance_km=s.get("distanceKm", 1.5),
+                    is_open=s.get("isOpen", True),
+                    categories=s.get("categories", []),
+                    phone=s.get("phone")
                 )
-            )
-            existing_shop_ids.add(shop_id)
+                session.add(shop)
+        await session.commit()
 
         # 5. Products
         products_data = data.get("products", [])
         print(f"[Seed] Seeding {len(products_data)} products...")
-        prod_ids = [prod.get("id") for prod in products_data if prod.get("id")]
+        prod_ids = [p.get("id") for p in products_data if p.get("id")]
         existing_prod_ids = set()
         if prod_ids:
             res = await session.execute(select(Product.id).where(Product.id.in_(prod_ids)))
             existing_prod_ids = set(res.scalars().all())
 
-        for prod in products_data:
-            prod_id = prod.get("id")
-            if not prod_id or prod_id in existing_prod_ids:
-                continue
-
-            specs = prod.get("specifications", {})
-            unit = specs.get("Unit", "unit") if isinstance(specs, dict) else "unit"
-            session.add(
-                Product(
-                    id=prod_id,
-                    title=prod.get("title") or prod.get("name") or "Construction Material",
-                    description=prod.get("description", "High quality construction and building materials."),
-                    price=float(prod.get("price", 100.0)),
-                    original_price=float(prod.get("originalPrice", prod.get("price", 100.0))),
-                    category_id=prod.get("categoryId", "cement"),
-                    shop_id=prod.get("shopId", "shop_001"),
-                    brand_id=prod.get("brandId"),
-                    image_urls=prod.get("imageUrls", []),
-                    specifications=specs if isinstance(specs, dict) else {},
-                    rating=float(prod.get("rating", 4.5)),
-                    total_reviews=int(prod.get("totalReviews", 10)),
-                    stock_quantity=int(prod.get("stockQuantity", 100)),
-                    unit=unit,
-                    is_active=True,
+        for p in products_data:
+            p_id = p.get("id")
+            if p_id not in existing_prod_ids:
+                product = Product(
+                    id=p_id,
+                    title=p.get("title"),
+                    description=p.get("description"),
+                    price=float(p.get("price", 0.0)),
+                    original_price=float(p.get("originalPrice", 0.0)) if p.get("originalPrice") else None,
+                    category_id=p.get("categoryId"),
+                    shop_id=p.get("shopId"),
+                    brand_id=p.get("brandId"),
+                    image_urls=p.get("imageUrls", []),
+                    specifications=p.get("specifications", {}),
+                    rating=p.get("rating", 4.5),
+                    total_reviews=p.get("totalReviews", 0),
+                    stock_quantity=p.get("stockQuantity", 100),
+                    unit=p.get("unit", "unit"),
+                    is_active=p.get("isActive", True)
                 )
-            )
-            existing_prod_ids.add(prod_id)
+                session.add(product)
+        await session.commit()
 
         # 6. Banners
         banners_data = data.get("banners", [])
         print(f"[Seed] Seeding {len(banners_data)} banners...")
-        banner_ids = [banner.get("id") for banner in banners_data if banner.get("id")]
+        banner_ids = [bn.get("id") for bn in banners_data if bn.get("id")]
         existing_banner_ids = set()
         if banner_ids:
             res = await session.execute(select(Banner.id).where(Banner.id.in_(banner_ids)))
             existing_banner_ids = set(res.scalars().all())
 
-        for banner in banners_data:
-            banner_id = banner.get("id")
-            if banner_id and banner_id not in existing_banner_ids:
-                session.add(
-                    Banner(
-                        id=banner_id,
-                        title=banner.get("title", "Mega Construction Sale"),
-                        subtitle=banner.get("subtitle", "Direct Factory Prices"),
-                        image_url=banner.get("imageUrl", ""),
-                        target_category=banner.get("targetUrl", "").replace("/category/", ""),
-                        discount_text="Up to 30% OFF",
-                        is_featured=True,
-                    )
+        for bn in banners_data:
+            bn_id = bn.get("id")
+            if bn_id not in existing_banner_ids:
+                banner = Banner(
+                    id=bn_id,
+                    title=bn.get("title"),
+                    subtitle=bn.get("subtitle"),
+                    image_url=bn.get("imageUrl") or "",
+                    target_category=bn.get("targetCategory"),
+                    discount_text=bn.get("discountText"),
+                    is_featured=bn.get("isFeatured", True)
                 )
-                existing_banner_ids.add(banner_id)
-
+                session.add(banner)
         await session.commit()
-        print("[Seed] Database seeding successfully completed!")
 
+        print("[Seed] Database seeding successfully completed!")
 
 if __name__ == "__main__":
     asyncio.run(seed_database())

@@ -9,7 +9,9 @@ from app.schemas.schemas import (
     ProductResponse,
     ProductCreate,
     ProductUpdate,
-    OrderResponse
+    OrderResponse,
+    UserResponse,
+    RoleUpdateRequest
 )
 from app.core.security import require_admin
 
@@ -136,3 +138,28 @@ async def delete_product_admin(
     await db.delete(product)
     await db.commit()
     return {"message": f"Product '{product_id}' deleted successfully", "deleted": True}
+
+
+@router.put("/users/{user_id}/role", response_model=UserResponse)
+async def update_user_role_admin(
+    user_id: str,
+    payload: RoleUpdateRequest,
+    admin_user: User = Depends(require_admin),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Protected role promotion/demotion endpoint.
+    Requires active admin privileges. Emits security audit log.
+    """
+    result = await db.execute(select(User).where((User.id == user_id) | (User.email == user_id)))
+    target_user = result.scalars().first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Target user not found")
+
+    old_role = target_user.role
+    target_user.role = payload.role
+    await db.commit()
+    await db.refresh(target_user)
+
+    print(f"[SECURITY AUDIT] Admin '{admin_user.email}' modified role of user '{target_user.email}' from '{old_role}' to '{payload.role}'")
+    return target_user

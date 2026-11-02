@@ -1,6 +1,10 @@
+import uuid
+import hmac
+import hashlib
+import bcrypt
 import jwt
 from datetime import datetime, timedelta, timezone
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Set
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,18 +15,36 @@ from app.core.config import settings
 
 security_scheme = HTTPBearer(auto_error=False)
 
-# Seed / Mock user constant for frictionless dev testing
-DEFAULT_USER_EMAIL = "buyer@buildmart.dev"
-DEFAULT_USER_NAME = "BuildMart Demo User"
-ADMIN_USER_EMAIL = "admin@buildmart.dev"
-SELLER_USER_EMAIL = "seller@buildmart.dev"
-
 JWT_ALGORITHM = "HS256"
+JWT_ISSUER = "buildmart-api"
+JWT_AUDIENCE = "buildmart-client"
 JWT_EXPIRATION_HOURS = 24
+
+# In-memory revocation registry (production setups back this with Redis)
+REVOKED_TOKEN_IDS: Set[str] = set()
+
+def hash_password(password: str) -> str:
+    """
+    Hashes plain password using bcrypt with salt rounds.
+    """
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Constant-time password verification against stored bcrypt hash.
+    """
+    if not plain_password or not hashed_password:
+        return False
+    try:
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
+    except Exception:
+        return False
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     """
-    Creates a signed JWT access token with standard claims.
+    Creates a cryptographically signed JWT access token with standard claims
+    (issuer, audience, issued-at, expiry, unique JWT ID).
     """
     to_encode = data.copy()
     now = datetime.now(timezone.utc)
@@ -30,82 +52,99 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
         expire = now + expires_delta
     else:
         expire = now + timedelta(hours=JWT_EXPIRATION_HOURS)
-    to_encode.update({"exp": expire, "iat": now})
+        
+    token_id = str(uuid.uuid4())
+    to_encode.update({
+        "exp": expire,
+        "iat": now,
+        "iss": JWT_ISSUER,
+        "aud": JWT_AUDIENCE,
+        "jti": token_id
+    })
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
     return encoded_jwt
 
 def decode_access_token(token: str) -> Dict[str, Any]:
     """
     Decodes and validates a JWT access token.
-    Raises HTTPException(401) on expired or invalid token.
+    Enforces signature, expiration, issuer, audience, and revocation checks.
+    Supports graceful secret rotation via PREVIOUS_SECRET_KEY.
     """
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication token has expired",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    except jwt.PyJWTError:
+    # Key rotation handling: try primary SECRET_KEY, fallback to PREVIOUS_SECRET_KEY
+    signing_keys = [settings.SECRET_KEY]
+    if settings.PREVIOUS_SECRET_KEY:
+        signing_keys.append(settings.PREVIOUS_SECRET_KEY)
+
+    payload = None
+    last_error = None
+
+    for key in signing_keys:
+        try:
+            payload = jwt.decode(
+                token,
+                key,
+                algorithms=[JWT_ALGORITHM],
+                issuer=JWT_ISSUER,
+                audience=JWT_AUDIENCE
+            )
+            break
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication token has expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        except jwt.InvalidIssuerError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token issuer",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        except jwt.InvalidAudienceError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token audience",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        except jwt.PyJWTError as e:
+            last_error = e
+
+    if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication token signature or payload",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-async def get_or_create_default_user(db: AsyncSession, email: str = DEFAULT_USER_EMAIL, role: str = "buyer", name: str = DEFAULT_USER_NAME) -> User:
-    result = await db.execute(select(User).where(User.email == email))
-    user = result.scalars().first()
-    if not user:
-        user = User(
-            id=f"usr_{role}_{email.split('@')[0]}",
-            name=name,
-            email=email,
-            phone="9876543210",
-            role=role,
-            saved_addresses=[
-                {
-                    "id": "addr_001",
-                    "fullName": name,
-                    "addressLine1": "Plot 42, Hitec City Phase 2",
-                    "addressLine2": "Near Cyber Towers",
-                    "city": "Hyderabad",
-                    "state": "Telangana",
-                    "postalCode": "500081",
-                    "phone": "9876543210",
-                    "isDefault": True
-                }
-            ]
+    # Check revocation blacklist
+    jti = payload.get("jti")
+    if jti and jti in REVOKED_TOKEN_IDS:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication token has been revoked",
+            headers={"WWW-Authenticate": "Bearer"},
         )
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
-    return user
+
+    return payload
+
+def revoke_token(token: str) -> None:
+    """
+    Blacklists a JWT token by its unique JWT ID (jti).
+    """
+    try:
+        payload = decode_access_token(token)
+        jti = payload.get("jti")
+        if jti:
+            REVOKED_TOKEN_IDS.add(jti)
+    except HTTPException:
+        # If already invalid or expired, record raw token hash
+        REVOKED_TOKEN_IDS.add(hashlib.sha256(token.encode("utf-8")).hexdigest())
 
 async def get_current_user_from_token(token: str, db: AsyncSession) -> User:
     """
-    Resolves a user from a JWT token or developer test token.
+    Resolves an active User from a verified JWT token.
+    Rejects any unverified format or nonexistent subject.
     """
-    # 1. Dev token format: user:<email> (Strictly prohibited in production mode)
-    if token.startswith("user:"):
-        if settings.ENVIRONMENT.lower() == "production" or not settings.DEBUG:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Development token format is prohibited in production or non-debug environments",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        email = token.replace("user:", "").strip()
-        result = await db.execute(select(User).where(User.email == email))
-        user = result.scalars().first()
-        if not user:
-            # If in dev, auto-seed the requested test role
-            role = "admin" if "admin" in email else ("seller" if "seller" in email else "buyer")
-            user = await get_or_create_default_user(db, email=email, role=role, name=f"Test {role.title()}")
-        return user
-
-    # 2. Signed JWT Token
     payload = decode_access_token(token)
     user_id = payload.get("sub")
     email = payload.get("email")
@@ -135,34 +174,22 @@ async def get_current_user_from_token(token: str, db: AsyncSession) -> User:
 async def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
     db: AsyncSession = Depends(get_db)
-) -> User:
+) -> Optional[User]:
     """
-    Resolves the current user.
-    If credentials provided, validates token.
-    If no credentials provided and in development mode, provides default demo user
-    for backward-compatible dev exploration.
+    Optional authentication dependency.
+    Returns authenticated user if valid token present, otherwise None for guest routes.
+    Never auto-impersonates demo users.
     """
     if credentials and credentials.credentials:
         return await get_current_user_from_token(credentials.credentials, db)
-
-    # In development mode, provide default demo user
-    if settings.ENVIRONMENT.lower() != "production":
-        return await get_or_create_default_user(db)
-
-    # In production, require credentials
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Authentication credentials required",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    return None
 
 async def require_authenticated_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
     db: AsyncSession = Depends(get_db)
 ) -> User:
     """
-    Strict authentication dependency. Fails fast with 401 if unauthenticated,
-    regardless of environment.
+    Strict authentication dependency. Fails closed with 401 if unauthenticated.
     """
     if not credentials or not credentials.credentials:
         raise HTTPException(
@@ -174,7 +201,7 @@ async def require_authenticated_user(
 
 def require_role(allowed_roles: List[str]):
     """
-    F-02: Role-based authorization guard.
+    Role-based authorization guard.
     Rejects unauthorized roles with 403 Forbidden.
     """
     async def role_checker(current_user: User = Depends(require_authenticated_user)) -> User:
@@ -186,6 +213,5 @@ def require_role(allowed_roles: List[str]):
         return current_user
     return role_checker
 
-# Convenience RBAC dependencies
 require_admin = require_role(["admin"])
 require_seller = require_role(["admin", "vendor", "seller"])

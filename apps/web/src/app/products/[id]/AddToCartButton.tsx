@@ -17,6 +17,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product }) => 
   const { addItem, isLoading } = useCartStore();
 
   const handleAddToCart = async () => {
+    useCartStore.getState().setIsOpen(true);
     await addItem(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

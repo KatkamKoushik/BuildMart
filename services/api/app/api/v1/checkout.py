@@ -21,55 +21,83 @@ async def create_razorpay_order(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    F-01: Creates Razorpay order for online payment.
-    Amount is strictly determined server-side from order total in paise.
+    Authoritative payment initiation.
+    - Strictly requires a verified, persisted Order record.
+    - Rejects unverified amounts; derives amount authoritatively from order.total_amount.
+    - Enforces ownership: only order owner or admin can initiate payment.
+    - Rejects already paid or cancelled orders.
+    - Fails closed in production if live Razorpay credentials are missing.
     """
     target_order_id = payload.order_id or payload.receipt
-    order = None
-    if target_order_id:
-        result = await db.execute(
-            select(Order).where(
-                (Order.id == target_order_id) | (Order.order_number == target_order_id)
-            )
-        )
-        order = result.scalars().first()
-
-    if order:
-        if order.user_id != current_user.id and current_user.role != "admin":
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access forbidden: You do not own this order"
-            )
-        amount_in_paise = int(round(order.total_amount * 100))
-        receipt = payload.receipt or order.order_number or f"rcpt_{int(time.time())}"
-    elif payload.amount is not None:
-        amount_in_paise = int(round(payload.amount * 100))
-        receipt = payload.receipt or f"rcpt_{int(time.time())}"
-    else:
+    if not target_order_id:
         raise HTTPException(
-            status_code=400,
-            detail="Order not found or valid payment amount required"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A valid persisted order ID is required to initiate checkout payment"
         )
 
-    if amount_in_paise <= 0:
-        raise HTTPException(status_code=400, detail="Payment amount must be greater than zero")
+    result = await db.execute(
+        select(Order).where(
+            (Order.id == target_order_id) | (Order.order_number == target_order_id)
+        )
+    )
+    order = result.scalars().first()
 
-    # If live Razorpay credentials configured, call Razorpay API
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Order '{target_order_id}' not found. Cannot initiate payment without a verified order."
+        )
+
+    if order.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: You do not have permission to pay for this order"
+        )
+
+    if order.payment_status == "paid":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Order has already been paid"
+        )
+
+    if order.status in ["cancelled", "delivered"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Cannot initiate payment for order in '{order.status}' status"
+        )
+
+    # Server-authoritative payable amount derived strictly from persisted order
+    amount_in_paise = int(round(order.total_amount * 100))
+    if amount_in_paise <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Payable order amount must be greater than zero"
+        )
+
+    receipt = order.order_number
+
+    # Live/Sandbox Razorpay credentials configured
     if (
         settings.RAZORPAY_KEY_ID
         and settings.RAZORPAY_KEY_SECRET
-        and not settings.RAZORPAY_KEY_SECRET.startswith("mock_") and "mock" not in settings.RAZORPAY_KEY_SECRET.lower()
+        and not settings.RAZORPAY_KEY_SECRET.startswith("mock_")
+        and "mock" not in settings.RAZORPAY_KEY_SECRET.lower()
+        and not settings.RAZORPAY_KEY_SECRET.startswith("your_")
+        and not settings.RAZORPAY_KEY_ID.startswith("mock_")
     ):
         try:
             import razorpay
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
             order_data = {
                 "amount": amount_in_paise,
-                "currency": payload.currency,
+                "currency": payload.currency or "INR",
                 "receipt": receipt,
                 "payment_capture": 1
             }
             rzp_order = client.order.create(data=order_data)
+            order.razorpay_order_id = rzp_order["id"]
+            await db.commit()
+            await db.refresh(order)
             return {
                 "order_id": rzp_order["id"],
                 "amount": rzp_order["amount"],
@@ -79,21 +107,26 @@ async def create_razorpay_order(
         except Exception as e:
             raise HTTPException(status_code=502, detail=f"Razorpay provider error: {str(e)}")
 
-    # Fail closed in production mode when live payment credentials are absent
+    # Fail closed in production mode when live credentials are absent
     if settings.ENVIRONMENT.lower() == "production":
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Production payment gateway is unconfigured or unavailable. Valid RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET required."
         )
 
-    # Deterministic development / test sandbox order ID
+    # Deterministic development sandbox order ID
     mock_order_id = f"order_{int(time.time())}_{current_user.id[:8]}"
+    order.razorpay_order_id = mock_order_id
+    await db.commit()
+    await db.refresh(order)
+
     return {
         "order_id": mock_order_id,
         "amount": amount_in_paise,
-        "currency": payload.currency,
+        "currency": payload.currency or "INR",
         "key_id": settings.RAZORPAY_KEY_ID
     }
+
 
 @router.post("/razorpay/verify")
 async def verify_razorpay_payment(
@@ -102,10 +135,10 @@ async def verify_razorpay_payment(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    F-01 & F-11: Authoritative Payment Verification.
-    1. Verifies HMAC-SHA256 signature using provider secret.
-    2. Identifies matching internal Order.
-    3. Prevents duplicate transitions; updates order to 'paid' and 'confirmed'.
+    Authoritative payment verification.
+    - Constant-time HMAC-SHA256 signature verification.
+    - Matches and validates internal Order ownership and status.
+    - Idempotent state transitions preventing double-confirmation.
     """
     body = f"{payload.razorpay_order_id}|{payload.razorpay_payment_id}"
     expected_signature = hmac.new(
@@ -114,14 +147,12 @@ async def verify_razorpay_payment(
         hashlib.sha256
     ).hexdigest()
 
-    # Strict constant-time HMAC check
     if not hmac.compare_digest(expected_signature, payload.razorpay_signature):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid payment signature: Signature mismatch"
         )
 
-    # Locate and update internal Order if referenced
     order = None
     if payload.order_id:
         result = await db.execute(
@@ -137,14 +168,18 @@ async def verify_razorpay_payment(
         order = result.scalars().first()
 
     if order:
-        # Check ownership
         if order.user_id != current_user.id and current_user.role != "admin":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Access forbidden: You do not own this order"
             )
 
-        # Idempotent handling: if already paid, return success without re-modifying
+        if order.razorpay_order_id and order.razorpay_order_id != payload.razorpay_order_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Payment order ID mismatch with registered order"
+            )
+
         if order.payment_status != "paid":
             order.payment_status = "paid"
             order.status = "confirmed"
@@ -162,6 +197,7 @@ async def verify_razorpay_payment(
         "internal_order_id": order.id if order else None
     }
 
+
 @router.post("/razorpay/webhook", response_model=WebhookResponse)
 async def razorpay_webhook(
     request: Request,
@@ -169,8 +205,10 @@ async def razorpay_webhook(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    F-01: Razorpay Webhook Verification with raw request body HMAC-SHA256
-    and idempotent replay protection.
+    Razorpay Webhook Verification.
+    - Constant-time HMAC-SHA256 signature verification over exact raw bytes.
+    - Replay attack deduplication.
+    - Transactional state updates.
     """
     if not x_razorpay_signature:
         raise HTTPException(
@@ -199,7 +237,7 @@ async def razorpay_webhook(
     event_id = event_data.get("id") or event_data.get("event_id") or f"evt_{int(time.time()*1000)}"
     event_type = event_data.get("event", "unknown")
 
-    # Idempotency check: prevent duplicate webhook replay attacks
+    # Prevent duplicate webhook replays
     existing_evt = await db.execute(select(WebhookEvent).where(WebhookEvent.event_id == event_id))
     if existing_evt.scalars().first():
         return WebhookResponse(
@@ -208,7 +246,6 @@ async def razorpay_webhook(
             message="Webhook event already processed"
         )
 
-    # Process recognized payment events
     payload_entity = event_data.get("payload", {})
     payment_entity = payload_entity.get("payment", {}).get("entity", {})
     rzp_order_id = payment_entity.get("order_id")
@@ -224,7 +261,6 @@ async def razorpay_webhook(
             elif event_type in ["payment.failed"]:
                 order.payment_status = "failed"
 
-    # Record event in WebhookEvent table
     new_event = WebhookEvent(
         event_id=event_id,
         event_type=event_type,

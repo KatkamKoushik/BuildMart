@@ -3,12 +3,15 @@ services:
     image: postgres:16-alpine
     container_name: buildmart-postgres
     restart: unless-stopped
+    networks:
+      - buildmart-net
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-buildmart_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-buildmart_secure_pass}
       POSTGRES_DB: ${POSTGRES_DB:-buildmart}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # Bound strictly to loopback interface for security (prevent public internet exposure)
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,8 +24,11 @@ services:
     image: redis:7-alpine
     container_name: buildmart-redis
     restart: unless-stopped
+    networks:
+      - buildmart-net
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      # Bound strictly to loopback interface
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -37,6 +43,8 @@ services:
       dockerfile: Dockerfile
     container_name: buildmart-api
     restart: unless-stopped
+    networks:
+      - buildmart-net
     depends_on:
       db:
         condition: service_healthy
@@ -45,11 +53,20 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-buildmart_user}:${POSTGRES_PASSWORD:-buildmart_secure_pass}@db:5432/${POSTGRES_DB:-buildmart}
       REDIS_URL: redis://redis:6379/0
-      ENVIRONMENT: production
-      DEBUG: "false"
-      ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DEBUG: ${DEBUG:-false}
+      SECRET_KEY: ${SECRET_KEY:?FATAL: SECRET_KEY must be provided in production}
+      ADMIN_BOOTSTRAP_SECRET: ${ADMIN_BOOTSTRAP_SECRET:?FATAL: ADMIN_BOOTSTRAP_SECRET must be provided in production}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
     ports:
       - "8000:8000"
+
+networks:
+  buildmart-net:
+    driver: bridge
 
 volumes:
   postgres_data:

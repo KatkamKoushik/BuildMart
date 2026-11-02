@@ -1,11 +1,24 @@
 import pytest
 
+async def get_test_token(async_client, email: str, password: str = "DevPass123!", name: str = "Test User") -> str:
+    login_res = await async_client.post("/api/v1/auth/token", json={"email": email, "password": password})
+    if login_res.status_code == 200:
+        return login_res.json()["access_token"]
+    reg_res = await async_client.post("/api/v1/auth/register", json={
+        "name": name,
+        "email": email,
+        "password": password
+    })
+    if reg_res.status_code == 201:
+        return reg_res.json()["access_token"]
+    raise RuntimeError(f"Could not obtain token for {email}: {login_res.text} / {reg_res.text}")
+
 
 @pytest.mark.asyncio
 async def test_login_success(async_client):
     payload = {
         "email": "buyer@buildmart.dev",
-        "role": "buyer",
+        "password": "DevPass123!",
     }
     response = await async_client.post("/api/v1/auth/token", json=payload)
     assert response.status_code == 200
@@ -15,11 +28,110 @@ async def test_login_success(async_client):
 
 
 @pytest.mark.asyncio
-async def test_add_to_cart_zero_quantity(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "buyer@buildmart.dev", "role": "buyer"}
+async def test_login_missing_password_rejected(async_client):
+    """
+    P0: An email address is not proof of identity. Missing password must be rejected with 401.
+    """
+    payload = {"email": "buyer@buildmart.dev"}
+    response = await async_client.post("/api/v1/auth/token", json=payload)
+    assert response.status_code == 401
+    assert "password is required" in response.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_login_wrong_password_rejected(async_client):
+    """
+    P0: Existing accounts must never receive a token without proving control with valid password.
+    """
+    payload = {
+        "email": "buyer@buildmart.dev",
+        "password": "IncorrectPassword123!"
+    }
+    response = await async_client.post("/api/v1/auth/token", json=payload)
+    assert response.status_code == 401
+    assert "invalid email or password" in response.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_registration_and_privilege_escalation_defense(async_client):
+    """
+    P0: Public registration must not accept or set admin, seller, or vendor from client input.
+    Server unconditionally assigns least-privileged 'buyer' role.
+    """
+    payload = {
+        "name": "Malicious User",
+        "email": "attacker@evilcorp.com",
+        "password": "SecurePassword123!",
+        "role": "admin"  # Attempt to self-assign admin
+    }
+    reg_res = await async_client.post("/api/v1/auth/register", json=payload)
+    assert reg_res.status_code == 201
+    user = reg_res.json()["user"]
+    # Role must be strictly 'buyer', ignoring client input
+    assert user["role"] == "buyer"
+
+    # Attacker cannot access admin endpoints
+    token = reg_res.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    admin_res = await async_client.get("/api/v1/admin/metrics", headers=headers)
+    assert admin_res.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_registration_weak_password_rejected(async_client):
+    """
+    P0: Weak passwords must be rejected at schema validation.
+    """
+    payload = {
+        "name": "Weak User",
+        "email": "weak@buildmart.dev",
+        "password": "weak"  # Too short and lacking complexity
+    }
+    reg_res = await async_client.post("/api/v1/auth/register", json=payload)
+    assert reg_res.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_password_reset_flow(async_client):
+    """
+    P0: Verified password reset flow with signed token.
+    """
+    token_req = await async_client.post(
+        "/api/v1/auth/password-reset-request",
+        json={"email": "buyer@buildmart.dev"}
     )
-    token = tok_res.json()["access_token"]
+    assert token_req.status_code == 200
+    reset_token = token_req.json().get("reset_token")
+    assert reset_token is not None
+
+    # Reset password
+    confirm_res = await async_client.post(
+        "/api/v1/auth/password-reset",
+        json={"token": reset_token, "new_password": "NewDevPass123!"}
+    )
+    assert confirm_res.status_code == 200
+
+    # Login with new password succeeds
+    login_new = await async_client.post(
+        "/api/v1/auth/token",
+        json={"email": "buyer@buildmart.dev", "password": "NewDevPass123!"}
+    )
+    assert login_new.status_code == 200
+
+    # Reset back to default password for subsequent test stability
+    token_req2 = await async_client.post(
+        "/api/v1/auth/password-reset-request",
+        json={"email": "buyer@buildmart.dev"}
+    )
+    await async_client.post(
+        "/api/v1/auth/password-reset",
+        json={"token": token_req2.json()["reset_token"], "new_password": "DevPass123!"}
+    )
+
+
+@pytest.mark.asyncio
+async def test_add_to_cart_zero_quantity(async_client):
+    token = await get_test_token(async_client, "buyer@buildmart.dev")
     headers = {"Authorization": f"Bearer {token}"}
 
     prod_res = await async_client.get("/api/v1/products?limit=1")
@@ -35,10 +147,7 @@ async def test_add_to_cart_zero_quantity(async_client):
 
 @pytest.mark.asyncio
 async def test_add_to_cart_nonexistent_product(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "buyer@buildmart.dev", "role": "buyer"}
-    )
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "buyer@buildmart.dev")
     headers = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -52,13 +161,10 @@ async def test_add_to_cart_nonexistent_product(async_client):
 @pytest.mark.asyncio
 async def test_razorpay_order_creation_amount_trust(async_client):
     """
-    Verifies that client cannot tamper with order amount.
+    P1: Client cannot tamper with order amount.
     Amount is strictly determined server-side from order total.
     """
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "checkout_tester@buildmart.dev", "role": "buyer"}
-    )
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "checkout_tester@buildmart.dev", name="Checkout Tester")
     headers = {"Authorization": f"Bearer {token}"}
 
     # Clear cart
@@ -86,7 +192,7 @@ async def test_razorpay_order_creation_amount_trust(async_client):
     assert order_resp.status_code == 201
     order = order_resp.json()
 
-    # Client sends manipulated amount 1.0 (Rs. 1)
+    # Client attempts to send manipulated amount 1.0 (Rs. 1)
     payload = {
         "order_id": order["id"],
         "amount": 1.0,
@@ -107,12 +213,10 @@ async def test_razorpay_order_creation_amount_trust(async_client):
 @pytest.mark.asyncio
 async def test_razorpay_order_creation_cross_user_denied(async_client):
     """
-    Verifies that User B cannot create payment intent for User A's order.
+    P1: User B cannot create payment intent for User A's order.
     """
-    tok_res_a = await async_client.post(
-        "/api/v1/auth/token", json={"email": "owner_a@buildmart.dev", "role": "buyer"}
-    )
-    headers_a = {"Authorization": f"Bearer {tok_res_a.json()['access_token']}"}
+    token_a = await get_test_token(async_client, "owner_a@buildmart.dev", name="Owner A")
+    headers_a = {"Authorization": f"Bearer {token_a}"}
 
     prod_res = await async_client.get("/api/v1/products?limit=1")
     test_prod = prod_res.json()[0]
@@ -137,10 +241,8 @@ async def test_razorpay_order_creation_cross_user_denied(async_client):
     order = order_resp.json()
 
     # User B tries to initiate checkout for User A's order
-    tok_res_b = await async_client.post(
-        "/api/v1/auth/token", json={"email": "attacker_b@buildmart.dev", "role": "buyer"}
-    )
-    headers_b = {"Authorization": f"Bearer {tok_res_b.json()['access_token']}"}
+    token_b = await get_test_token(async_client, "attacker_b@buildmart.dev", name="Attacker B")
+    headers_b = {"Authorization": f"Bearer {token_b}"}
 
     response = await async_client.post(
         "/api/v1/checkout/razorpay/create-order",
@@ -153,50 +255,49 @@ async def test_razorpay_order_creation_cross_user_denied(async_client):
 
 @pytest.mark.asyncio
 async def test_add_saved_address(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "addr_user@buildmart.dev", "role": "buyer"}
-    )
-    user_data = tok_res.json()["user"]
-    initial_addr_count = len(user_data.get("saved_addresses") or [])
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "addr_user@buildmart.dev", name="Address User")
     headers = {"Authorization": f"Bearer {token}"}
 
-    address_payload = {
-        "fullName": "John Doe",
-        "addressLine1": "123 Main St",
-        "addressLine2": "Apt 4B",
-        "city": "Bengaluru",
-        "state": "Karnataka",
-        "postalCode": "560001",
+    res_me = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res_me.status_code == 200
+    initial_addr_count = len(res_me.json().get("saved_addresses") or [])
+
+    new_address = {
+        "fullName": "Koushik Katkam",
+        "addressLine1": "Plot 104, Mega Hills",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "postalCode": "500081",
         "phone": "9876543210",
         "isDefault": True,
     }
-
-    res = await async_client.post("/api/v1/auth/address", json=address_payload, headers=headers)
-    assert res.status_code == 200
-    data = res.json()
+    response = await async_client.post("/api/v1/auth/address", json=new_address, headers=headers)
+    assert response.status_code == 200
+    data = response.json()
     assert len(data["saved_addresses"]) == initial_addr_count + 1
-    added_addr = data["saved_addresses"][-1]
-    assert added_addr["fullName"] == "John Doe"
-    assert added_addr["isDefault"] is True
-    assert "id" in added_addr
 
-    # Add second address as default
-    address_payload_2 = {
-        "fullName": "John Work",
-        "addressLine1": "456 Tech Park",
-        "city": "Bengaluru",
-        "state": "Karnataka",
-        "postalCode": "560045",
+    added = data["saved_addresses"][-1]
+    assert added["fullName"] == "Koushik Katkam"
+    assert added["postalCode"] == "500081"
+    assert added["isDefault"] is True
+
+    # Add second address with isDefault=True, should unset first default
+    new_address2 = {
+        "fullName": "Koushik Office",
+        "addressLine1": "Cyber Towers, Hitec City",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "postalCode": "500081",
         "phone": "9876543210",
         "isDefault": True,
     }
-    res2 = await async_client.post("/api/v1/auth/address", json=address_payload_2, headers=headers)
-    assert res2.status_code == 200
-    data2 = res2.json()
+    response2 = await async_client.post("/api/v1/auth/address", json=new_address2, headers=headers)
+    assert response2.status_code == 200
+    data2 = response2.json()
     assert len(data2["saved_addresses"]) == initial_addr_count + 2
-    # Verify previous address is now isDefault=False and newest is isDefault=True
-    assert data2["saved_addresses"][-2]["isDefault"] is False
+
+    matching_initial = [a for a in data2["saved_addresses"] if a["fullName"] == "Koushik Katkam"][0]
+    assert matching_initial["isDefault"] is False
     assert data2["saved_addresses"][-1]["isDefault"] is True
 
 
@@ -215,10 +316,7 @@ async def test_add_saved_address_unauthenticated(async_client):
 
 @pytest.mark.asyncio
 async def test_update_cart_item_zero_quantity_removes_item(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "cart_zero_user@buildmart.dev", "role": "buyer"}
-    )
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "cart_zero_user@buildmart.dev", name="Cart Zero User")
     headers = {"Authorization": f"Bearer {token}"}
 
     # Clear cart first
@@ -254,10 +352,7 @@ async def test_update_cart_item_zero_quantity_removes_item(async_client):
 
 @pytest.mark.asyncio
 async def test_update_cart_item_negative_quantity_rejected(async_client):
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "cart_neg_user@buildmart.dev", "role": "buyer"}
-    )
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "cart_neg_user@buildmart.dev", name="Cart Neg User")
     headers = {"Authorization": f"Bearer {token}"}
 
     prod_res = await async_client.get("/api/v1/products?limit=1")
@@ -293,10 +388,7 @@ async def test_razorpay_order_creation_provider_error(async_client, monkeypatch)
     monkeypatch.setattr(settings, "RAZORPAY_KEY_SECRET", "live_secret_for_error_test")
     monkeypatch.setattr(razorpay, "Client", FailingRazorpayClient)
 
-    tok_res = await async_client.post(
-        "/api/v1/auth/token", json={"email": "provider_error_tester@buildmart.dev", "role": "buyer"}
-    )
-    token = tok_res.json()["access_token"]
+    token = await get_test_token(async_client, "provider_error_tester@buildmart.dev", name="Provider Error Tester")
     headers = {"Authorization": f"Bearer {token}"}
 
     prod_res = await async_client.get("/api/v1/products?limit=1")
@@ -332,9 +424,6 @@ async def test_razorpay_order_creation_provider_error(async_client, monkeypatch)
 
 @pytest.mark.asyncio
 async def test_quote_request_validation_errors(async_client):
-    """
-    Rule 8: Verify quote request input validation on quantities, pincodes, and phone numbers.
-    """
     # 1. Non-positive quantity should fail with 422
     payload_bad_qty = {
         "customer_name": "Test Builder",
@@ -357,12 +446,31 @@ async def test_quote_request_validation_errors(async_client):
     res = await async_client.post("/api/v1/quotes", json=payload_bad_pin)
     assert res.status_code == 422
 
+    # 3. Invalid phone format (<10 digits) should fail with 422
+    payload_bad_phone = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "98765",
+        "delivery_pincode": "500081",
+        "items": [{"title": "Steel Rods", "quantity": 5, "unit": "tonnes"}]
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_bad_phone)
+    assert res.status_code == 422
+
+    # 4. Empty items list should fail with 422
+    payload_empty_items = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "9876543210",
+        "delivery_pincode": "500081",
+        "items": []
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_empty_items)
+    assert res.status_code == 422
+
 
 @pytest.mark.asyncio
 async def test_quote_request_catalog_price_estimation(async_client):
-    """
-    Rule 2 & 8: Verify quotes estimate price accurately based on catalog products.
-    """
     prod_res = await async_client.get("/api/v1/products?limit=1")
     assert prod_res.status_code == 200
     prod = prod_res.json()[0]

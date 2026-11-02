@@ -1,8 +1,26 @@
 import hmac
 import hashlib
 import json
+import time
+import uuid
+import jwt
 import pytest
 from app.core.config import Settings, settings
+from app.core.security import JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE
+
+async def get_test_token(async_client, email: str, password: str = "DevPass123!", name: str = "Test User") -> str:
+    login_res = await async_client.post("/api/v1/auth/token", json={"email": email, "password": password})
+    if login_res.status_code == 200:
+        return login_res.json()["access_token"]
+    reg_res = await async_client.post("/api/v1/auth/register", json={
+        "name": name,
+        "email": email,
+        "password": password
+    })
+    if reg_res.status_code == 201:
+        return reg_res.json()["access_token"]
+    raise RuntimeError(f"Could not obtain token for {email}: {login_res.text} / {reg_res.text}")
+
 
 @pytest.mark.asyncio
 async def test_unauthenticated_protected_routes(async_client):
@@ -18,15 +36,16 @@ async def test_unauthenticated_protected_routes(async_client):
     res = await async_client.post("/api/v1/checkout/razorpay/create-order", json={"amount": 1000.0})
     assert res.status_code == 401
 
+
 @pytest.mark.asyncio
 async def test_rbac_buyer_denied_admin_routes(async_client):
     """
     F-02: Buyers must not have access to administrator endpoints (403 Forbidden).
     """
-    # Login as buyer
+    # Login as buyer with verified password
     token_res = await async_client.post(
         "/api/v1/auth/token",
-        json={"email": "buyer@buildmart.dev", "role": "buyer"}
+        json={"email": "buyer@buildmart.dev", "password": "DevPass123!"}
     )
     assert token_res.status_code == 200
     buyer_token = token_res.json()["access_token"]
@@ -46,15 +65,16 @@ async def test_rbac_buyer_denied_admin_routes(async_client):
     res = await async_client.post("/api/v1/admin/products", json=prod_payload, headers=headers)
     assert res.status_code == 403
 
+
 @pytest.mark.asyncio
 async def test_rbac_admin_allowed_admin_routes(async_client):
     """
     F-02: Authorized administrators can access admin metrics and CRUD products.
     """
-    # Login as admin
+    # Login as admin with verified password
     token_res = await async_client.post(
         "/api/v1/auth/token",
-        json={"email": "admin@buildmart.dev", "role": "admin"}
+        json={"email": "admin@buildmart.dev", "password": "DevPass123!"}
     )
     assert token_res.status_code == 200
     admin_token = token_res.json()["access_token"]
@@ -86,16 +106,13 @@ async def test_rbac_admin_allowed_admin_routes(async_client):
     assert del_res.status_code == 200
     assert del_res.json()["deleted"] is True
 
+
 @pytest.mark.asyncio
 async def test_resource_ownership_cross_customer_isolation(async_client):
     """
     F-02 & F-10: Customer A cannot view or cancel Customer B's order.
     """
-    # Create Customer A and place order
-    tok_a = (await async_client.post(
-        "/api/v1/auth/token", json={"email": "customera@buildmart.dev", "role": "buyer"}
-    )).json()["access_token"]
-
+    tok_a = await get_test_token(async_client, "customera@buildmart.dev", name="Customer A")
     prod_res = await async_client.get("/api/v1/products?limit=1")
     test_prod = prod_res.json()[0]
 
@@ -111,10 +128,7 @@ async def test_resource_ownership_cross_customer_isolation(async_client):
     )).json()
     order_id = order_a["id"]
 
-    # Create Customer B
-    tok_b = (await async_client.post(
-        "/api/v1/auth/token", json={"email": "customerb@buildmart.dev", "role": "buyer"}
-    )).json()["access_token"]
+    tok_b = await get_test_token(async_client, "customerb@buildmart.dev", name="Customer B")
 
     # Customer B attempts to view Customer A's order
     view_res = await async_client.get(
@@ -131,14 +145,13 @@ async def test_resource_ownership_cross_customer_isolation(async_client):
     )
     assert cancel_res.status_code == 403
 
+
 @pytest.mark.asyncio
 async def test_server_authoritative_calculations_and_tampering(async_client):
     """
     F-13: Server-authoritative checkout calculations and negative quantity prevention.
     """
-    tok = (await async_client.post(
-        "/api/v1/auth/token", json={"email": "buyer1@buildmart.dev", "role": "buyer"}
-    )).json()["access_token"]
+    tok = await get_test_token(async_client, "buyer1@buildmart.dev", name="Buyer 1")
     headers = {"Authorization": f"Bearer {tok}"}
 
     prod_res = await async_client.get("/api/v1/products?limit=1")
@@ -176,14 +189,13 @@ async def test_server_authoritative_calculations_and_tampering(async_client):
     assert order["payment_status"] == "pending"
     assert order["status"] == "pending"
 
+
 @pytest.mark.asyncio
 async def test_razorpay_signature_verification_and_tampering(async_client):
     """
     F-01: Razorpay HMAC-SHA256 signature verification and tamper detection.
     """
-    tok = (await async_client.post(
-        "/api/v1/auth/token", json={"email": "buyer_rzp@buildmart.dev", "role": "buyer"}
-    )).json()["access_token"]
+    tok = await get_test_token(async_client, "buyer_rzp@buildmart.dev", name="Buyer Rzp")
     headers = {"Authorization": f"Bearer {tok}"}
 
     prod = (await async_client.get("/api/v1/products?limit=1")).json()[0]
@@ -253,6 +265,7 @@ async def test_razorpay_signature_verification_and_tampering(async_client):
     )
     assert replay_res.status_code == 200
 
+
 @pytest.mark.asyncio
 async def test_razorpay_webhook_verification_and_replay_protection(async_client):
     """
@@ -306,13 +319,14 @@ async def test_razorpay_webhook_verification_and_replay_protection(async_client)
     assert replay_res.status_code == 200
     assert replay_res.json()["status"] == "duplicate"
 
+
 @pytest.mark.asyncio
 async def test_order_state_machine_invalid_transitions(async_client):
     """
     F-11: Order state machine rejects invalid transitions.
     """
     admin_tok = (await async_client.post(
-        "/api/v1/auth/token", json={"email": "admin@buildmart.dev", "role": "admin"}
+        "/api/v1/auth/token", json={"email": "admin@buildmart.dev", "password": "DevPass123!"}
     )).json()["access_token"]
     admin_headers = {"Authorization": f"Bearer {admin_tok}"}
 
@@ -337,6 +351,7 @@ async def test_order_state_machine_invalid_transitions(async_client):
     assert invalid_res.status_code == 400
     assert "invalid state transition" in invalid_res.json()["detail"].lower()
 
+
 def test_production_config_fail_fast():
     """
     F-07 & F-08: Fail-fast validation in production mode.
@@ -345,6 +360,7 @@ def test_production_config_fail_fast():
         Settings(
             ENVIRONMENT="production",
             SECRET_KEY="buildmart-dev-secret-key-at-least-32-chars-long",
+            ADMIN_BOOTSTRAP_SECRET="prod-bootstrap-secret-min-32-chars-long-x",
             DEBUG=False
         )
 
@@ -352,6 +368,7 @@ def test_production_config_fail_fast():
         Settings(
             ENVIRONMENT="production",
             SECRET_KEY="a-very-long-production-key-with-strictly-valid-chars-123456",
+            ADMIN_BOOTSTRAP_SECRET="prod-bootstrap-secret-min-32-chars-long-x",
             DEBUG=True
         )
 
@@ -359,7 +376,7 @@ def test_production_config_fail_fast():
 @pytest.mark.asyncio
 async def test_dev_token_rejected_in_production(async_client, monkeypatch):
     """
-    Rule 6: Development bypass tokens must be rejected with 401 when running in production.
+    P0 & Rule 6: Development bypass tokens must be rejected with 401 across all environments.
     """
     monkeypatch.setattr(settings, "ENVIRONMENT", "production")
     monkeypatch.setattr(settings, "DEBUG", False)
@@ -367,7 +384,7 @@ async def test_dev_token_rejected_in_production(async_client, monkeypatch):
     dev_headers = {"Authorization": "Bearer user:custom-buyer-id:buyer:buyer@buildmart.dev"}
     res = await async_client.get("/api/v1/orders", headers=dev_headers)
     assert res.status_code == 401
-    assert "prohibited in production" in res.json().get("detail", "").lower()
+    assert "invalid authentication token" in res.json().get("detail", "").lower()
 
 
 @pytest.mark.asyncio
@@ -378,13 +395,28 @@ async def test_razorpay_order_fails_closed_in_production_without_live_keys(async
     # 1. Obtain a valid authenticated buyer JWT
     token_res = await async_client.post(
         "/api/v1/auth/token",
-        json={"email": "buyer@buildmart.dev", "role": "buyer"}
+        json={"email": "buyer@buildmart.dev", "password": "DevPass123!"}
     )
     assert token_res.status_code == 200
     buyer_token = token_res.json()["access_token"]
     headers = {"Authorization": f"Bearer {buyer_token}"}
 
-    # 2. Simulate production environment where live Razorpay key is not configured or mock
+    # 2. Create a persisted order
+    prod_res = await async_client.get("/api/v1/products?limit=1")
+    prod = prod_res.json()[0]
+    order_res = await async_client.post(
+        "/api/v1/orders",
+        json={
+            "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+            "payment_method": "razorpay",
+            "items": [{"productId": prod["id"], "quantity": 1}],
+        },
+        headers=headers,
+    )
+    assert order_res.status_code == 201
+    order = order_res.json()
+
+    # 3. Simulate production environment where live Razorpay key is not configured or mock
     monkeypatch.setattr(settings, "ENVIRONMENT", "production")
     monkeypatch.setattr(settings, "DEBUG", False)
     monkeypatch.setattr(settings, "RAZORPAY_KEY_ID", "")
@@ -392,7 +424,7 @@ async def test_razorpay_order_fails_closed_in_production_without_live_keys(async
 
     res = await async_client.post(
         "/api/v1/checkout/razorpay/create-order",
-        json={"amount": 1500.0, "currency": "INR"},
+        json={"order_id": order["id"]},
         headers=headers
     )
     assert res.status_code == 503
@@ -422,3 +454,224 @@ async def test_auto_seeding_disabled_in_production(monkeypatch):
         pass
 
     assert seeding_called is False, "seed_database should not be executed when ENVIRONMENT == 'production'"
+
+
+# =========================================================================
+# P0 / P1 Negative Security & Integrity Tests
+# =========================================================================
+
+@pytest.mark.asyncio
+async def test_arbitrary_email_cannot_log_in(async_client):
+    """
+    P0 Negative Test: Arbitrary unregistered email cannot log in.
+    """
+    response = await async_client.post(
+        "/api/v1/auth/token",
+        json={"email": "nonexistent_hacker@evilcorp.io", "password": "SomePassword123!"}
+    )
+    assert response.status_code == 401
+    assert "invalid email or password" in response.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_token_from_another_environment_rejected_invalid_secret(async_client):
+    """
+    P0 Negative Test: Token signed with another environment/server's secret is rejected.
+    """
+    now = int(time.time())
+    foreign_payload = {
+        "sub": "user_foreign_123",
+        "email": "foreign@buildmart.dev",
+        "role": "buyer",
+        "iss": JWT_ISSUER,
+        "aud": JWT_AUDIENCE,
+        "iat": now,
+        "exp": now + 3600,
+        "jti": str(uuid.uuid4())
+    }
+    foreign_token = jwt.encode(foreign_payload, "completely-different-signing-secret", algorithm=JWT_ALGORITHM)
+
+    res = await async_client.get("/api/v1/orders", headers={"Authorization": f"Bearer {foreign_token}"})
+    assert res.status_code == 401
+    assert "invalid authentication token" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_token_invalid_issuer_rejected(async_client):
+    """
+    P0 Negative Test: Token from invalid/untrusted issuer is rejected.
+    """
+    now = int(time.time())
+    payload = {
+        "sub": "user_issuer_test",
+        "email": "buyer@buildmart.dev",
+        "role": "buyer",
+        "iss": "untrusted-issuer-corp",
+        "aud": JWT_AUDIENCE,
+        "iat": now,
+        "exp": now + 3600,
+        "jti": str(uuid.uuid4())
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+    res = await async_client.get("/api/v1/orders", headers={"Authorization": f"Bearer {token}"})
+    assert res.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_token_invalid_audience_rejected(async_client):
+    """
+    P0 Negative Test: Token crafted for a different audience is rejected.
+    """
+    now = int(time.time())
+    payload = {
+        "sub": "user_aud_test",
+        "email": "buyer@buildmart.dev",
+        "role": "buyer",
+        "iss": JWT_ISSUER,
+        "aud": "rogue-external-client",
+        "iat": now,
+        "exp": now + 3600,
+        "jti": str(uuid.uuid4())
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+    res = await async_client.get("/api/v1/orders", headers={"Authorization": f"Bearer {token}"})
+    assert res.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_token_expired_rejected(async_client):
+    """
+    P0 Negative Test: Expired token is rejected.
+    """
+    past = int(time.time()) - 3600
+    payload = {
+        "sub": "user_exp_test",
+        "email": "buyer@buildmart.dev",
+        "role": "buyer",
+        "iss": JWT_ISSUER,
+        "aud": JWT_AUDIENCE,
+        "iat": past - 3600,
+        "exp": past,
+        "jti": str(uuid.uuid4())
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+    res = await async_client.get("/api/v1/orders", headers={"Authorization": f"Bearer {token}"})
+    assert res.status_code == 401
+    assert "token has expired" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_token_revoked_on_logout(async_client):
+    """
+    P0 Negative Test: Token revoked via /auth/logout is rejected on subsequent requests.
+    """
+    tok = await get_test_token(async_client, "logout_tester@buildmart.dev", name="Logout Tester")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    # Verify token works
+    res1 = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res1.status_code == 200
+
+    # Logout to revoke token
+    logout_res = await async_client.post("/api/v1/auth/logout", headers=headers)
+    assert logout_res.status_code == 200
+    assert "revoked" in logout_res.json().get("message", "").lower()
+
+    # Subsequent request must be rejected
+    res2 = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res2.status_code == 401
+    assert "revoked" in res2.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_checkout_cannot_create_payment_without_persisted_order(async_client):
+    """
+    P1 Negative Test: Razorpay order cannot be created with nonexistent order.
+    """
+    tok = await get_test_token(async_client, "unpersisted_order@buildmart.dev", name="Unpersisted")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/create-order",
+        json={"order_id": "nonexistent-order-uuid", "amount": 5000.0},
+        headers=headers
+    )
+    assert res.status_code == 404
+    assert "not found" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_inventory_check_insufficient_stock_rejected(async_client):
+    """
+    P1 Negative Test: Order with quantity exceeding stock is rejected with 409 Conflict.
+    """
+    tok = await get_test_token(async_client, "stock_buyer@buildmart.dev", name="Stock Buyer")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    prod_res = await async_client.get("/api/v1/products?limit=1")
+    prod = prod_res.json()[0]
+    stock = prod.get("stock_quantity", 100)
+
+    # Attempt to order stock + 1000 items
+    order_payload = {
+        "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+        "payment_method": "cod",
+        "items": [{"productId": prod["id"], "quantity": stock + 1000}]
+    }
+    res = await async_client.post("/api/v1/orders", json=order_payload, headers=headers)
+    assert res.status_code == 409
+    assert "insufficient" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_order_cancellation_restores_inventory(async_client):
+    """
+    P1 Test: Order creation reserves stock; cancellation restores product stock.
+    """
+    tok = await get_test_token(async_client, "restore_buyer@buildmart.dev", name="Restore Buyer")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    # Fetch product stock
+    prod_res1 = await async_client.get("/api/v1/products?limit=1")
+    prod1 = prod_res1.json()[0]
+    initial_stock = prod1["stock_quantity"]
+
+    # Place order for 5 items
+    order_res = await async_client.post(
+        "/api/v1/orders",
+        json={
+            "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+            "payment_method": "cod",
+            "items": [{"productId": prod1["id"], "quantity": 5}]
+        },
+        headers=headers
+    )
+    assert order_res.status_code == 201
+    order = order_res.json()
+
+    # Product stock should be decremented by 5
+    prod_res2 = await async_client.get(f"/api/v1/products/{prod1['id']}")
+    assert prod_res2.json()["stock_quantity"] == initial_stock - 5
+
+    # Cancel order
+    cancel_res = await async_client.post(f"/api/v1/orders/{order['id']}/cancel", headers=headers)
+    assert cancel_res.status_code == 200
+
+    # Product stock should be restored to initial
+    prod_res3 = await async_client.get(f"/api/v1/products/{prod1['id']}")
+    assert prod_res3.json()["stock_quantity"] == initial_stock
+
+
+@pytest.mark.asyncio
+async def test_health_readiness_probe(async_client):
+    """
+    P1 Test: Deep health readiness probe verifies database connectivity.
+    """
+    res = await async_client.get("/api/v1/health/ready")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "ready"
+    assert data["database"] == "connected"
