@@ -2,7 +2,7 @@ name: Mobile CI (Flutter)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, 'feat/**' ]
     paths:
       - 'mobile/**'
       - '.github/workflows/flutter_ci.yml'
@@ -26,10 +26,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -46,6 +46,10 @@ jobs:
           echo "Preparing safe environment configuration from .env.example..."
           cp .env.example .env
           test -f .env && echo ".env successfully instantiated for asset bundling"
+          if [ ! -f android/app/google-services.json ]; then
+            echo "Instantiating placeholder google-services.json from template..."
+            cp android/app/google-services.json.example android/app/google-services.json
+          fi
 
       - name: Install dependencies
         run: flutter pub get
@@ -68,10 +72,10 @@ jobs:
         working-directory: mobile
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -87,6 +91,10 @@ jobs:
           echo "Preparing safe environment configuration from .env.example..."
           cp .env.example .env
           test -f .env && echo ".env successfully instantiated for asset bundling"
+          if [ ! -f android/app/google-services.json ]; then
+            echo "Instantiating placeholder google-services.json from template..."
+            cp android/app/google-services.json.example android/app/google-services.json
+          fi
 
       - name: Install dependencies
         run: flutter pub get

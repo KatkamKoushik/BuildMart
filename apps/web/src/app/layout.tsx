@@ -19,6 +19,19 @@ export const metadata: Metadata = {
     "BuildMart",
   ],
   authors: [{ name: "BuildMart Technologies" }],
+  openGraph: {
+    title: "BuildMart | Certified Construction Materials & Bulk Procurement",
+    description: "Direct-from-manufacturer cement, TMT steel, aggregates, plumbing, and building materials.",
+    url: "https://buildmart.in",
+    siteName: "BuildMart",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BuildMart | Construction Materials Marketplace",
+    description: "Wholesale construction supplies with direct site delivery.",
+  },
 };
 
 export default function RootLayout({

@@ -3,9 +3,14 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import json
 
+import os
 # Use a service account
-cred = credentials.Certificate('buildmart-24c42-firebase-adminsdk-fbsvc-c831ddcd32.json')
-firebase_admin.initialize_app(cred)
+cred_path = os.getenv('FIREBASE_CREDENTIALS_PATH', 'firebase-credentials.json')
+if os.path.exists(cred_path):
+    cred = credentials.Certificate(cred_path)
+    firebase_admin.initialize_app(cred)
+else:
+    firebase_admin.initialize_app()
 
 db = firestore.client()
 

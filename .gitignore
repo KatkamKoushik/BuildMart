@@ -87,3 +87,14 @@ mobile/.env
 apps/*/.env*.local
 services/*/.env*.local
 
+# Cloud Credentials
+*credentials*.json
+*serviceAccount*.json
+google-services.json
+firebase-credentials.json
+
+
+
+# Local Engineering Checklists (Excluded from Git)
+mobile_apps_and_websites_exhaustive_master_checklist.md
+*checklist*.md
