@@ -6,8 +6,9 @@ Production-grade construction materials marketplace and commercial procurement p
 [![API CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-api.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/ci-api.yml)
 [![Mobile CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/KatkamKoushik/BuildMart?color=blue&logo=github)](https://github.com/KatkamKoushik/BuildMart/releases)
-[![Pytest Suite](https://img.shields.io/badge/pytest-15%20passed-success?logo=pytest&logoColor=white)](forensic-report/TEST_EXECUTION_REPORT.md)
-[![Code Coverage](https://img.shields.io/badge/coverage-69%25-green?logo=pytest)](forensic-report/TEST_EXECUTION_REPORT.md)
+[![Pytest Suite](https://img.shields.io/badge/pytest-33%20passed-success?logo=pytest&logoColor=white)](services/api/tests)
+[![Playwright E2E](https://img.shields.io/badge/playwright-6%20passed-success?logo=playwright&logoColor=white)](tests/e2e)
+[![Alembic](https://img.shields.io/badge/migrations-alembic-blue?logo=alembic)](services/api/alembic)
 [![Catalog Audit](https://img.shields.io/badge/catalog%20audit-210%20verified-blue)](scripts/audits/catalog_audit_report.json)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
@@ -127,12 +128,15 @@ Install root and workspace packages:
 pnpm install
 ```
 
-### 4. Setup and Seed the Backend Database
-Navigate to the API service directory, install dependencies, and run the automated seed command:
+### 4. Setup Database and Run Migrations
+Navigate to the API service directory, install dependencies, and apply database migrations:
 ```bash
 cd services/api
 pip install -r requirements.txt
-pip install email-validator
+# Run Alembic schema migrations to head
+alembic upgrade head
+
+# Optional: Seed initial development catalog data (disabled in production)
 python -m app.seed
 cd ../..
 ```
@@ -180,6 +184,20 @@ pnpm --filter @buildmart/web build
 cd services/api
 pytest -v
 cd ../..
+```
+
+### Run End-to-End Test Suite (Playwright)
+```bash
+pnpm test:e2e
+```
+Or directly:
+```bash
+python -m pytest tests/e2e/test_playwright_e2e.py -v
+```
+
+### Run Database Migration Integrity and Rollback Test
+```bash
+python -m pytest services/api/tests/test_migrations.py -v
 ```
 
 The automated test suite verifies:
