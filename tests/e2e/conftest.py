@@ -36,9 +36,11 @@ def live_servers():
     # 1. Start FastAPI backend if not already running
     if not is_port_open(API_PORT):
         api_dir = os.path.join(root_dir, "services", "api")
+        api_env = {**os.environ, "DATABASE_URL": f"sqlite+aiosqlite:///{os.path.join(api_dir, 'buildmart.db')}"}
         api_proc = subprocess.Popen(
             [sys.executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", str(API_PORT)],
             cwd=api_dir,
+            env=api_env,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )

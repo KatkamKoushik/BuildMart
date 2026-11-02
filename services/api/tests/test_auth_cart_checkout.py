@@ -357,6 +357,28 @@ async def test_quote_request_validation_errors(async_client):
     res = await async_client.post("/api/v1/quotes", json=payload_bad_pin)
     assert res.status_code == 422
 
+    # 3. Invalid phone format (<10 digits) should fail with 422
+    payload_bad_phone = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "98765",
+        "delivery_pincode": "500081",
+        "items": [{"title": "Steel Rods", "quantity": 5, "unit": "tonnes"}]
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_bad_phone)
+    assert res.status_code == 422
+
+    # 4. Empty items list should fail with 422
+    payload_empty_items = {
+        "customer_name": "Test Builder",
+        "email": "test@builder.com",
+        "phone": "9876543210",
+        "delivery_pincode": "500081",
+        "items": []
+    }
+    res = await async_client.post("/api/v1/quotes", json=payload_empty_items)
+    assert res.status_code == 422
+
 
 @pytest.mark.asyncio
 async def test_quote_request_catalog_price_estimation(async_client):
