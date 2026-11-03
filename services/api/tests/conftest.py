@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 import pytest
 import pytest_asyncio
@@ -14,18 +13,12 @@ from app.seed import seed_database
 # Disable rate limiting by default across automated test suites
 limiter.enabled = False
 
-configured_url = os.getenv("TEST_DATABASE_URL")
-if configured_url and "sqlite" not in configured_url:
-    TEST_DATABASE_URL = configured_url
-    connect_args = {}
-else:
-    TEST_DB_FILE = Path(__file__).resolve().parent.parent / "test_buildmart.db"
-    TEST_DATABASE_URL = f"sqlite+aiosqlite:///{TEST_DB_FILE}"
-    connect_args = {"check_same_thread": False}
+TEST_DB_FILE = Path(__file__).resolve().parent.parent / "test_buildmart.db"
+TEST_DATABASE_URL = f"sqlite+aiosqlite:///{TEST_DB_FILE}"
 
 test_engine = create_async_engine(
     TEST_DATABASE_URL,
-    connect_args=connect_args
+    connect_args={"check_same_thread": False}
 )
 TestAsyncSession = async_sessionmaker(bind=test_engine, class_=AsyncSession, expire_on_commit=False)
 

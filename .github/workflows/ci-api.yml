@@ -69,9 +69,13 @@ jobs:
         env:
           DATABASE_URL: postgresql+asyncpg://buildmart_user:buildmart_secure_pass@localhost:5432/buildmart_test
 
+      - name: Run SQLite to PostgreSQL Migration Dry Run
+        run: python ../../scripts/migrations/migrate_sqlite_to_postgres.py --dry-run --sqlite buildmart.db
+        env:
+          DATABASE_URL: postgresql://buildmart_user:buildmart_secure_pass@localhost:5432/buildmart_test
+
       - name: Run Pytest Suite
         run: python -m pytest -v --tb=short
         env:
           PYTHONPATH: .
           TESTING: "true"
-          TEST_DATABASE_URL: postgresql+asyncpg://buildmart_user:buildmart_secure_pass@localhost:5432/buildmart_test
