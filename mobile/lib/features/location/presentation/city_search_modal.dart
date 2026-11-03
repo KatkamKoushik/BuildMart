@@ -20,7 +20,9 @@ class _CitySearchModalState extends State<CitySearchModal> {
     'Chennai',
     'Kolkata',
     'Surat',
-    'Pune'
+    'Pune',
+    'Warangal',
+    'Hanamkonda',
   ];
   List<String> _filteredCities = [];
 
@@ -50,11 +52,14 @@ class _CitySearchModalState extends State<CitySearchModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color:
+            isDark ? AppColors.darkSecondaryBackground : AppColors.background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -92,7 +97,13 @@ class _CitySearchModalState extends State<CitySearchModal> {
                 return ListTile(
                   leading:
                       const Icon(Icons.location_city, color: AppColors.primary),
-                  title: Text(city),
+                  title: Text(
+                    city,
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkText : AppColors.text,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context, city);
                   },

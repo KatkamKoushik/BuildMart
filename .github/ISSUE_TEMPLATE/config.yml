@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: BuildMart Technical Documentation & Wiki
+    url: https://github.com/KatkamKoushik/BuildMart/wiki
+    about: Read our system architecture, database design, and procurement workflows.
+  - name: Security Vulnerability Reporting
+    url: https://github.com/KatkamKoushik/BuildMart/security/policy
+    about: Please report security vulnerabilities privately according to our security policy.

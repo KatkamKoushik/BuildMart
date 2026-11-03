@@ -1,14 +1,17 @@
+from pathlib import Path
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from app.main import app
+from app.core.rate_limit import limiter
 from app.db.session import Base, get_db
 from app.models.models import User
 from app.seed import seed_database
 
-from pathlib import Path
+# Disable rate limiting by default across automated test suites
+limiter.enabled = False
 
 TEST_DB_FILE = Path(__file__).resolve().parent.parent / "test_buildmart.db"
 TEST_DATABASE_URL = f"sqlite+aiosqlite:///{TEST_DB_FILE}"

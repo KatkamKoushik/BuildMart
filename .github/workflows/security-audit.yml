@@ -36,13 +36,52 @@ jobs:
         run: ruff check services/api/app --select=E9,F63,F7,F82
 
       - name: Python Dependency Vulnerability Audit
-        run: pip-audit -r services/api/requirements.txt --ignore-vuln CVE-2024-43799 || true
+        run: pip-audit -r services/api/requirements.txt --ignore-vuln CVE-2024-43799
 
-      - name: Git Repository Secret Leak Verification
+      - name: Git Repository Secret Filename Verification
         run: |
-          echo "Verifying no private keys or active secrets are tracked in Git index..."
+          echo "Verifying no protected credential files are tracked in Git index..."
           if git ls-files | grep -E "(\.env$|firebase-credentials\.json$|.*serviceAccount.*\.json$|google-services\.json$)"; then
             echo "ERROR: Protected credential file detected in git index!"
             exit 1
           fi
           echo "Secret scan passed: No protected credential files tracked."
+
+      - name: Git Repository Deep Secret Content Inspection
+        run: |
+          echo "Inspecting repository tracked file contents for leaked credential patterns..."
+          python -c "
+          import subprocess, sys, re
+
+          files = subprocess.check_output(['git', 'ls-files']).decode('utf-8', errors='ignore').splitlines()
+
+          patterns = [
+              (re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'), 'Private Key'),
+              (re.compile(r'AKIA[0-9A-Z]{16}'), 'AWS Access Key ID'),
+              (re.compile(r'ghp_[0-9a-zA-Z]{36}'), 'GitHub Personal Access Token'),
+              (re.compile(r'xox[baprs]-[0-9]{10,13}-[0-9]{10,13}[a-zA-Z0-9-]*'), 'Slack Token'),
+              (re.compile(r'rzp_live_[0-9a-zA-Z]{14,}'), 'Live Razorpay Key ID'),
+              (re.compile(r'sk_live_[0-9a-zA-Z]{24,}'), 'Live Stripe Secret Key'),
+          ]
+
+          violations = []
+          for f in files:
+              # Skip test fixtures and mocks
+              if any(p in f for p in ['tests/', 'test/', 'example', '.example', 'mock', 'fixtures']):
+                  continue
+              try:
+                  with open(f, 'r', encoding='utf-8', errors='ignore') as fh:
+                      content = fh.read()
+                      for pat, name in patterns:
+                          if pat.search(content):
+                              violations.append(f'Secret pattern [{name}] found in file: {f}')
+              except Exception:
+                  pass
+
+          if violations:
+              print('FATAL: Secret leak detected in tracked files:')
+              for v in violations:
+                  print('  ' + v)
+              sys.exit(1)
+          print('Content secret scan clean: No leaked private keys, access tokens, or live credentials.')
+          "

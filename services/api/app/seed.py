@@ -131,7 +131,7 @@ async def seed_database(session_factory=None):
                 brand = Brand(
                     id=b_id,
                     name=b.get("name"),
-                    image_url=b.get("imageUrl") or "",
+                    image_url=b.get("imageUrl") or b.get("logoUrl") or "",
                     category_id=b.get("categoryId")
                 )
                 session.add(brand)
@@ -176,9 +176,21 @@ async def seed_database(session_factory=None):
             res = await session.execute(select(Product.id).where(Product.id.in_(prod_ids)))
             existing_prod_ids = set(res.scalars().all())
 
+        # Collect existing shop IDs to guarantee foreign key integrity
+        res_shops = await session.execute(select(Shop.id))
+        valid_shop_ids = set(res_shops.scalars().all())
+
         for p in products_data:
             p_id = p.get("id")
             if p_id not in existing_prod_ids:
+                raw_shop_id = p.get("shopId")
+                resolved_shop_id = raw_shop_id
+                if raw_shop_id and raw_shop_id not in valid_shop_ids:
+                    if raw_shop_id == "shop_01" and "shop_001" in valid_shop_ids:
+                        resolved_shop_id = "shop_001"
+                    else:
+                        resolved_shop_id = None
+
                 product = Product(
                     id=p_id,
                     title=p.get("title"),
@@ -186,7 +198,7 @@ async def seed_database(session_factory=None):
                     price=float(p.get("price", 0.0)),
                     original_price=float(p.get("originalPrice", 0.0)) if p.get("originalPrice") else None,
                     category_id=p.get("categoryId"),
-                    shop_id=p.get("shopId"),
+                    shop_id=resolved_shop_id,
                     brand_id=p.get("brandId"),
                     image_urls=p.get("imageUrls", []),
                     specifications=p.get("specifications", {}),

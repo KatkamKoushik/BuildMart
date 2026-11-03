@@ -79,6 +79,14 @@ flutter:
     - assets/seeded_data.json
     - assets/images/
     - assets/images/empty_state_illustrations/
+    - assets/images/brand logo/
+    - assets/images/products/
+    - assets/images/products/asian paints/
+    - assets/images/products/CenturyDoors/
+    - assets/images/products/Fenesta/
+    - assets/images/products/Greenply/
+    - assets/images/products/Jaquar/
+    - assets/images/products/Saint-Gobain/
 
 flutter_icons:
   android: true

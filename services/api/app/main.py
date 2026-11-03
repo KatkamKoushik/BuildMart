@@ -17,6 +17,9 @@ from app.api.v1 import (
 )
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
+from app.core.rate_limit import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 import time
 from app.db.mongodb import close_mongo_connection
 from app.db.session import Base, engine
@@ -33,16 +36,15 @@ MAX_REQUEST_BODY_SIZE = 10 * 1024 * 1024  # 10 MB
 async def lifespan(app: FastAPI):
     setup_logging()
     logger.info("Initializing BuildMart API services...")
-    # Startup: ensure tables exist and run seeder if initial setup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
     if settings.ENVIRONMENT.lower() != "production":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
         try:
             await seed_database()
         except Exception as e:
             logger.info(f"[Lifespan] Seeding notice: {e}")
     else:
-        logger.info("[Lifespan] Production mode: Automatic database seeding is disabled.")
+        logger.info("[Lifespan] Production mode: Schema must be managed via Alembic migrations ('alembic upgrade head'). Automatic create_all and seeding are disabled.")
     yield
     # Shutdown
     close_mongo_connection()
@@ -57,6 +59,10 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/api/v1/openapi.json"
 )
+
+# Register SlowAPI rate limiter state and exception handler
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS configuration
 origins = settings.cors_origins
@@ -77,7 +83,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 async def security_and_limits_middleware(request: Request, call_next):
     # Correlation ID propagation (Section 28-B011)
     request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
-    # 1. Reject payloads exceeding maximum allowable request size
+
+    # 1. Reject payloads exceeding maximum allowable request size via Content-Length
     content_length = request.headers.get("content-length")
     if content_length:
         try:
@@ -93,12 +100,31 @@ async def security_and_limits_middleware(request: Request, call_next):
         except ValueError:
             pass
 
+    # 2. Enforce streaming body consumption limits for chunked/unstated transfers
+    received_bytes = 0
+    original_receive = request._receive
+
+    async def limited_receive():
+        nonlocal received_bytes
+        message = await original_receive()
+        if message["type"] == "http.request":
+            body_chunk = message.get("body", b"")
+            received_bytes += len(body_chunk)
+            if received_bytes > MAX_REQUEST_BODY_SIZE:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail="Request payload exceeds maximum allowable limit (10MB)."
+                )
+        return message
+
+    request._receive = limited_receive
+
     start_time = time.perf_counter()
     response = await call_next(request)
     duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
     logger.info(f"{request.method} {request.url.path} -> {response.status_code} ({duration_ms}ms) [request_id={request_id}]")
 
-    # 2. Strict Security Headers
+    # 3. Strict Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"

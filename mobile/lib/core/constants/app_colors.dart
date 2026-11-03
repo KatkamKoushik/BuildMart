@@ -34,6 +34,7 @@ class AppColors {
       Color(0xFF060C17); // True Dark OLED Canvas
   static const Color darkSecondaryBackground =
       Color(0xFF0B1527); // Dark Surface Card
+  static const Color darkCard = Color(0xFF0B1527); // Dark Surface Card alias
   static const Color darkText = Color(0xFFF8FAFC); // High legibility white
   static const Color darkTextLight = Color(0xFF94A3B8); // Slate 400
   static const Color darkBorder = Color(0x1FFFFFFF); // 12% subtle white border

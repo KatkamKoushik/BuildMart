@@ -1,10 +1,8 @@
 class AdminConstants {
-  // Add allowed admin email addresses here
+  // Configured administrative email addresses
   static const List<String> adminEmails = [
-    'developer@buildmart.com',
-    'admin@buildmart.com',
-    'client@buildmart.com',
-    'yogeswarreddy17@gmail.com', // Adding a likely test email based on previous context if needed
+    'admin@buildmart.dev',
+    'developer@buildmart.dev',
   ];
 
   static bool isAdmin(String email) {

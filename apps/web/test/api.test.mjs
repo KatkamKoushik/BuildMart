@@ -22,7 +22,7 @@ test("getAuthToken returns null when unauthenticated and does not auto-login", a
   assert.equal(token, null, "Unauthenticated user should receive null token");
 });
 
-test("setAuthToken sets and retrieves token from storage", async () => {
+test("setAuthToken sets and retrieves token in-memory", async () => {
   mockStorage.clear();
   const { getAuthToken, setAuthToken } = await import("../src/lib/api.ts");
 
@@ -35,6 +35,13 @@ test("setAuthToken sets and retrieves token from storage", async () => {
   assert.equal(clearedToken, null);
 });
 
+test("tokens are not persisted in localStorage to prevent XSS exposure", async () => {
+  mockStorage.clear();
+  const { setAuthToken } = await import("../src/lib/api.ts");
+  setAuthToken("sensitive_token_jwt");
+  assert.equal(mockStorage.get("buildmart_access_token"), undefined, "Token must not be stored in localStorage");
+});
+
 test("getApiBaseUrl resolves default localhost API address", async () => {
   const { api } = await import("../src/lib/api.ts");
   assert.ok(api, "API client object must be defined");
@@ -44,4 +51,3 @@ test("getApiBaseUrl resolves default localhost API address", async () => {
   assert.equal(typeof api.createOrder, "function");
   assert.equal(typeof api.submitQuote, "function");
 });
-

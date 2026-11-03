@@ -40,7 +40,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: process.platform === "win32" ? undefined : "standalone",
   reactStrictMode: true,
   images: {
     remotePatterns: [

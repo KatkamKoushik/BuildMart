@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     MONGODB_URI: Optional[str] = Field(default=None)
     MONGODB_DB_NAME: str = Field(default="buildmart")
 
+    # Email / Password Recovery Delivery
+    SMTP_HOST: Optional[str] = Field(default=None)
+    SMTP_PORT: int = Field(default=587)
+    SMTP_USER: Optional[str] = Field(default=None)
+    SMTP_PASSWORD: Optional[str] = Field(default=None)
+    EMAIL_FROM: str = Field(default="noreply@buildmart.dev")
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -61,16 +68,47 @@ class Settings(BaseSettings):
             # 2. Reject debug mode in production
             if self.DEBUG:
                 raise ValueError("FATAL CONFIG ERROR: DEBUG must be set to False in production.")
-            # 3. Reject mock Razorpay credentials in production
+
+            # 3. Reject empty, mock, test, or placeholder Razorpay credentials in production
+            if not self.RAZORPAY_KEY_ID or not self.RAZORPAY_KEY_ID.strip():
+                raise ValueError("FATAL CONFIG ERROR: RAZORPAY_KEY_ID cannot be empty in production.")
+            if not self.RAZORPAY_KEY_SECRET or not self.RAZORPAY_KEY_SECRET.strip():
+                raise ValueError("FATAL CONFIG ERROR: RAZORPAY_KEY_SECRET cannot be empty in production.")
+            if not self.RAZORPAY_WEBHOOK_SECRET or not self.RAZORPAY_WEBHOOK_SECRET.strip():
+                raise ValueError("FATAL CONFIG ERROR: RAZORPAY_WEBHOOK_SECRET cannot be empty in production.")
+
             if (
-                self.RAZORPAY_KEY_SECRET.startswith("mock_")
-                or self.RAZORPAY_WEBHOOK_SECRET.startswith("mock_")
-                or "mock" in self.RAZORPAY_KEY_SECRET.lower()
+                not self.RAZORPAY_KEY_ID.startswith("rzp_live_")
+                or len(self.RAZORPAY_KEY_ID.strip()) < 14
                 or "test" in self.RAZORPAY_KEY_ID.lower()
+                or "mock" in self.RAZORPAY_KEY_ID.lower()
             ):
                 raise ValueError(
-                    "FATAL CONFIG ERROR: Production mode cannot start with mock or test Razorpay secrets."
+                    "FATAL CONFIG ERROR: Production mode requires a valid live RAZORPAY_KEY_ID starting with 'rzp_live_'."
                 )
+
+            if (
+                len(self.RAZORPAY_KEY_SECRET.strip()) < 16
+                or self.RAZORPAY_KEY_SECRET.startswith("mock_")
+                or self.RAZORPAY_KEY_SECRET.startswith("your_")
+                or "mock" in self.RAZORPAY_KEY_SECRET.lower()
+                or "test" in self.RAZORPAY_KEY_SECRET.lower()
+            ):
+                raise ValueError(
+                    "FATAL CONFIG ERROR: Production mode requires a valid live RAZORPAY_KEY_SECRET of at least 16 characters."
+                )
+
+            if (
+                len(self.RAZORPAY_WEBHOOK_SECRET.strip()) < 16
+                or self.RAZORPAY_WEBHOOK_SECRET.startswith("mock_")
+                or self.RAZORPAY_WEBHOOK_SECRET.startswith("your_")
+                or "mock" in self.RAZORPAY_WEBHOOK_SECRET.lower()
+                or "test" in self.RAZORPAY_WEBHOOK_SECRET.lower()
+            ):
+                raise ValueError(
+                    "FATAL CONFIG ERROR: Production mode requires a valid live RAZORPAY_WEBHOOK_SECRET of at least 16 characters."
+                )
+
             # 4. Reject default bootstrap secret
             if "dev" in self.ADMIN_BOOTSTRAP_SECRET.lower() or len(self.ADMIN_BOOTSTRAP_SECRET) < 32:
                 raise ValueError(

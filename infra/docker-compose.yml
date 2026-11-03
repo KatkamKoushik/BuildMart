@@ -7,7 +7,7 @@ services:
       - buildmart-net
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-buildmart_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-buildmart_secure_pass}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?FATAL: POSTGRES_PASSWORD must be provided in production}
       POSTGRES_DB: ${POSTGRES_DB:-buildmart}
     ports:
       # Bound strictly to loopback interface for security (prevent public internet exposure)
@@ -51,15 +51,15 @@ services:
       redis:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-buildmart_user}:${POSTGRES_PASSWORD:-buildmart_secure_pass}@db:5432/${POSTGRES_DB:-buildmart}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-buildmart_user}:${POSTGRES_PASSWORD:?FATAL: POSTGRES_PASSWORD must be provided in production}@db:5432/${POSTGRES_DB:-buildmart}
       REDIS_URL: redis://redis:6379/0
       ENVIRONMENT: ${ENVIRONMENT:-production}
       DEBUG: ${DEBUG:-false}
       SECRET_KEY: ${SECRET_KEY:?FATAL: SECRET_KEY must be provided in production}
       ADMIN_BOOTSTRAP_SECRET: ${ADMIN_BOOTSTRAP_SECRET:?FATAL: ADMIN_BOOTSTRAP_SECRET must be provided in production}
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:?FATAL: RAZORPAY_KEY_ID must be provided in production}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:?FATAL: RAZORPAY_KEY_SECRET must be provided in production}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:?FATAL: RAZORPAY_WEBHOOK_SECRET must be provided in production}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
     ports:
       - "8000:8000"
@@ -68,6 +68,8 @@ services:
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
     container_name: buildmart-web
     restart: unless-stopped
     networks:

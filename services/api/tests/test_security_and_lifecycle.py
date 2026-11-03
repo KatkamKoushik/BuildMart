@@ -209,7 +209,13 @@ async def test_razorpay_signature_verification_and_tampering(async_client):
         headers=headers
     )).json()
 
-    rzp_order_id = "order_test_987654"
+    create_res = await async_client.post(
+        "/api/v1/checkout/razorpay/create-order",
+        json={"order_id": order["id"]},
+        headers=headers
+    )
+    assert create_res.status_code == 200
+    rzp_order_id = create_res.json()["order_id"]
     rzp_payment_id = "pay_test_123456"
 
     # 1. Tampered signature rejected
@@ -675,3 +681,351 @@ async def test_health_readiness_probe(async_client):
     data = res.json()
     assert data["status"] == "ready"
     assert data["database"] == "connected"
+
+
+@pytest.mark.asyncio
+async def test_production_config_rejects_empty_or_whitespace_razorpay_secrets():
+    """
+    P0 Test: Production configuration fails fast if Razorpay credentials are empty.
+    """
+    valid_secret = "super_secure_production_secret_32_chars_minimum_length!"
+    valid_bootstrap = "super_secure_production_bootstrap_secret_32_chars!"
+
+    # 1. Empty key ID
+    with pytest.raises(ValueError, match="RAZORPAY_KEY_ID cannot be empty in production"):
+        Settings(
+            ENVIRONMENT="production",
+            DEBUG=False,
+            SECRET_KEY=valid_secret,
+            ADMIN_BOOTSTRAP_SECRET=valid_bootstrap,
+            RAZORPAY_KEY_ID="",
+            RAZORPAY_KEY_SECRET="rzp_live_secret_1234567890abcdef",
+            RAZORPAY_WEBHOOK_SECRET="rzp_webhook_secret_1234567890abcdef"
+        )
+
+    # 2. Empty key secret
+    with pytest.raises(ValueError, match="RAZORPAY_KEY_SECRET cannot be empty in production"):
+        Settings(
+            ENVIRONMENT="production",
+            DEBUG=False,
+            SECRET_KEY=valid_secret,
+            ADMIN_BOOTSTRAP_SECRET=valid_bootstrap,
+            RAZORPAY_KEY_ID="rzp_live_1234567890abcdef",
+            RAZORPAY_KEY_SECRET="   ",
+            RAZORPAY_WEBHOOK_SECRET="rzp_webhook_secret_1234567890abcdef"
+        )
+
+    # 3. Non-live key format in production
+    with pytest.raises(ValueError, match="starting with 'rzp_live_'"):
+        Settings(
+            ENVIRONMENT="production",
+            DEBUG=False,
+            SECRET_KEY=valid_secret,
+            ADMIN_BOOTSTRAP_SECRET=valid_bootstrap,
+            RAZORPAY_KEY_ID="rzp_test_1234567890abcdef",
+            RAZORPAY_KEY_SECRET="rzp_live_secret_1234567890abcdef",
+            RAZORPAY_WEBHOOK_SECRET="rzp_webhook_secret_1234567890abcdef"
+        )
+
+
+@pytest.mark.asyncio
+async def test_verify_payment_rejects_empty_gateway_secret(async_client):
+    """
+    P0 Test: Payment verification rejects verification when secret is unconfigured.
+    """
+    tok = await get_test_token(async_client, "empty_secret_user@buildmart.dev")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    original_secret = settings.RAZORPAY_KEY_SECRET
+    try:
+        settings.RAZORPAY_KEY_SECRET = ""
+        res = await async_client.post(
+            "/api/v1/checkout/razorpay/verify",
+            json={
+                "order_id": "any-order-id",
+                "razorpay_order_id": "order_123",
+                "razorpay_payment_id": "pay_123",
+                "razorpay_signature": "fake_sig"
+            },
+            headers=headers
+        )
+        assert res.status_code == 503
+        assert "not configured" in res.json().get("detail", "").lower()
+    finally:
+        settings.RAZORPAY_KEY_SECRET = original_secret
+
+
+@pytest.mark.asyncio
+async def test_verify_payment_rejects_nonexistent_order(async_client):
+    """
+    P0 Test: Payment verification returns 404 if internal order does not exist.
+    """
+    tok = await get_test_token(async_client, "nonexistent_verify@buildmart.dev")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    body = "order_123|pay_123"
+    valid_sig = hmac.new(
+        settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
+        body.encode("utf-8"),
+        hashlib.sha256
+    ).hexdigest()
+
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/verify",
+        json={
+            "order_id": "nonexistent-order-uuid-99999",
+            "razorpay_order_id": "order_123",
+            "razorpay_payment_id": "pay_123",
+            "razorpay_signature": valid_sig
+        },
+        headers=headers
+    )
+    assert res.status_code == 404
+    assert "no matching internal order" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_verify_payment_rejects_order_without_registered_gateway_order(async_client):
+    """
+    P0 Test: Payment verification rejects orders that have no registered razorpay_order_id.
+    """
+    tok = await get_test_token(async_client, "unregistered_rzp@buildmart.dev")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    # Create order directly without calling create-order
+    prod_res = await async_client.get("/api/v1/products?limit=1")
+    prod = prod_res.json()[0]
+
+    order_res = await async_client.post(
+        "/api/v1/orders",
+        json={
+            "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+            "payment_method": "razorpay",
+            "items": [{"productId": prod["id"], "quantity": 1}]
+        },
+        headers=headers
+    )
+    assert order_res.status_code == 201
+    order = order_res.json()
+
+    # Attempt to verify payment directly without initiating create-order
+    body = "forged_order_id_123|pay_123"
+    valid_sig = hmac.new(
+        settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
+        body.encode("utf-8"),
+        hashlib.sha256
+    ).hexdigest()
+
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/verify",
+        json={
+            "order_id": order["id"],
+            "razorpay_order_id": "forged_order_id_123",
+            "razorpay_payment_id": "pay_123",
+            "razorpay_signature": valid_sig
+        },
+        headers=headers
+    )
+    assert res.status_code == 400
+    assert "not initiated a registered razorpay" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_verify_payment_rejects_mismatched_order_id(async_client):
+    """
+    P0 Test: Payment verification rejects mismatched razorpay_order_id.
+    """
+    tok = await get_test_token(async_client, "mismatch_rzp@buildmart.dev")
+    headers = {"Authorization": f"Bearer {tok}"}
+
+    prod_res = await async_client.get("/api/v1/products?limit=1")
+    prod = prod_res.json()[0]
+
+    order_res = await async_client.post(
+        "/api/v1/orders",
+        json={
+            "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+            "payment_method": "razorpay",
+            "items": [{"productId": prod["id"], "quantity": 1}]
+        },
+        headers=headers
+    )
+    order = order_res.json()
+
+    # Initiate checkout to register genuine razorpay_order_id
+    create_res = await async_client.post(
+        "/api/v1/checkout/razorpay/create-order",
+        json={"order_id": order["id"]},
+        headers=headers
+    )
+    assert create_res.status_code == 200
+
+    # Attempt to verify with a different razorpay_order_id
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/verify",
+        json={
+            "order_id": order["id"],
+            "razorpay_order_id": "mismatched_order_id_456",
+            "razorpay_payment_id": "pay_123",
+            "razorpay_signature": "fake_sig"
+        },
+        headers=headers
+    )
+    assert res.status_code == 400
+    assert "mismatch" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_webhook_rejects_missing_or_empty_secret(async_client):
+    """
+    P0 Test: Webhook endpoint fails closed if webhook secret is empty.
+    """
+    original_secret = settings.RAZORPAY_WEBHOOK_SECRET
+    try:
+        settings.RAZORPAY_WEBHOOK_SECRET = ""
+        res = await async_client.post(
+            "/api/v1/checkout/razorpay/webhook",
+            json={"event": "payment.captured"},
+            headers={"X-Razorpay-Signature": "some_sig"}
+        )
+        assert res.status_code == 503
+        assert "not configured" in res.json().get("detail", "").lower()
+    finally:
+        settings.RAZORPAY_WEBHOOK_SECRET = original_secret
+
+
+@pytest.mark.asyncio
+async def test_webhook_rejects_forged_signature(async_client):
+    """
+    P0 Test: Webhook endpoint rejects forged or invalid HMAC signature.
+    """
+    res = await async_client.post(
+        "/api/v1/checkout/razorpay/webhook",
+        json={"event": "payment.captured", "id": "evt_forged_1"},
+        headers={"X-Razorpay-Signature": "forged_invalid_signature_hex"}
+    )
+    assert res.status_code == 400
+    assert "invalid webhook signature" in res.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_password_reset_token_single_use_enforcement(async_client):
+    """
+    P1 Test: Password reset token is single-use only; replay attempts are rejected.
+    """
+    # 1. Register a test user
+    email = f"single_use_reset_{int(time.time())}@buildmart.dev"
+    await async_client.post(
+        "/api/v1/auth/register",
+        json={"name": "Reset User", "email": email, "password": "OriginalPass123!"}
+    )
+
+    # 2. Request reset token
+    req_res = await async_client.post("/api/v1/auth/password-reset-request", json={"email": email})
+    assert req_res.status_code == 200
+    token = req_res.json().get("reset_token")
+    assert token is not None
+
+    # 3. First consumption must succeed
+    confirm1 = await async_client.post(
+        "/api/v1/auth/password-reset",
+        json={"token": token, "new_password": "NewUpdatedPass123!"}
+    )
+    assert confirm1.status_code == 200
+    assert "updated successfully" in confirm1.json().get("message", "").lower()
+
+    # 4. Second consumption attempt with the same token must be rejected
+    confirm2 = await async_client.post(
+        "/api/v1/auth/password-reset",
+        json={"token": token, "new_password": "AnotherNewPass123!"}
+    )
+    assert confirm2.status_code == 400
+    assert "already been used" in confirm2.json().get("detail", "").lower()
+
+
+@pytest.mark.asyncio
+async def test_registration_nullable_phone_preserves_none(async_client):
+    """
+    P2 Test: Registration with omitted phone stores None rather than dummy '0000000000'.
+    """
+    email = f"null_phone_{int(time.time())}@buildmart.dev"
+    reg_res = await async_client.post(
+        "/api/v1/auth/register",
+        json={"name": "No Phone User", "email": email, "password": "SecurePass123!"}
+    )
+    assert reg_res.status_code == 201
+    user_data = reg_res.json()["user"]
+    assert user_data.get("phone") is None
+
+
+@pytest.mark.asyncio
+async def test_slowapi_rate_limiter_enforcement(async_client):
+    """
+    Test that SlowAPI rate limiting enforces limits and returns 429 when enabled.
+    """
+    from app.core.rate_limit import limiter
+    limiter.enabled = True
+    try:
+        email = f"rate_limit_test_{int(time.time())}@buildmart.dev"
+        responses = []
+        for _ in range(5):
+            res = await async_client.post("/api/v1/auth/password-reset-request", json={"email": email})
+            responses.append(res.status_code)
+        
+        # At least one request beyond the limit must return 429
+        assert 429 in responses, f"Expected 429 Too Many Requests in {responses}"
+    finally:
+        limiter.enabled = False
+
+
+@pytest.mark.asyncio
+async def test_razorpay_sdk_utility_signature_verification_and_tampering(async_client):
+    """
+    Test authoritative payment verification using official Razorpay SDK utility.
+    Valid signatures are accepted; forged/tampered signatures are rejected with 400.
+    """
+    buyer_token = await get_test_token(async_client, "rzp_sdk_test@buildmart.dev")
+    headers = {"Authorization": f"Bearer {buyer_token}"}
+
+    # 1. Create order
+    res = await async_client.get("/api/v1/products")
+    prods = res.json()
+    prod = prods[0] if isinstance(prods, list) else prods["products"][0]
+    order_res = await async_client.post("/api/v1/orders", json={
+        "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+        "payment_method": "razorpay",
+        "items": [{"productId": prod["id"], "quantity": 1}]
+    }, headers=headers)
+    assert order_res.status_code == 201
+    order_id = order_res.json()["id"]
+
+    # 2. Initiate payment session
+    init_res = await async_client.post("/api/v1/checkout/razorpay/create-order", json={"order_id": order_id}, headers=headers)
+    assert init_res.status_code == 200
+    rzp_order_id = init_res.json()["order_id"]
+
+    # 3. Generate valid signature
+    rzp_payment_id = f"pay_{int(time.time())}_valid"
+    msg = f"{rzp_order_id}|{rzp_payment_id}"
+    valid_sig = hmac.new(settings.RAZORPAY_KEY_SECRET.encode("utf-8"), msg.encode("utf-8"), hashlib.sha256).hexdigest()
+
+    # 4. Attempt verification with tampered signature -> must return 400
+    tampered_sig = valid_sig[:-4] + "0000"
+    tampered_res = await async_client.post("/api/v1/checkout/razorpay/verify", json={
+        "order_id": order_id,
+        "razorpay_order_id": rzp_order_id,
+        "razorpay_payment_id": rzp_payment_id,
+        "razorpay_signature": tampered_sig
+    }, headers=headers)
+    assert tampered_res.status_code == 400
+    assert "invalid payment signature" in tampered_res.json()["detail"].lower()
+
+    # 5. Attempt verification with valid signature -> must succeed 200
+    valid_res = await async_client.post("/api/v1/checkout/razorpay/verify", json={
+        "order_id": order_id,
+        "razorpay_order_id": rzp_order_id,
+        "razorpay_payment_id": rzp_payment_id,
+        "razorpay_signature": valid_sig
+    }, headers=headers)
+    assert valid_res.status_code == 200
+    assert valid_res.json()["verified"] is True

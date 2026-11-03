@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/dummy_images.dart';
 import '../../../shared/widgets/buildmart_button.dart';
-import '../../../shared/widgets/network_image_widget.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
-  const PaymentSuccessScreen({super.key});
+  final String? orderId;
+  const PaymentSuccessScreen({super.key, this.orderId});
 
   @override
   State<PaymentSuccessScreen> createState() => _PaymentSuccessScreenState();
@@ -41,6 +40,11 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
+    final orderConfirmationText = widget.orderId != null &&
+            widget.orderId!.isNotEmpty
+        ? 'Your order #${widget.orderId} has been confirmed. You will receive real-time tracking updates shortly.'
+        : 'Your order has been confirmed. You will receive real-time tracking updates shortly.';
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -51,11 +55,14 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
               const Spacer(),
               ScaleTransition(
                 scale: _scaleAnimation,
-                child: const NetworkImageWidget(
-                  imageUrl: DummyImages.illustrationSuccess,
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.contain,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Image.asset(
+                    'assets/images/empty_state_illustrations/payment_success_mobile_app_illus.jpeg',
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -68,11 +75,14 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Your order #BM-9876543 has been confirmed. You will receive an update shortly.',
+              Text(
+                orderConfirmationText,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: AppColors.textLight, height: 1.5, fontSize: 16),
+                style: const TextStyle(
+                  color: AppColors.textLight,
+                  height: 1.5,
+                  fontSize: 16,
+                ),
               ),
               const Spacer(),
               BuildMartButton(

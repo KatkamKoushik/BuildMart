@@ -7,7 +7,7 @@ Production-grade construction materials marketplace and commercial procurement p
 [![Mobile CI](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/flutter_ci.yml)
 [![Security Audit](https://github.com/KatkamKoushik/BuildMart/actions/workflows/security-audit.yml/badge.svg)](https://github.com/KatkamKoushik/BuildMart/actions/workflows/security-audit.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/KatkamKoushik/BuildMart?color=blue&logo=github)](https://github.com/KatkamKoushik/BuildMart/releases)
-[![Pytest Suite](https://img.shields.io/badge/pytest-48%20passed-success?logo=pytest&logoColor=white)](services/api/tests)
+[![Pytest Suite](https://img.shields.io/badge/pytest-59%20passed-success?logo=pytest&logoColor=white)](services/api/tests)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -182,7 +182,7 @@ buildmart/
 │       ├── app/core/          # Configuration, Security, and Authentication
 │       ├── app/db/            # Session handling, Async Engine, and MongoDB Wire Module
 │       ├── app/seed.py        # Seed pipeline importing 210 products and 16 categories
-│       ├── tests/             # Automated Pytest Integration Suite (48 tests)
+│       ├── tests/             # Automated Pytest Integration Suite (59 tests)
 │       └── Dockerfile         # Production Container Definition
 │
 ├── packages/
@@ -240,11 +240,32 @@ buildmart/
 - Validation: Zod schemas for addresses, cart operations, checkout, and quote requests
 
 ### Mobile Client ([mobile](mobile))
-- Framework: Flutter 3.x
-- State Management: Riverpod 2 with code generation
-- Navigation: GoRouter with declarative deep linking
-- Keystore Storage: `flutter_secure_storage` backed by Android Keystore provider
+- Framework: Flutter 3.x (Material 3 with OLED dark mode contrast)
+- State Management: Riverpod 2 with code generation and reactive stream listenables
+- Authentication: Multi-method auth supporting Google Sign-In, Firebase OTP, and JWT backend sessions
+- Offline-First Catalog: Bundled local asset logos for all 18 manufacturer brands (UltraTech, Tata Tiscon, Berger, Astral, CenturyDoors, Jaquar, etc.)
+- Real-Time Data Pipeline: Pure live data flow connecting FastAPI backend and Cloud Firestore with zero mock data, zero placeholder images, and dynamic error fallbacks
+- Navigation: GoRouter with declarative deep linking and parameter-driven shop/product routing
+- Keystore Storage: `flutter_secure_storage` backed by Android Keystore hardware provider
 - Network Resilience: 15-second operation timeout with explicit HTTP 408 / 503 error translation
+
+#### Mobile Application Interface
+
+<p align="center">
+  <img src="docs/screenshots/01_home_screen.jpg" width="19%" alt="Home Screen with Real-Time Location" />
+  <img src="docs/screenshots/02_categories_grid.jpg" width="19%" alt="Materials Categories Grid" />
+  <img src="docs/screenshots/03_top_brands.jpg" width="19%" alt="Top Verified Manufacturer Brands" />
+  <img src="docs/screenshots/04_brand_products.jpg" width="19%" alt="Live Products & Real-Time Pricing" />
+  <img src="docs/screenshots/05_google_auth_profile.jpg" width="19%" alt="Google Sign-In & User Profile" />
+</p>
+
+| Screen | Feature & Architecture Highlights |
+| :--- | :--- |
+| **01. Real-Time Home** | Live GPS location detection (`Hanamkonda / Naim Nagar`), category selector, and popular brand logos. |
+| **02. Material Categories** | Full building materials taxonomy covering Cement, Steel, Bricks, Sand & Aggregates, Plumbing, and Electricals. |
+| **03. Verified Top Brands** | 18 manufacturer brands with offline-first bundled asset logos and dark-mode high contrast rendering. |
+| **04. Live Brand Catalog** | Real-time product inventory for ACC Cement with GST-compliant pricing, stock status, and cart integration. |
+| **05. Profile & Google Auth** | Real OAuth Google Sign-In with automatic backend session synchronization and profile picture caching. |
 
 ---
 
@@ -343,8 +364,8 @@ python -m pytest services/api/tests/test_migrations.py -v
 ### Run Mobile Static Analysis and Unit Tests
 ```bash
 cd mobile
-dart format --output=none --set-exit-if-changed .
-dart analyze --fatal-infos
+dart format --output=none --set-exit-if-changed lib/ test/
+flutter analyze --no-fatal-infos
 flutter test --coverage
 cd ..
 ```
