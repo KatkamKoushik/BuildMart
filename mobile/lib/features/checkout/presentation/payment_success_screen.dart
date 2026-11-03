@@ -40,7 +40,8 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
-    final orderConfirmationText = widget.orderId != null && widget.orderId!.isNotEmpty
+    final orderConfirmationText = widget.orderId != null &&
+            widget.orderId!.isNotEmpty
         ? 'Your order #${widget.orderId} has been confirmed. You will receive real-time tracking updates shortly.'
         : 'Your order has been confirmed. You will receive real-time tracking updates shortly.';
 

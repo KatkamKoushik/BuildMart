@@ -9,12 +9,14 @@ class SeederService {
 
   Future<void> seedDatabase() async {
     // 1. Always load and refresh local catalog in memory and state
-    debugPrint('[SeederService] Loading local catalog from assets/seeded_data.json...');
+    debugPrint(
+        '[SeederService] Loading local catalog from assets/seeded_data.json...');
     await LocalCatalogService.instance.loadFromAssets();
 
     // 2. Attempt Firestore sync only if Cloud Firestore server database is active
     try {
-      debugPrint('[SeederService] Checking Cloud Firestore server database availability...');
+      debugPrint(
+          '[SeederService] Checking Cloud Firestore server database availability...');
       final String jsonString =
           await rootBundle.loadString('assets/seeded_data.json');
       final Map<String, dynamic> data = jsonDecode(jsonString);
@@ -26,7 +28,8 @@ class SeederService {
           .get(const GetOptions(source: Source.server))
           .timeout(const Duration(seconds: 2));
 
-      debugPrint('[SeederService] Cloud Firestore reachable. Seeding collections...');
+      debugPrint(
+          '[SeederService] Cloud Firestore reachable. Seeding collections...');
       // Seed Brands
       for (var brand in data['brands'] ?? []) {
         await _firestore.collection('brands').doc(brand['id']).set(brand);

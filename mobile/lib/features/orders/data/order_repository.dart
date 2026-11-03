@@ -30,7 +30,8 @@ class OrderRepository {
   OrderModel _mapBackendOrder(Map<String, dynamic> data) {
     final id = data['id']?.toString() ?? '';
     final status = data['status']?.toString() ?? 'placed';
-    final total = (data['total_amount'] ?? data['totalAmount'] ?? 0.0).toDouble();
+    final total =
+        (data['total_amount'] ?? data['totalAmount'] ?? 0.0).toDouble();
     final rawDate = data['created_at'] ?? data['createdAt'];
     DateTime createdAt = DateTime.now();
     if (rawDate != null) {
@@ -43,8 +44,12 @@ class OrderRepository {
       status: status,
       totalAmount: total,
       createdAt: createdAt,
-      driverName: data['driver_name']?.toString() ?? data['driverName']?.toString() ?? '',
-      driverPhone: data['driver_phone']?.toString() ?? data['driverPhone']?.toString() ?? '',
+      driverName: data['driver_name']?.toString() ??
+          data['driverName']?.toString() ??
+          '',
+      driverPhone: data['driver_phone']?.toString() ??
+          data['driverPhone']?.toString() ??
+          '',
     );
   }
 
@@ -61,7 +66,11 @@ class OrderRepository {
 
     // 2. Stream from Cloud Firestore
     try {
-      yield* _firestore.collection('orders').doc(orderId).snapshots().map((doc) {
+      yield* _firestore
+          .collection('orders')
+          .doc(orderId)
+          .snapshots()
+          .map((doc) {
         if (!doc.exists || doc.data() == null) {
           throw Exception('Order not found');
         }
@@ -90,7 +99,8 @@ class OrderRepository {
       final res = await _apiClient.get('/orders', auth: true);
       if (res is List && res.isNotEmpty) {
         final apiOrders = res
-            .map((item) => _mapBackendOrder(Map<String, dynamic>.from(item as Map)))
+            .map((item) =>
+                _mapBackendOrder(Map<String, dynamic>.from(item as Map)))
             .toList();
         apiOrders.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         yield apiOrders;

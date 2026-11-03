@@ -43,7 +43,10 @@ class ShopDetailsScreen extends ConsumerWidget {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       shadows: [
-                        Shadow(color: Colors.black87, blurRadius: 6, offset: Offset(0, 1)),
+                        Shadow(
+                            color: Colors.black87,
+                            blurRadius: 6,
+                            offset: Offset(0, 1)),
                       ],
                     ),
                   ),
@@ -77,7 +80,9 @@ class ShopDetailsScreen extends ConsumerWidget {
                       color: isFavorite ? AppColors.error : Colors.white,
                     ),
                     onPressed: () {
-                      ref.read(favoriteShopsProvider.notifier).toggleFavorite(shopId);
+                      ref
+                          .read(favoriteShopsProvider.notifier)
+                          .toggleFavorite(shopId);
                     },
                   ),
                   IconButton(
@@ -98,9 +103,12 @@ class ShopDetailsScreen extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildMetaItem(context, Icons.star, '$rating ($reviewCount)', 'Ratings'),
-                                _buildMetaItem(context, Icons.location_on, distance, 'Distance'),
-                                _buildMetaItem(context, Icons.access_time, '8 AM - 8 PM', 'Hours'),
+                                _buildMetaItem(context, Icons.star,
+                                    '$rating ($reviewCount)', 'Ratings'),
+                                _buildMetaItem(context, Icons.location_on,
+                                    distance, 'Distance'),
+                                _buildMetaItem(context, Icons.access_time,
+                                    '8 AM - 8 PM', 'Hours'),
                               ],
                             ),
                             const Divider(height: 24),
@@ -109,9 +117,13 @@ class ShopDetailsScreen extends ConsumerWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    address.isNotEmpty ? address : 'Verified Building Materials Yard',
+                                    address.isNotEmpty
+                                        ? address
+                                        : 'Verified Building Materials Yard',
                                     style: TextStyle(
-                                      color: isDark ? AppColors.darkTextLight : AppColors.textLight,
+                                      color: isDark
+                                          ? AppColors.darkTextLight
+                                          : AppColors.textLight,
                                       fontSize: 12,
                                     ),
                                     maxLines: 1,
@@ -138,7 +150,10 @@ class ShopDetailsScreen extends ConsumerWidget {
                       if (shop != null && shop.categories.isNotEmpty) ...[
                         Text(
                           'Available Categories',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         Wrap(
@@ -147,7 +162,8 @@ class ShopDetailsScreen extends ConsumerWidget {
                           children: shop.categories.map((cat) {
                             return Chip(
                               label: Text(cat),
-                              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                              backgroundColor:
+                                  AppColors.primary.withValues(alpha: 0.1),
                               labelStyle: const TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w600,
@@ -165,7 +181,8 @@ class ShopDetailsScreen extends ConsumerWidget {
                       const SizedBox(height: 12),
                       Consumer(
                         builder: (context, ref, child) {
-                          final productsAsync = ref.watch(featuredProductsProvider);
+                          final productsAsync =
+                              ref.watch(featuredProductsProvider);
                           return productsAsync.when(
                             data: (products) {
                               final shopProducts = products.take(6).toList();
@@ -173,7 +190,8 @@ class ShopDetailsScreen extends ConsumerWidget {
                                 return const Center(
                                   child: Padding(
                                     padding: EdgeInsets.all(16.0),
-                                    child: Text('No products available for this shop.'),
+                                    child: Text(
+                                        'No products available for this shop.'),
                                   ),
                                 );
                               }
@@ -181,7 +199,8 @@ class ShopDetailsScreen extends ConsumerWidget {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: shopProducts.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 16,
                                   mainAxisSpacing: 16,
@@ -191,12 +210,14 @@ class ShopDetailsScreen extends ConsumerWidget {
                                   final p = shopProducts[index];
                                   return ProductCard(
                                     product: p,
-                                    onTap: () => context.push('/product-details/${p.id}'),
+                                    onTap: () => context
+                                        .push('/product-details/${p.id}'),
                                   );
                                 },
                               );
                             },
-                            loading: () => const Center(child: CircularProgressIndicator()),
+                            loading: () => const Center(
+                                child: CircularProgressIndicator()),
                             error: (_, __) => const SizedBox.shrink(),
                           );
                         },
@@ -209,7 +230,8 @@ class ShopDetailsScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (_, __) => Scaffold(
         appBar: AppBar(title: const Text('Shop Details')),
         body: const Center(child: Text('Failed to load shop details.')),
@@ -217,7 +239,8 @@ class ShopDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMetaItem(BuildContext context, IconData icon, String value, String label) {
+  Widget _buildMetaItem(
+      BuildContext context, IconData icon, String value, String label) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [

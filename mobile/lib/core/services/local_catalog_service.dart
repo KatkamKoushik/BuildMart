@@ -72,7 +72,8 @@ class LocalCatalogService extends ChangeNotifier {
           final map = Map<String, dynamic>.from(b);
           final id = map['id']?.toString() ?? '';
           final name = map['name']?.toString() ?? '';
-          map['logoUrl'] = BrandAssets.resolveLogoUrl(id, map['logoUrl']?.toString(), name);
+          map['logoUrl'] =
+              BrandAssets.resolveLogoUrl(id, map['logoUrl']?.toString(), name);
           return BrandModel.fromJson(map);
         }).toList();
       }

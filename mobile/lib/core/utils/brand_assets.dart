@@ -15,8 +15,10 @@ class BrandAssets {
     'ramco': '${_basePath}ramco.jpg',
     'priya': '${_basePath}priya cement.jpg',
     'priya cement': '${_basePath}priya cement.jpg',
-    'kcp': '${_basePath}the-kcp-ltd-jubilee-hills-hyderabad-cement-distributors-ymiqb1k3ad-250.avif',
-    'kcp cement': '${_basePath}the-kcp-ltd-jubilee-hills-hyderabad-cement-distributors-ymiqb1k3ad-250.avif',
+    'kcp':
+        '${_basePath}the-kcp-ltd-jubilee-hills-hyderabad-cement-distributors-ymiqb1k3ad-250.avif',
+    'kcp cement':
+        '${_basePath}the-kcp-ltd-jubilee-hills-hyderabad-cement-distributors-ymiqb1k3ad-250.avif',
     'penna': '${_basePath}penna.jpg',
     'penna cement': '${_basePath}penna.jpg',
     'supreme': '${_basePath}supreme pipes.jpg',
@@ -48,7 +50,8 @@ class BrandAssets {
         return _brandLogoMap[normalizedName];
       }
       for (final entry in _brandLogoMap.entries) {
-        if (normalizedName.contains(entry.key) || entry.key.contains(normalizedName)) {
+        if (normalizedName.contains(entry.key) ||
+            entry.key.contains(normalizedName)) {
           return entry.value;
         }
       }
@@ -57,7 +60,8 @@ class BrandAssets {
   }
 
   /// Resolves the best available logo URL, prioritizing local offline asset when offline or missing.
-  static String resolveLogoUrl(String brandId, String? currentLogoUrl, [String? brandName]) {
+  static String resolveLogoUrl(String brandId, String? currentLogoUrl,
+      [String? brandName]) {
     final offlineAsset = getOfflineLogo(brandId, brandName);
     if (currentLogoUrl == null || currentLogoUrl.isEmpty) {
       return offlineAsset ?? '';
@@ -73,4 +77,3 @@ class BrandAssets {
     return currentLogoUrl;
   }
 }
-

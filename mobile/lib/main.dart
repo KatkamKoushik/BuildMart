@@ -32,7 +32,7 @@ void main() async {
         'Firebase initialization failed (Have you run flutterfire configure?): $e');
   }
 
-    // Pre-load local offline catalog for instant UI rendering
+  // Pre-load local offline catalog for instant UI rendering
   try {
     await LocalCatalogService.instance.ensureInitialized();
   } catch (e) {

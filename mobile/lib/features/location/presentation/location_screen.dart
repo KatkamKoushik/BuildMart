@@ -58,14 +58,21 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
           place.subAdministrativeArea,
           place.administrativeArea,
           place.postalCode,
-        ].where((p) => p != null && p.trim().isNotEmpty && p != 'Unnamed Road').toSet().toList();
+        ]
+            .where(
+                (p) => p != null && p.trim().isNotEmpty && p != 'Unnamed Road')
+            .toSet()
+            .toList();
         if (parts.isEmpty && place.name != null && place.name!.isNotEmpty) {
           parts.add(place.name!);
         }
-        final detectedLoc = parts.isNotEmpty ? parts.join(', ') : 'Current Location';
+        final detectedLoc =
+            parts.isNotEmpty ? parts.join(', ') : 'Current Location';
         final title = (place.locality?.isNotEmpty == true)
             ? place.locality!
-            : (place.subLocality?.isNotEmpty == true ? place.subLocality! : 'Detected Location');
+            : (place.subLocality?.isNotEmpty == true
+                ? place.subLocality!
+                : 'Detected Location');
 
         await ref
             .read(deliveryAddressProvider.notifier)
@@ -118,9 +125,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
 
     final user = ref.read(userProvider).value;
     if (user != null) {
-      await ref
-          .read(userRepositoryProvider)
-          .addSavedAddress(user.id, addrLine);
+      await ref.read(userRepositoryProvider).addSavedAddress(user.id, addrLine);
     }
 
     if (mounted) {
@@ -154,13 +159,19 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: Divider(color: isDark ? AppColors.darkBorder : AppColors.border)),
+                Expanded(
+                    child: Divider(
+                        color:
+                            isDark ? AppColors.darkBorder : AppColors.border)),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child:
                       Text('OR', style: TextStyle(color: AppColors.textLight)),
                 ),
-                Expanded(child: Divider(color: isDark ? AppColors.darkBorder : AppColors.border)),
+                Expanded(
+                    child: Divider(
+                        color:
+                            isDark ? AppColors.darkBorder : AppColors.border)),
               ],
             ),
             const SizedBox(height: 24),
@@ -195,7 +206,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Apply', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('Apply',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -210,14 +222,17 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground,
+                color: isDark
+                    ? AppColors.darkSecondaryBackground
+                    : AppColors.secondaryBackground,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.border,
                 ),
               ),
               child: ListTile(
-                leading: const Icon(Icons.location_city, color: AppColors.primary),
+                leading:
+                    const Icon(Icons.location_city, color: AppColors.primary),
                 title: Text(
                   'Search for your city',
                   style: TextStyle(
@@ -295,7 +310,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   Widget _buildSavedLocation(BuildContext context, WidgetRef ref, String title,
       String address, IconData icon, AddressModel addr) {
     final selectedAddress = ref.watch(selectedAddressProvider);
-    final isSelected = selectedAddress.id == addr.id || selectedAddress.addressLine == addr.addressLine;
+    final isSelected = selectedAddress.id == addr.id ||
+        selectedAddress.addressLine == addr.addressLine;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
@@ -303,9 +319,13 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
       decoration: BoxDecoration(
         color: isSelected
             ? AppColors.primary.withValues(alpha: 0.12)
-            : (isDark ? AppColors.darkSecondaryBackground : AppColors.background),
+            : (isDark
+                ? AppColors.darkSecondaryBackground
+                : AppColors.background),
         border: Border.all(
-            color: isSelected ? AppColors.primary : (isDark ? AppColors.darkBorder : AppColors.border)),
+            color: isSelected
+                ? AppColors.primary
+                : (isDark ? AppColors.darkBorder : AppColors.border)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(

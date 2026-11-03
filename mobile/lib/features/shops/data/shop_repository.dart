@@ -16,14 +16,19 @@ class ShopRepository {
     return ShopModel(
       id: id,
       name: data['name']?.toString() ?? '',
-      coverImageUrl: data['cover_image_url']?.toString() ?? data['coverImageUrl']?.toString() ?? '',
-      logoUrl: data['logo_url']?.toString() ?? data['logoUrl']?.toString() ?? '',
+      coverImageUrl: data['cover_image_url']?.toString() ??
+          data['coverImageUrl']?.toString() ??
+          '',
+      logoUrl:
+          data['logo_url']?.toString() ?? data['logoUrl']?.toString() ?? '',
       rating: (data['rating'] ?? 4.5).toDouble(),
       reviewCount: (data['review_count'] ?? data['reviewCount'] ?? 0) is int
           ? (data['review_count'] ?? data['reviewCount'] ?? 0)
           : int.tryParse(data['review_count']?.toString() ?? '0') ?? 0,
       address: data['address']?.toString() ?? '',
-      distance: data['distance_km'] != null ? '${data['distance_km']} km' : (data['distance']?.toString() ?? '1.5 km'),
+      distance: data['distance_km'] != null
+          ? '${data['distance_km']} km'
+          : (data['distance']?.toString() ?? '1.5 km'),
       isOpen: data['is_open'] ?? data['isOpen'] ?? true,
       categories: (data['categories'] is List)
           ? (data['categories'] as List).map((e) => e.toString()).toList()
@@ -43,7 +48,8 @@ class ShopRepository {
       final res = await _apiClient.get('/shops', auth: false);
       if (res is List && res.isNotEmpty) {
         final apiShops = res
-            .map((item) => _mapBackendShop(Map<String, dynamic>.from(item as Map)))
+            .map((item) =>
+                _mapBackendShop(Map<String, dynamic>.from(item as Map)))
             .toList();
         yield apiShops;
       }
@@ -115,7 +121,8 @@ final nearbyShopsProvider = StreamProvider<List<ShopModel>>((ref) {
   return repository.watchNearbyShops();
 });
 
-final shopByIdProvider = StreamProvider.family<ShopModel?, String>((ref, shopId) {
+final shopByIdProvider =
+    StreamProvider.family<ShopModel?, String>((ref, shopId) {
   final repository = ref.watch(shopRepositoryProvider);
   return repository.watchShop(shopId);
 });

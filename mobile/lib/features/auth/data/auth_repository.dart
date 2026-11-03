@@ -10,7 +10,8 @@ import '../../../core/services/api_client.dart';
 class AuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
-    serverClientId: '3441164208-11vm9eu2chebstg97muifnqt40bp4un8.apps.googleusercontent.com',
+    serverClientId:
+        '3441164208-11vm9eu2chebstg97muifnqt40bp4un8.apps.googleusercontent.com',
   );
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -20,7 +21,8 @@ class AuthRepository {
   String? _verificationId;
   bool _isLoggedIn = false;
   final ValueNotifier<bool> authStateListenable = ValueNotifier<bool>(false);
-  final StreamController<bool> _authStateController = StreamController<bool>.broadcast();
+  final StreamController<bool> _authStateController =
+      StreamController<bool>.broadcast();
 
   Stream<bool> get authStateStream => _authStateController.stream;
 
@@ -56,7 +58,8 @@ class AuthRepository {
 
     try {
       final token = await _storage.getToken();
-      final hasToken = (token != null && token.isNotEmpty) || _auth.currentUser != null;
+      final hasToken =
+          (token != null && token.isNotEmpty) || _auth.currentUser != null;
       _isLoggedIn = hasToken;
       authStateListenable.value = hasToken;
       _authStateController.add(hasToken);
@@ -98,7 +101,8 @@ class AuthRepository {
               await _storage.saveUserId(user.uid);
 
               try {
-                final doc = await _firestore.collection('users').doc(user.uid).get();
+                final doc =
+                    await _firestore.collection('users').doc(user.uid).get();
                 if (!doc.exists) {
                   await _firestore.collection('users').doc(user.uid).set({
                     'phone': user.phoneNumber ?? '',
@@ -197,17 +201,21 @@ class AuthRepository {
             final userCredential = await _auth.signInWithCredential(credential);
             user = userCredential.user;
           } catch (e) {
-            debugPrint('[AuthRepository] Firebase signInWithCredential warning: $e');
+            debugPrint(
+                '[AuthRepository] Firebase signInWithCredential warning: $e');
           }
         }
 
         final uid = user?.uid ?? account.id;
-        final token = (await user?.getIdToken()) ?? googleAuth.idToken ?? 'google_oauth_token';
+        final token = (await user?.getIdToken()) ??
+            googleAuth.idToken ??
+            'google_oauth_token';
         await _storage.saveToken(token);
         await _storage.saveUserId(uid);
 
         final prefs = await SharedPreferences.getInstance();
-        final displayName = account.displayName ?? user?.displayName ?? 'BuildMart User';
+        final displayName =
+            account.displayName ?? user?.displayName ?? 'BuildMart User';
         final email = account.email;
         final photoUrl = account.photoUrl ?? user?.photoURL ?? '';
         await prefs.setString('cached_user_name', displayName);
@@ -240,7 +248,8 @@ class AuthRepository {
             });
           }
         } catch (e) {
-          debugPrint('[AuthRepository] Notice: Firestore user sync bypassed: $e');
+          debugPrint(
+              '[AuthRepository] Notice: Firestore user sync bypassed: $e');
         }
 
         _notifyAuthSuccess();
@@ -268,11 +277,13 @@ class AuthRepository {
         await _storage.saveUserId(uid);
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('cached_user_name', userData?['name'] ?? 'BuildMart Buyer');
+        await prefs.setString(
+            'cached_user_name', userData?['name'] ?? 'BuildMart Buyer');
         await prefs.setString('cached_user_email', userData?['email'] ?? email);
         await prefs.setString('cached_user_role', userData?['role'] ?? 'buyer');
 
-        debugPrint('[AuthRepository] Successfully authenticated via Backend API for $email');
+        debugPrint(
+            '[AuthRepository] Successfully authenticated via Backend API for $email');
         _notifyAuthSuccess();
         return null;
       }
@@ -321,7 +332,8 @@ class AuthRepository {
     }
   }
 
-  Future<String?> signUpWithEmail(String email, String password, String name) async {
+  Future<String?> signUpWithEmail(
+      String email, String password, String name) async {
     try {
       final res = await _apiClient.post(
         '/auth/register',
@@ -377,7 +389,6 @@ class AuthRepository {
       return e.toString();
     }
   }
-
 
   Future<String?> loginWithPhone(String phoneNumber) async {
     final completer = Completer<String?>();

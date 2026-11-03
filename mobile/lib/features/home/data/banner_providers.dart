@@ -16,14 +16,18 @@ final bannersProvider = StreamProvider<List<String>>((ref) async* {
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isNotEmpty) {
-        return snapshot.docs.map((doc) {
-          final data = doc.data();
-          return (data['imageUrl'] ?? '').toString();
-        }).where((url) => url.isNotEmpty).toList();
+        return snapshot.docs
+            .map((doc) {
+              final data = doc.data();
+              return (data['imageUrl'] ?? '').toString();
+            })
+            .where((url) => url.isNotEmpty)
+            .toList();
       }
       return localCatalog.banners;
     }).handleError((error) {
-      debugPrint('[BannersProvider] Firestore fallback to local banners: $error');
+      debugPrint(
+          '[BannersProvider] Firestore fallback to local banners: $error');
       return localCatalog.banners;
     });
   } catch (e) {

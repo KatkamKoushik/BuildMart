@@ -43,7 +43,8 @@ final userProvider = StreamProvider<UserModel?>((ref) async* {
   }
 
   final sub1 = authRepository.authStateStream.listen((_) => checkUser());
-  final sub2 = FirebaseAuth.instance.authStateChanges().listen((_) => checkUser());
+  final sub2 =
+      FirebaseAuth.instance.authStateChanges().listen((_) => checkUser());
   ref.onDispose(() {
     sub1.cancel();
     sub2.cancel();
@@ -60,15 +61,22 @@ class UserRepository {
   Future<UserModel> _buildFallbackUserModel(String uid) async {
     final prefs = await SharedPreferences.getInstance();
     final firebaseUser = FirebaseAuth.instance.currentUser;
-    final cachedName = prefs.getString('cached_user_name') ?? firebaseUser?.displayName ?? '';
-    final cachedEmail = prefs.getString('cached_user_email') ?? firebaseUser?.email ?? '';
-    final cachedPhone = prefs.getString('cached_user_phone') ?? firebaseUser?.phoneNumber ?? '';
-    final cachedPhoto = prefs.getString('cached_user_photo') ?? firebaseUser?.photoURL;
-    final savedAddrs = prefs.getStringList('saved_addresses_$uid') ?? const <String>[];
+    final cachedName =
+        prefs.getString('cached_user_name') ?? firebaseUser?.displayName ?? '';
+    final cachedEmail =
+        prefs.getString('cached_user_email') ?? firebaseUser?.email ?? '';
+    final cachedPhone =
+        prefs.getString('cached_user_phone') ?? firebaseUser?.phoneNumber ?? '';
+    final cachedPhoto =
+        prefs.getString('cached_user_photo') ?? firebaseUser?.photoURL;
+    final savedAddrs =
+        prefs.getStringList('saved_addresses_$uid') ?? const <String>[];
 
     return UserModel(
       id: uid,
-      name: cachedName.isNotEmpty ? cachedName : (cachedEmail.isNotEmpty ? cachedEmail.split('@')[0] : 'User'),
+      name: cachedName.isNotEmpty
+          ? cachedName
+          : (cachedEmail.isNotEmpty ? cachedEmail.split('@')[0] : 'User'),
       email: cachedEmail,
       phone: cachedPhone,
       profileImageUrl: cachedPhoto,
@@ -79,14 +87,19 @@ class UserRepository {
   Future<UserModel> getUserOnce(String uid) async {
     final fallbackUser = await _buildFallbackUserModel(uid);
     try {
-      final doc = await _firestore.collection('users').doc(uid).get().timeout(const Duration(seconds: 1));
+      final doc = await _firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(const Duration(seconds: 1));
       if (doc.exists && doc.data() != null) {
         final data = Map<String, dynamic>.from(doc.data()!);
         data['id'] = doc.id;
         data['name'] = data['name'] ?? fallbackUser.name;
         data['email'] = data['email'] ?? fallbackUser.email;
         data['phone'] = data['phone'] ?? fallbackUser.phone;
-        data['savedAddresses'] = data['savedAddresses'] ?? fallbackUser.savedAddresses;
+        data['savedAddresses'] =
+            data['savedAddresses'] ?? fallbackUser.savedAddresses;
         return UserModel.fromJson(data);
       }
     } catch (_) {}
@@ -107,7 +120,8 @@ class UserRepository {
         data['name'] = data['name'] ?? fallbackUser.name;
         data['email'] = data['email'] ?? fallbackUser.email;
         data['phone'] = data['phone'] ?? fallbackUser.phone;
-        data['savedAddresses'] = data['savedAddresses'] ?? fallbackUser.savedAddresses;
+        data['savedAddresses'] =
+            data['savedAddresses'] ?? fallbackUser.savedAddresses;
         return UserModel.fromJson(data);
       }).handleError((error) {
         debugPrint('[UserRepository] Firestore user stream fallback: $error');

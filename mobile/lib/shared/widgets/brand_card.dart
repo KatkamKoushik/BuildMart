@@ -20,8 +20,11 @@ class BrandCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkCard : AppColors.background;
-    final labelBg = isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground;
-    final borderColor = isDark ? AppColors.darkBorder : AppColors.border.withValues(alpha: 0.3);
+    final labelBg = isDark
+        ? AppColors.darkSecondaryBackground
+        : AppColors.secondaryBackground;
+    final borderColor =
+        isDark ? AppColors.darkBorder : AppColors.border.withValues(alpha: 0.3);
     final textColor = isDark ? AppColors.darkText : AppColors.text;
 
     final resolvedLogo = BrandAssets.resolveLogoUrl(name, logoUrl, name);
@@ -61,7 +64,8 @@ class BrandCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               decoration: BoxDecoration(
                 color: labelBg,
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(16)),
               ),
               child: Text(
                 name,

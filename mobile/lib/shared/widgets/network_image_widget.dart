@@ -27,7 +27,8 @@ class NetworkImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAsset = imageUrl.startsWith('assets/');
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fallbackBg = isDark ? AppColors.darkCard : AppColors.secondaryBackground;
+    final fallbackBg =
+        isDark ? AppColors.darkCard : AppColors.secondaryBackground;
 
     Widget defaultFallback() {
       if (fallbackAsset != null && fallbackAsset!.isNotEmpty) {

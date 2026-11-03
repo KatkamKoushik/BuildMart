@@ -57,7 +57,8 @@ class _CitySearchModalState extends State<CitySearchModal> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSecondaryBackground : AppColors.background,
+        color:
+            isDark ? AppColors.darkSecondaryBackground : AppColors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(

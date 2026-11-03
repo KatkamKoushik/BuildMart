@@ -21,7 +21,8 @@ class NotificationModel {
   });
 }
 
-final userNotificationsProvider = StreamProvider<List<NotificationModel>>((ref) async* {
+final userNotificationsProvider =
+    StreamProvider<List<NotificationModel>>((ref) async* {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
     yield const [];
@@ -85,12 +86,16 @@ class NotificationsScreen extends ConsumerWidget {
               return Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : Theme.of(context).cardTheme.color,
+                  color: isDark
+                      ? AppColors.darkCard
+                      : Theme.of(context).cardTheme.color,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: item.isUnread
                         ? AppColors.primary.withValues(alpha: 0.5)
-                        : (isDark ? AppColors.darkBorder : AppColors.border.withValues(alpha: 0.5)),
+                        : (isDark
+                            ? AppColors.darkBorder
+                            : AppColors.border.withValues(alpha: 0.5)),
                   ),
                 ),
                 child: Row(
@@ -102,7 +107,8 @@ class NotificationsScreen extends ConsumerWidget {
                         color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.notifications_active, color: AppColors.primary, size: 24),
+                      child: const Icon(Icons.notifications_active,
+                          color: AppColors.primary, size: 24),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -115,9 +121,16 @@ class NotificationsScreen extends ConsumerWidget {
                               Expanded(
                                 child: Text(
                                   item.title,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: item.isUnread ? FontWeight.bold : FontWeight.normal,
-                                        color: isDark ? AppColors.darkText : AppColors.text,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: item.isUnread
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: isDark
+                                            ? AppColors.darkText
+                                            : AppColors.text,
                                       ),
                                 ),
                               ),
@@ -135,17 +148,25 @@ class NotificationsScreen extends ConsumerWidget {
                           const SizedBox(height: 4),
                           Text(
                             item.description,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: isDark ? AppColors.darkTextLight : AppColors.textLight,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: isDark
+                                      ? AppColors.darkTextLight
+                                      : AppColors.textLight,
                                 ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             item.time,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: isDark ? AppColors.darkTextLight : AppColors.textLight,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: isDark
+                                          ? AppColors.darkTextLight
+                                          : AppColors.textLight,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
                         ],
                       ),

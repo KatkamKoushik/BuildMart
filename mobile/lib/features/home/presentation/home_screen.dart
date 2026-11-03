@@ -171,13 +171,18 @@ class HomeScreen extends ConsumerWidget {
     final currentAddress = ref.watch(deliveryAddressProvider);
     final userAsync = ref.watch(userProvider);
 
-    String titleText = currentAddress.title.isNotEmpty ? currentAddress.title : AppLocalizations.of(context)!.location;
-    String shortAddress = currentAddress.addressLine.isNotEmpty && currentAddress.id != 'initial'
-        ? currentAddress.addressLine.split(',')[0].trim()
-        : AppLocalizations.of(context)!.selectDeliveryLocation;
+    String titleText = currentAddress.title.isNotEmpty
+        ? currentAddress.title
+        : AppLocalizations.of(context)!.location;
+    String shortAddress =
+        currentAddress.addressLine.isNotEmpty && currentAddress.id != 'initial'
+            ? currentAddress.addressLine.split(',')[0].trim()
+            : AppLocalizations.of(context)!.selectDeliveryLocation;
 
     userAsync.whenData((user) {
-      if (user != null && user.savedAddresses.isNotEmpty && currentAddress.id == 'initial') {
+      if (user != null &&
+          user.savedAddresses.isNotEmpty &&
+          currentAddress.id == 'initial') {
         final addressLine = user.savedAddresses.first;
         final parts = addressLine.split(',');
         shortAddress = parts.isNotEmpty ? parts[0].trim() : addressLine;
@@ -231,7 +236,6 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       actions: [
-
         Semantics(
           label: 'Notifications',
           button: true,

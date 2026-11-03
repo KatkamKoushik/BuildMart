@@ -92,7 +92,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final user = FirebaseAuth.instance.currentUser;
     final prefs = await SharedPreferences.getInstance();
     final userEmail = user?.email ?? prefs.getString('cached_user_email') ?? '';
-    final userPhone = user?.phoneNumber ?? prefs.getString('cached_user_phone') ?? '';
+    final userPhone =
+        user?.phoneNumber ?? prefs.getString('cached_user_phone') ?? '';
 
     var options = {
       'key': razorpayKey,
@@ -103,9 +104,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (userPhone.isNotEmpty) 'contact': userPhone,
         if (userEmail.isNotEmpty) 'email': userEmail,
       },
-      'theme': {
-        'color': '#FFC107'
-      }
+      'theme': {'color': '#FFC107'}
     };
 
     try {

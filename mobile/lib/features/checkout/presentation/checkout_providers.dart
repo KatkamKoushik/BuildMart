@@ -37,7 +37,8 @@ class DeliveryAddressNotifier extends StateNotifier<AddressModel> {
     } catch (_) {}
   }
 
-  Future<void> setAddress({required String title, required String addressLine}) async {
+  Future<void> setAddress(
+      {required String title, required String addressLine}) async {
     final newModel = AddressModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,

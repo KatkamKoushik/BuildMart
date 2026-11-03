@@ -142,8 +142,10 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                 children: [
                                   CircleAvatar(
                                     radius: 24,
-                                    backgroundColor: AppColors.primary.withValues(alpha: 0.15),
-                                    child: const Icon(Icons.delivery_dining, color: AppColors.primary, size: 28),
+                                    backgroundColor: AppColors.primary
+                                        .withValues(alpha: 0.15),
+                                    child: const Icon(Icons.delivery_dining,
+                                        color: AppColors.primary, size: 28),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -152,7 +154,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            widget.driverName != null && widget.driverName!.isNotEmpty
+                                            widget.driverName != null &&
+                                                    widget
+                                                        .driverName!.isNotEmpty
                                                 ? widget.driverName!
                                                 : 'Assigning Delivery Partner...',
                                             style: const TextStyle(
@@ -161,7 +165,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                                widget.orderId != null && widget.orderId!.isNotEmpty
+                                                widget.orderId != null &&
+                                                        widget
+                                                            .orderId!.isNotEmpty
                                                     ? 'Order #'
                                                     : 'Active Delivery',
                                                 style: const TextStyle(

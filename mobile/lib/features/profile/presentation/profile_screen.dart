@@ -120,7 +120,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   border: Border.all(
                                       color: AppColors.primary, width: 2),
                                 ),
-                                child: (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
+                                child: (user.profileImageUrl != null &&
+                                        user.profileImageUrl!.isNotEmpty)
                                     ? NetworkImageWidget(
                                         imageUrl: user.profileImageUrl!,
                                         width: 64,
@@ -327,7 +328,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Catalog refreshed successfully!'),
+                                content:
+                                    Text('Catalog refreshed successfully!'),
                                 backgroundColor: AppColors.success,
                               ),
                             );

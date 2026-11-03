@@ -45,7 +45,9 @@ class ProductDetailsScreen extends ConsumerWidget {
     final rating = product.rating;
     final reviews = product.reviews;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = (isDark ? AppColors.darkSecondaryBackground : AppColors.background).withValues(alpha: 0.85);
+    final surfaceColor =
+        (isDark ? AppColors.darkSecondaryBackground : AppColors.background)
+            .withValues(alpha: 0.85);
     final iconColor = isDark ? AppColors.darkText : AppColors.accent;
 
     return Scaffold(
@@ -121,8 +123,8 @@ class ProductDetailsScreen extends ConsumerWidget {
                     label: Text('$totalItems'),
                     backgroundColor: AppColors.error,
                     child: IconButton(
-                      icon: Icon(Icons.shopping_cart_outlined,
-                          color: iconColor),
+                      icon:
+                          Icon(Icons.shopping_cart_outlined, color: iconColor),
                       onPressed: () => context.push('/cart'),
                     ),
                   );
@@ -142,7 +144,9 @@ class ProductDetailsScreen extends ConsumerWidget {
               child: Container(
                 height: 350,
                 width: double.infinity,
-                color: isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground,
+                color: isDark
+                    ? AppColors.darkSecondaryBackground
+                    : AppColors.secondaryBackground,
                 child: NetworkImageWidget(
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
@@ -208,10 +212,14 @@ class ProductDetailsScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground,
+                          color: isDark
+                              ? AppColors.darkSecondaryBackground
+                              : AppColors.secondaryBackground,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.border,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.border,
                           ),
                         ),
                         child: Row(
@@ -225,7 +233,9 @@ class ProductDetailsScreen extends ConsumerWidget {
                                     .bodyMedium
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: isDark ? AppColors.darkText : AppColors.text,
+                                      color: isDark
+                                          ? AppColors.darkText
+                                          : AppColors.text,
                                     )),
                           ],
                         ),
@@ -447,8 +457,7 @@ class ProductDetailsScreen extends ConsumerWidget {
           final cartAsync = ref.watch(cartStreamProvider(userId));
           final currentQty = cartAsync.when(
             data: (items) {
-              final match =
-                  items.where((item) => item.productId == product.id);
+              final match = items.where((item) => item.productId == product.id);
               return match.isNotEmpty ? match.first.quantity : 0;
             },
             loading: () => 0,
@@ -466,7 +475,9 @@ class ProductDetailsScreen extends ConsumerWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark ? Colors.black54 : AppColors.accent.withValues(alpha: 0.05),
+                  color: isDark
+                      ? Colors.black54
+                      : AppColors.accent.withValues(alpha: 0.05),
                   offset: const Offset(0, -4),
                   blurRadius: 10,
                 ),
@@ -495,7 +506,9 @@ class ProductDetailsScreen extends ConsumerWidget {
                                         : Icons.remove,
                                     color: currentQty == 1
                                         ? AppColors.error
-                                        : (isDark ? AppColors.darkText : AppColors.accent),
+                                        : (isDark
+                                            ? AppColors.darkText
+                                            : AppColors.accent),
                                   ),
                                   onPressed: () {
                                     ref
@@ -522,13 +535,17 @@ class ProductDetailsScreen extends ConsumerWidget {
                                         .titleLarge
                                         ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: isDark ? AppColors.darkText : AppColors.accent,
+                                          color: isDark
+                                              ? AppColors.darkText
+                                              : AppColors.accent,
                                         ),
                                   ),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.add,
-                                      color: isDark ? AppColors.darkText : AppColors.accent),
+                                      color: isDark
+                                          ? AppColors.darkText
+                                          : AppColors.accent),
                                   onPressed: () {
                                     ref
                                         .read(cartRepositoryProvider)
@@ -594,17 +611,24 @@ class ProductDetailsScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.inventory_2_outlined, size: 64, color: AppColors.textLight),
+              const Icon(Icons.inventory_2_outlined,
+                  size: 64, color: AppColors.textLight),
               const SizedBox(height: 16),
               Text(
                 'Product Not Found',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
                 'The product you are looking for is currently unavailable.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textLight),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: AppColors.textLight),
               ),
               const SizedBox(height: 24),
               BuildMartButton(

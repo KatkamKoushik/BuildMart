@@ -37,7 +37,8 @@ class BrandRepository {
           final id = map['id']?.toString() ?? '';
           final name = map['name']?.toString() ?? '';
           final rawLogo = map['image_url'] ?? map['imageUrl'] ?? map['logoUrl'];
-          map['logoUrl'] = BrandAssets.resolveLogoUrl(id, rawLogo?.toString(), name);
+          map['logoUrl'] =
+              BrandAssets.resolveLogoUrl(id, rawLogo?.toString(), name);
           return BrandModel.fromJson(map);
         }).toList();
         yield apiBrands;
@@ -54,8 +55,10 @@ class BrandRepository {
             final data = Map<String, dynamic>.from(doc.data());
             data['id'] = doc.id;
             data['name'] = data['name'] ?? '';
-            final rawLogo = data['logoUrl'] ?? data['image_url'] ?? data['imageUrl'];
-            data['logoUrl'] = BrandAssets.resolveLogoUrl(doc.id, rawLogo?.toString(), data['name']);
+            final rawLogo =
+                data['logoUrl'] ?? data['image_url'] ?? data['imageUrl'];
+            data['logoUrl'] = BrandAssets.resolveLogoUrl(
+                doc.id, rawLogo?.toString(), data['name']);
             return BrandModel.fromJson(data);
           }).toList();
         }

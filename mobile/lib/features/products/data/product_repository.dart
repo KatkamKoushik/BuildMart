@@ -71,7 +71,8 @@ class ProductRepository {
         }
         return localCatalog.products;
       }).handleError((error) {
-        debugPrint('[ProductRepository] Firestore stream fallback to local: $error');
+        debugPrint(
+            '[ProductRepository] Firestore stream fallback to local: $error');
         return localCatalog.products;
       });
     } catch (e) {
@@ -85,7 +86,8 @@ class ProductRepository {
   Stream<List<ProductModel>> watchProductsByCategory(String categoryId) async* {
     final localCatalog = LocalCatalogService.instance;
     await localCatalog.ensureInitialized();
-    final localCategoryProducts = localCatalog.getProductsByCategory(categoryId);
+    final localCategoryProducts =
+        localCatalog.getProductsByCategory(categoryId);
     if (localCategoryProducts.isNotEmpty) {
       yield localCategoryProducts;
     }

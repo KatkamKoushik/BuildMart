@@ -37,14 +37,17 @@ class CartRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonList = prefs.getStringList('cart_items_$userId') ?? [];
-      final items = jsonList.map((str) {
-        try {
-          final map = jsonDecode(str) as Map<String, dynamic>;
-          return CartItemModel.fromJson(map);
-        } catch (_) {
-          return null;
-        }
-      }).whereType<CartItemModel>().toList();
+      final items = jsonList
+          .map((str) {
+            try {
+              final map = jsonDecode(str) as Map<String, dynamic>;
+              return CartItemModel.fromJson(map);
+            } catch (_) {
+              return null;
+            }
+          })
+          .whereType<CartItemModel>()
+          .toList();
       _memoryCart[userId] = items;
       return items;
     } catch (e) {
@@ -99,10 +102,12 @@ class CartRepository {
 
   Future<void> addToCart(String userId, CartItemModel item) async {
     final items = await _loadLocalCart(userId);
-    final index = items.indexWhere((it) => it.id == item.id || it.productId == item.productId);
+    final index = items
+        .indexWhere((it) => it.id == item.id || it.productId == item.productId);
     if (index >= 0) {
       final existing = items[index];
-      items[index] = existing.copyWith(quantity: existing.quantity + item.quantity);
+      items[index] =
+          existing.copyWith(quantity: existing.quantity + item.quantity);
     } else {
       items.add(item);
     }
@@ -130,7 +135,8 @@ class CartRepository {
     if (newQuantity <= 0) {
       items.removeWhere((it) => it.id == itemId || it.productId == itemId);
     } else {
-      final index = items.indexWhere((it) => it.id == itemId || it.productId == itemId);
+      final index =
+          items.indexWhere((it) => it.id == itemId || it.productId == itemId);
       if (index >= 0) {
         items[index] = items[index].copyWith(quantity: newQuantity);
       }
@@ -153,8 +159,8 @@ class CartRepository {
             .doc(userId)
             .collection('cart')
             .doc(itemId)
-            .update({'quantity': newQuantity})
-            .timeout(const Duration(seconds: 1));
+            .update({'quantity': newQuantity}).timeout(
+                const Duration(seconds: 1));
       }
     } catch (_) {}
   }
