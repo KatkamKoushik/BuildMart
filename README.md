@@ -249,6 +249,24 @@ buildmart/
 - Keystore Storage: `flutter_secure_storage` backed by Android Keystore hardware provider
 - Network Resilience: 15-second operation timeout with explicit HTTP 408 / 503 error translation
 
+#### Mobile Application Interface
+
+<p align="center">
+  <img src="docs/screenshots/01_home_screen.jpg" width="19%" alt="Home Screen with Real-Time Location" />
+  <img src="docs/screenshots/02_categories_grid.jpg" width="19%" alt="Materials Categories Grid" />
+  <img src="docs/screenshots/03_top_brands.jpg" width="19%" alt="Top Verified Manufacturer Brands" />
+  <img src="docs/screenshots/04_brand_products.jpg" width="19%" alt="Live Products & Real-Time Pricing" />
+  <img src="docs/screenshots/05_google_auth_profile.jpg" width="19%" alt="Google Sign-In & User Profile" />
+</p>
+
+| Screen | Feature & Architecture Highlights |
+| :--- | :--- |
+| **01. Real-Time Home** | Live GPS location detection (`Hanamkonda / Naim Nagar`), category selector, and popular brand logos. |
+| **02. Material Categories** | Full building materials taxonomy covering Cement, Steel, Bricks, Sand & Aggregates, Plumbing, and Electricals. |
+| **03. Verified Top Brands** | 18 manufacturer brands with offline-first bundled asset logos and dark-mode high contrast rendering. |
+| **04. Live Brand Catalog** | Real-time product inventory for ACC Cement with GST-compliant pricing, stock status, and cart integration. |
+| **05. Profile & Google Auth** | Real OAuth Google Sign-In with automatic backend session synchronization and profile picture caching. |
+
 ---
 
 ## Getting Started
