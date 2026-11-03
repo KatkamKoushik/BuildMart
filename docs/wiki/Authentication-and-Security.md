@@ -3,11 +3,11 @@
 This document outlines the authentication lifecycle, Role-Based Access Control (RBAC), gateway security middlewares, and secret defense mechanisms in BuildMart.
 
 Primary Source Files:
-- [services/api/app/api/v1/auth.py](file:///d:/buildmart/services/api/app/api/v1/auth.py)
-- [services/api/app/core/security.py](file:///d:/buildmart/services/api/app/core/security.py)
-- [services/api/app/main.py](file:///d:/buildmart/services/api/app/main.py)
-- [mobile/lib/core/security/secure_storage.dart](file:///d:/buildmart/mobile/lib/core/security/secure_storage.dart)
-- [.github/workflows/security-audit.yml](file:///d:/buildmart/.github/workflows/security-audit.yml)
+- [services/api/app/api/v1/auth.py](../../services/api/app/api/v1/auth.py)
+- [services/api/app/core/security.py](../../services/api/app/core/security.py)
+- [services/api/app/main.py](../../services/api/app/main.py)
+- [mobile/lib/core/security/secure_storage.dart](../../mobile/lib/core/security/secure_storage.dart)
+- [.github/workflows/security-audit.yml](../../.github/workflows/security-audit.yml)
 
 ---
 
@@ -64,7 +64,7 @@ Permissions are enforced through FastAPI dependency injection decorators (`get_c
 
 ## Gateway Defense & HTTP Security Headers
 
-Configured in [services/api/app/main.py](file:///d:/buildmart/services/api/app/main.py):
+Configured in [services/api/app/main.py](../../services/api/app/main.py):
 
 ```mermaid
 flowchart TD
@@ -85,10 +85,10 @@ flowchart TD
 ### Mobile App (Flutter)
 The mobile application isolates authentication credentials using `flutter_secure_storage`:
 - **Android**: Uses Android Keystore provider with AES encryption and RSA key wrapping.
-- **Cleartext Traffic**: Prohibited via Android Network Security Config ([mobile/android/app/src/main/res/xml/network_security_config.xml](file:///d:/buildmart/mobile/android/app/src/main/res/xml/network_security_config.xml)), ensuring all API requests enforce HTTPS transport security.
+- **Cleartext Traffic**: Prohibited via Android Network Security Config ([mobile/android/app/src/main/res/xml/network_security_config.xml](../../mobile/android/app/src/main/res/xml/network_security_config.xml)), ensuring all API requests enforce HTTPS transport security.
 
 ### Web Application (Next.js 15)
-Tokens are managed via Zustand client state and propagated in `Authorization: Bearer <token>` headers through the typed API client ([apps/web/src/lib/api.ts](file:///d:/buildmart/apps/web/src/lib/api.ts)).
+Tokens are managed via Zustand client state and propagated in `Authorization: Bearer <token>` headers through the typed API client ([apps/web/src/lib/api.ts](../../apps/web/src/lib/api.ts)).
 
 ---
 
@@ -100,7 +100,7 @@ BuildMart implements a zero-trust secret management standard:
    Master keys, payment secrets (`RAZORPAY_KEY_SECRET`), database credentials, and service account keys are supplied exclusively via runtime environment variables.
 
 2. **Automated Secret Leak Auditing**:
-   GitHub Actions CI includes a dedicated gate ([.github/workflows/security-audit.yml](file:///d:/buildmart/.github/workflows/security-audit.yml)) verifying:
+   GitHub Actions CI includes a dedicated gate ([.github/workflows/security-audit.yml](../../.github/workflows/security-audit.yml)) verifying:
    - No private keys (`id_rsa`, `.pem`, `.pkcs12`) exist in git tracking.
    - Protected credential files (such as `google-services.json` containing live GCP keys) are blocked from git tracking.
    - Example configuration templates (e.g. `google-services.json.example`) contain strictly sanitized dummy tokens (`DUMMY_API_KEY_FOR_CI_VALIDATION_ONLY_0000`).

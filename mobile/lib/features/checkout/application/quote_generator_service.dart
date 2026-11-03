@@ -46,7 +46,7 @@ class QuoteGeneratorService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('BuildMart Quotation',
-            style: pw.TextStyle(
+            style: const pw.TextStyle(
                 fontSize: 24,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue900)),
@@ -63,7 +63,8 @@ class QuoteGeneratorService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('Prepared For:',
-            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
+            style: const pw.TextStyle(
+                fontWeight: pw.FontWeight.bold, fontSize: 14)),
         pw.SizedBox(height: 4),
         pw.Text(user.name),
         pw.Text(user.email),
@@ -76,8 +77,8 @@ class QuoteGeneratorService {
       List<CartItemModel> items, NumberFormat formatter) {
     return pw.TableHelper.fromTextArray(
       headers: ['S.No', 'Product', 'Qty', 'Unit Price', 'Amount'],
-      headerStyle:
-          pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+      headerStyle: const pw.TextStyle(
+          fontWeight: pw.FontWeight.bold, color: PdfColors.white),
       headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey800),
       cellHeight: 30,
       cellAlignments: {

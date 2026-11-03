@@ -3,12 +3,12 @@
 This document covers the Flutter 3.x mobile client architecture, Riverpod 2 state management, network resilience strategies, hardware keystore integration, and ProGuard / R8 release hardening.
 
 Primary Source Files:
-- [mobile/lib/main.dart](file:///d:/buildmart/mobile/lib/main.dart)
-- [mobile/lib/core/services/api_client.dart](file:///d:/buildmart/mobile/lib/core/services/api_client.dart)
-- [mobile/lib/core/security/secure_storage.dart](file:///d:/buildmart/mobile/lib/core/security/secure_storage.dart)
-- [mobile/android/app/src/main/res/xml/network_security_config.xml](file:///d:/buildmart/mobile/android/app/src/main/res/xml/network_security_config.xml)
-- [mobile/android/app/proguard-rules.pro](file:///d:/buildmart/mobile/android/app/proguard-rules.pro)
-- [.github/workflows/flutter_ci.yml](file:///d:/buildmart/.github/workflows/flutter_ci.yml)
+- [mobile/lib/main.dart](../../mobile/lib/main.dart)
+- [mobile/lib/core/services/api_client.dart](../../mobile/lib/core/services/api_client.dart)
+- [mobile/lib/core/security/secure_storage.dart](../../mobile/lib/core/security/secure_storage.dart)
+- [mobile/android/app/src/main/res/xml/network_security_config.xml](../../mobile/android/app/src/main/res/xml/network_security_config.xml)
+- [mobile/android/app/proguard-rules.pro](../../mobile/android/app/proguard-rules.pro)
+- [.github/workflows/flutter_ci.yml](../../.github/workflows/flutter_ci.yml)
 
 ---
 
@@ -77,7 +77,7 @@ sequenceDiagram
     end
 ```
 
-Implementation excerpt from [mobile/lib/core/services/api_client.dart](file:///d:/buildmart/mobile/lib/core/services/api_client.dart):
+Implementation excerpt from [mobile/lib/core/services/api_client.dart](../../mobile/lib/core/services/api_client.dart):
 ```dart
 Future<ApiResponse<T>> _safeCall<T>(
   Future<http.Response> Function() requestFn,
@@ -113,7 +113,7 @@ Authentication tokens are never written to unencrypted `SharedPreferences` or lo
 ## Android Release Hardening
 
 ### 1. Network Security Configuration
-Cleartext (HTTP) network traffic is explicitly prohibited across the application bundle via [network_security_config.xml](file:///d:/buildmart/mobile/android/app/src/main/res/xml/network_security_config.xml):
+Cleartext (HTTP) network traffic is explicitly prohibited across the application bundle via [network_security_config.xml](../../mobile/android/app/src/main/res/xml/network_security_config.xml):
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
@@ -126,7 +126,7 @@ Cleartext (HTTP) network traffic is explicitly prohibited across the application
 ```
 
 ### 2. ProGuard and R8 Obfuscation Rules
-To prevent reverse-engineering of commercial domain logic and protect serialization reflection, release builds apply rules configured in [mobile/android/app/proguard-rules.pro](file:///d:/buildmart/mobile/android/app/proguard-rules.pro):
+To prevent reverse-engineering of commercial domain logic and protect serialization reflection, release builds apply rules configured in [mobile/android/app/proguard-rules.pro](../../mobile/android/app/proguard-rules.pro):
 - Preserves Flutter framework wrappers and platform channels.
 - Preserves Freezed and JSON serialization data transfer objects.
 - Obfuscates business logic classes and strips debug symbol tables.
@@ -135,7 +135,7 @@ To prevent reverse-engineering of commercial domain logic and protect serializat
 
 ## Continuous Integration & Automated Builds
 
-The Flutter client is validated via GitHub Actions in [.github/workflows/flutter_ci.yml](file:///d:/buildmart/.github/workflows/flutter_ci.yml):
+The Flutter client is validated via GitHub Actions in [.github/workflows/flutter_ci.yml](../../.github/workflows/flutter_ci.yml):
 1. **Dart Code Formatting Check**: `dart format --output=none --set-exit-if-changed .`
 2. **Dart Static Analysis**: `dart analyze --fatal-infos`
 3. **Automated Unit & Widget Tests**: `flutter test --coverage`

@@ -36,10 +36,10 @@ void main() {
     });
 
     test('AppColors brand constants match defined design tokens', () {
-      expect(AppColors.primary, equals(const Color(0xFFFFC107)));
-      expect(AppColors.darkBackground, equals(const Color(0xFF121212)));
+      expect(AppColors.primary, equals(const Color(0xFFF59E0B)));
+      expect(AppColors.darkBackground, equals(const Color(0xFF060C17)));
       expect(AppColors.background, equals(const Color(0xFFFFFFFF)));
-      expect(AppColors.error, equals(const Color(0xFFDC2626)));
+      expect(AppColors.error, equals(const Color(0xFFEF4444)));
     });
   });
 }

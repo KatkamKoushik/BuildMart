@@ -1,3 +1,4 @@
+from app.core.logging import logger
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
@@ -31,7 +32,7 @@ async def health_readiness(db: AsyncSession = Depends(get_db)):
         if res.scalar() == 1:
             db_healthy = True
     except Exception as e:
-        print(f"[Health] Database readiness check failed: {e}")
+        logger.warning(f"[Health] Database readiness check failed: {e}")
         db_healthy = False
 
     if not db_healthy:
@@ -54,5 +55,10 @@ async def health_readiness(db: AsyncSession = Depends(get_db)):
     if settings.MONGODB_URI:
         mongo_healthy = check_mongo_health()
         res["mongodb"] = "connected" if mongo_healthy else "degraded"
+
+    if settings.REDIS_URL:
+        from app.core.security import get_redis_client
+        redis_client = get_redis_client()
+        res["redis"] = "connected" if redis_client is not None else "disconnected"
 
     return res

@@ -135,14 +135,24 @@ class _BrandsScreenState extends ConsumerState<BrandsScreen> {
                         final isWood = ['greenply', 'wood', 'board', 'ply']
                             .any((k) => name.contains(k) || id.contains(k));
 
-                        if (_selectedFilterIndex == 1 && !isCement)
+                        if (_selectedFilterIndex == 1 && !isCement) {
                           return false;
-                        if (_selectedFilterIndex == 2 && !isSteel) return false;
-                        if (_selectedFilterIndex == 3 && !isPaint) return false;
-                        if (_selectedFilterIndex == 4 && !isPlumbing)
+                        }
+                        if (_selectedFilterIndex == 2 && !isSteel) {
                           return false;
-                        if (_selectedFilterIndex == 5 && !isDoors) return false;
-                        if (_selectedFilterIndex == 6 && !isWood) return false;
+                        }
+                        if (_selectedFilterIndex == 3 && !isPaint) {
+                          return false;
+                        }
+                        if (_selectedFilterIndex == 4 && !isPlumbing) {
+                          return false;
+                        }
+                        if (_selectedFilterIndex == 5 && !isDoors) {
+                          return false;
+                        }
+                        if (_selectedFilterIndex == 6 && !isWood) {
+                          return false;
+                        }
                       }
                       return true;
                     }).toList();

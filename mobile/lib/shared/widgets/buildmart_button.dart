@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 
 class BuildMartButton extends StatelessWidget {
@@ -21,12 +22,19 @@ class BuildMartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOnPressed = (isLoading || onPressed == null)
+        ? null
+        : () {
+            HapticFeedback.lightImpact();
+            onPressed!();
+          };
+
     return SizedBox(
       width: width,
       height: 56,
       child: isOutlined
           ? OutlinedButton(
-              onPressed: isLoading ? null : onPressed,
+              onPressed: effectiveOnPressed,
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.primary, width: 2),
                 shape: RoundedRectangleBorder(
@@ -37,7 +45,7 @@ class BuildMartButton extends StatelessWidget {
               child: _buildChild(),
             )
           : ElevatedButton(
-              onPressed: isLoading ? null : onPressed,
+              onPressed: effectiveOnPressed,
               child: _buildChild(),
             ),
     );

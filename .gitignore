@@ -98,3 +98,10 @@ firebase-credentials.json
 # Local Engineering Checklists (Excluded from Git)
 mobile_apps_and_websites_exhaustive_master_checklist.md
 *checklist*.md
+
+# Build and Test Caches
+*.tsbuildinfo
+*.db
+*.sqlite
+*.sqlite3
+test_buildmart.db

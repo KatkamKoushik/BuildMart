@@ -46,7 +46,7 @@ class HelpCenterScreen extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: AppColors.border),
+              side: const BorderSide(color: AppColors.border),
             ),
             child: ListTile(
               leading:
@@ -68,7 +68,7 @@ class HelpCenterScreen extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: AppColors.border),
+              side: const BorderSide(color: AppColors.border),
             ),
             child: ListTile(
               leading:
@@ -88,7 +88,7 @@ class HelpCenterScreen extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: AppColors.border),
+              side: const BorderSide(color: AppColors.border),
             ),
             child: ListTile(
               leading:
@@ -114,7 +114,7 @@ class HelpCenterScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
       child: ExpansionTile(
         title: Text(

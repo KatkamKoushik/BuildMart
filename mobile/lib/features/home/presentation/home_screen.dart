@@ -71,8 +71,9 @@ class HomeScreen extends ConsumerWidget {
                               builder: (context, ref, child) {
                                 final recentlyViewed =
                                     ref.watch(recentlyViewedProvider);
-                                if (recentlyViewed.isEmpty)
+                                if (recentlyViewed.isEmpty) {
                                   return const SizedBox.shrink();
+                                }
 
                                 return Column(
                                   children: [

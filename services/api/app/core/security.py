@@ -13,6 +13,9 @@ from app.db.session import get_db
 from app.models.models import User
 from app.core.config import settings
 
+import redis
+from app.core.logging import logger
+
 security_scheme = HTTPBearer(auto_error=False)
 
 JWT_ALGORITHM = "HS256"
@@ -20,8 +23,45 @@ JWT_ISSUER = "buildmart-api"
 JWT_AUDIENCE = "buildmart-client"
 JWT_EXPIRATION_HOURS = 24
 
-# In-memory revocation registry (production setups back this with Redis)
+# Redis-backed revocation registry with in-memory fallback
 REVOKED_TOKEN_IDS: Set[str] = set()
+_redis_client: Optional[redis.Redis] = None
+_last_redis_check: float = 0.0
+
+def get_redis_client() -> Optional[redis.Redis]:
+    global _redis_client, _last_redis_check
+    import time
+    if _redis_client is not None:
+        return _redis_client
+    now = time.time()
+    if now - _last_redis_check < 30.0:
+        return None
+    _last_redis_check = now
+    if settings.REDIS_URL:
+        try:
+            client = redis.from_url(
+                settings.REDIS_URL,
+                decode_responses=True,
+                socket_connect_timeout=0.1,
+                socket_timeout=0.2
+            )
+            client.ping()
+            _redis_client = client
+            return _redis_client
+        except Exception:
+            return None
+    return None
+
+def is_token_revoked(token_id: str) -> bool:
+    if token_id in REVOKED_TOKEN_IDS:
+        return True
+    r = get_redis_client()
+    if r is not None:
+        try:
+            return bool(r.get(f"revoked_token:{token_id}"))
+        except Exception:
+            pass
+    return False
 
 def hash_password(password: str) -> str:
     """
@@ -118,7 +158,7 @@ def decode_access_token(token: str) -> Dict[str, Any]:
 
     # Check revocation blacklist
     jti = payload.get("jti")
-    if jti and jti in REVOKED_TOKEN_IDS:
+    if jti and is_token_revoked(jti):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication token has been revoked",
@@ -129,16 +169,24 @@ def decode_access_token(token: str) -> Dict[str, Any]:
 
 def revoke_token(token: str) -> None:
     """
-    Blacklists a JWT token by its unique JWT ID (jti).
+    Blacklists a JWT token by its unique JWT ID (jti) or hash with 24-hour TTL.
+    Persists to Redis when available and maintains local in-memory fallback.
     """
+    token_id = None
     try:
         payload = decode_access_token(token)
-        jti = payload.get("jti")
-        if jti:
-            REVOKED_TOKEN_IDS.add(jti)
+        token_id = payload.get("jti")
     except HTTPException:
-        # If already invalid or expired, record raw token hash
-        REVOKED_TOKEN_IDS.add(hashlib.sha256(token.encode("utf-8")).hexdigest())
+        token_id = hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+    if token_id:
+        REVOKED_TOKEN_IDS.add(token_id)
+        r = get_redis_client()
+        if r is not None:
+            try:
+                r.setex(f"revoked_token:{token_id}", JWT_EXPIRATION_HOURS * 3600, "revoked")
+            except Exception as e:
+                logger.warning(f"[Security] Failed to write token revocation to Redis: {e}")
 
 async def get_current_user_from_token(token: str, db: AsyncSession) -> User:
     """

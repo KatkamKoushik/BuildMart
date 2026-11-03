@@ -28,28 +28,7 @@ export async function getAuthToken(): Promise<string | null> {
   if (!authToken) {
     authToken = localStorage.getItem("buildmart_access_token");
   }
-  if (authToken) {
-    return authToken;
-  }
-
-  try {
-    const loginRes = await fetch(`${getApiBaseUrl()}/auth/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "buyer@buildmart.dev", password: "DevPass123!" }),
-    });
-    if (loginRes.ok) {
-      const data = await loginRes.json();
-      if (data && typeof data.access_token === "string") {
-        authToken = data.access_token;
-        localStorage.setItem("buildmart_access_token", data.access_token);
-        return authToken;
-      }
-    }
-  } catch {
-    // Backend offline or login endpoint unreachable
-  }
-  return null;
+  return authToken;
 }
 
 export function setAuthToken(token: string | null) {

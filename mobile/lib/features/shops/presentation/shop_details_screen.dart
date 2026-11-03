@@ -23,8 +23,8 @@ class ShopDetailsScreen extends ConsumerWidget {
           SliverAppBar(
             expandedHeight: 200.0,
             pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Sri Sai Hardware & Cements',
+            flexibleSpace: const FlexibleSpaceBar(
+              title: Text('Sri Sai Hardware & Cements',
                   style: TextStyle(
                       color: AppColors.background,
                       textBaseline: TextBaseline.alphabetic,
@@ -130,8 +130,9 @@ class ShopDetailsScreen extends ConsumerWidget {
                       final productsAsync = ref.watch(featuredProductsProvider);
                       return productsAsync.when(
                         data: (products) {
-                          if (products.isEmpty)
+                          if (products.isEmpty) {
                             return const Text('No products available');
+                          }
                           return GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),

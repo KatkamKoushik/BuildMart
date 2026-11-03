@@ -30,16 +30,16 @@ BuildMart is a digital procurement platform purpose-built for the building const
 
 Detailed architectural deep-dives, entity relationship diagrams, security policies, and deployment manuals are maintained in the project Wiki:
 
-| Wiki Module | Technical Scope and Architecture | Direct Link |
-| :--- | :--- | :--- |
-| **Wiki Portal Index** | Documentation index, system tenets, and technology stack overview | [Home](file:///d:/buildmart/docs/wiki/Home.md) |
-| **System Architecture** | 3-tier boundary breakdown, Monorepo layout, and request lifecycles | [Architecture](file:///d:/buildmart/docs/wiki/Architecture.md) |
-| **Database & Persistence** | PostgreSQL 16 schema, ER diagram, migrations, and Firestore wire | [Database and Persistence](file:///d:/buildmart/docs/wiki/Database-and-Persistence.md) |
-| **Authentication & Security** | JWT auth lifecycle, RBAC enforcement matrix, and HTTP security | [Authentication and Security](file:///d:/buildmart/docs/wiki/Authentication-and-Security.md) |
-| **Payments & Orders** | Razorpay flow, HMAC verification, webhooks, and state machine | [Payments and Orders](file:///d:/buildmart/docs/wiki/Payments-and-Orders.md) |
-| **Mobile Engineering** | Flutter 3.x, Riverpod 2, keystore isolation, and 15s timeouts | [Mobile Engineering](file:///d:/buildmart/docs/wiki/Mobile-Engineering.md) |
-| **CI/CD & Quality Gates** | GitHub Actions multi-tier matrix, Node 24 runtimes, and audit gates | [CI/CD and Quality Gates](file:///d:/buildmart/docs/wiki/CI-CD-and-Quality-Gates.md) |
-| **Deployment & Operations** | Docker Compose topology, health checks, logging, and runbooks | [Deployment and Operations](file:///d:/buildmart/docs/wiki/Deployment-and-Operations.md) |
+| Wiki Module | Technical Scope and Architecture | Live GitHub Wiki | Repository Mirror |
+| :--- | :--- | :--- | :--- |
+| **Wiki Portal Index** | Documentation index, system tenets, and technology stack overview | [Wiki Home](https://github.com/KatkamKoushik/BuildMart/wiki) | [Home.md](docs/wiki/Home.md) |
+| **System Architecture** | 3-tier boundary breakdown, Monorepo layout, and request lifecycles | [Architecture](https://github.com/KatkamKoushik/BuildMart/wiki/Architecture) | [Architecture.md](docs/wiki/Architecture.md) |
+| **Database & Persistence** | PostgreSQL 16 schema, ER diagram, migrations, and Firestore wire | [Database & Persistence](https://github.com/KatkamKoushik/BuildMart/wiki/Database-and-Persistence) | [Database-and-Persistence.md](docs/wiki/Database-and-Persistence.md) |
+| **Authentication & Security** | JWT auth lifecycle, RBAC enforcement matrix, and HTTP security | [Authentication & Security](https://github.com/KatkamKoushik/BuildMart/wiki/Authentication-and-Security) | [Authentication-and-Security.md](docs/wiki/Authentication-and-Security.md) |
+| **Payments & Orders** | Razorpay flow, HMAC verification, webhooks, and state machine | [Payments & Orders](https://github.com/KatkamKoushik/BuildMart/wiki/Payments-and-Orders) | [Payments-and-Orders.md](docs/wiki/Payments-and-Orders.md) |
+| **Mobile Engineering** | Flutter 3.x, Riverpod 2, keystore isolation, and 15s timeouts | [Mobile Engineering](https://github.com/KatkamKoushik/BuildMart/wiki/Mobile-Engineering) | [Mobile-Engineering.md](docs/wiki/Mobile-Engineering.md) |
+| **CI/CD & Quality Gates** | GitHub Actions multi-tier matrix, Node 24 runtimes, and audit gates | [CI/CD & Quality Gates](https://github.com/KatkamKoushik/BuildMart/wiki/CI-CD-and-Quality-Gates) | [CI/CD-and-Quality-Gates.md](docs/wiki/CI-CD-and-Quality-Gates.md) |
+| **Deployment & Operations** | Docker Compose topology, health checks, logging, and runbooks | [Deployment & Operations](https://github.com/KatkamKoushik/BuildMart/wiki/Deployment-and-Operations) | [Deployment-and-Operations.md](docs/wiki/Deployment-and-Operations.md) |
 
 ---
 
@@ -215,14 +215,14 @@ buildmart/
 
 ## Technology Stack
 
-### Frontend ([apps/web](file:///d:/buildmart/apps/web))
+### Frontend ([apps/web](apps/web))
 - Framework: Next.js 15 (App Router, React Server Components)
 - Language: TypeScript 5.8
 - UI & Styling: React 19, Tailwind CSS with industrial construction palette
 - State Management: Zustand (Cart, Wishlist, UI Drawers)
 - Icons: Lucide React
 
-### Backend ([services/api](file:///d:/buildmart/services/api))
+### Backend ([services/api](services/api))
 - Framework: FastAPI 0.115
 - Language: Python 3.12
 - ORM: SQLAlchemy 2.0 (Async Engine)
@@ -234,11 +234,12 @@ buildmart/
 - Payment Verification: Razorpay Python SDK with HMAC-SHA256 signature validation
 - Testing: Pytest with HTTPX AsyncClient
 
-### Shared Library ([packages/shared](file:///d:/buildmart/packages/shared))
+### Shared Library ([packages/shared](packages/shared))
 - Language: TypeScript
+- Design Tokens: Unified cross-platform brand tokens, typography scales, and spacing in [packages/shared/src/theme.ts](packages/shared/src/theme.ts)
 - Validation: Zod schemas for addresses, cart operations, checkout, and quote requests
 
-### Mobile Client ([mobile](file:///d:/buildmart/mobile))
+### Mobile Client ([mobile](mobile))
 - Framework: Flutter 3.x
 - State Management: Riverpod 2 with code generation
 - Navigation: GoRouter with declarative deep linking
@@ -309,6 +310,12 @@ pnpm dev:api
 ---
 
 ## Testing and Quality Verification
+
+### Monorepo Full Test Suite (Concurrent Execution)
+`ash
+# Runs test suites across all packages concurrently via Turborepo
+pnpm test
+`
 
 ### Typecheck Shared Domain Package
 ```bash
@@ -384,6 +391,14 @@ All endpoints are versioned under `/api/v1`:
 
 ---
 
+## Cross-Platform Design System
+
+The unified design specification is documented in [DESIGN.md](DESIGN.md), establishing shared brand tokens, responsive 12-column Bento layouts for Web, and native ergonomics (touch targets >= 48dp, safe areas, haptic feedback) for Mobile:
+- **Shared Tokens**: [packages/shared/src/theme.ts](packages/shared/src/theme.ts)
+- **Specification Blueprint**: [DESIGN.md](DESIGN.md)
+
+---
+
 ## Security Policies and Compliance
 
 - **Zero Untracked Secrets**: Secrets reside strictly in `.env` or CI secret vaults. Active and valid keys are prohibited in Git via pre-push audit gates.
@@ -392,6 +407,26 @@ All endpoints are versioned under `/api/v1`:
 - **Hardened HTTP Headers**: Responses enforce `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `X-XSS-Protection: 1; mode=block`, and Content Security Policy.
 - **Hardware Isolation**: Mobile authentication tokens are stored in hardware-backed Android Keystore via `flutter_secure_storage`.
 - **Statutory Tax Compliance**: Guaranteed 18% GST calculation with Input Tax Credit (ITC) eligibility.
+
+---
+
+## Architecture Decision Records (ADRs)
+
+Core architectural decisions are tracked under [docs/adr](docs/adr):
+
+| ADR | Title | Status | Summary |
+| :--- | :--- | :--- | :--- |
+| [0001](docs/adr/0001-dual-database-persistence.md) | Dual Database Persistence | Accepted | PostgreSQL 16 relational ledger + Firestore MongoDB wire protocol |
+| [0002](docs/adr/0002-pnpm-turborepo-monorepo.md) | pnpm & Turborepo Monorepo | Accepted | pnpm 12 workspaces with Turborepo task pipeline caching |
+| [0003](docs/adr/0003-server-authoritative-procurement.md) | Server-Authoritative Procurement | Accepted | Server pricing, statutory 18% GST invariants, and Razorpay HMAC verification |
+
+---
+
+## Repository Governance and Security
+
+- [LICENSE](LICENSE): Open-source MIT License.
+- [SECURITY.md](SECURITY.md): Responsible disclosure policy, SLA, and security invariant definitions.
+- [CONTRIBUTING.md](CONTRIBUTING.md): Developer setup, code review conventions, and branch policies.
 
 ---
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { api } from "@/lib/api";
+import { api } from "../lib/api";
 import type { CartItem, CartSummary, Product } from "@buildmart/shared";
 
 interface CartState {

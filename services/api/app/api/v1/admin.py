@@ -1,3 +1,4 @@
+from app.core.logging import logger
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -161,5 +162,5 @@ async def update_user_role_admin(
     await db.commit()
     await db.refresh(target_user)
 
-    print(f"[SECURITY AUDIT] Admin '{admin_user.email}' modified role of user '{target_user.email}' from '{old_role}' to '{payload.role}'")
+    logger.warning(f"[SECURITY AUDIT] Admin '{admin_user.email}' modified role of user '{target_user.email}' from '{old_role}' to '{payload.role}'")
     return target_user

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,7 @@ class MainScaffold extends ConsumerWidget {
   });
 
   void _goBranch(int index) {
+    HapticFeedback.selectionClick();
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,

@@ -310,20 +310,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         setState(() => _isSeeding = true);
                         try {
                           await SeederService().seedDatabase();
-                          if (mounted) {
+                          if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    '✅ Catalog refreshed! Restart the app to see changes.'),
+                                    'Catalog refreshed! Restart the app to see changes.'),
                                 backgroundColor: AppColors.success,
                               ),
                             );
                           }
                         } catch (e) {
-                          if (mounted) {
+                          if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('❌ Error: $e'),
+                                content: Text('Error: $e'),
                                 backgroundColor: AppColors.error,
                               ),
                             );

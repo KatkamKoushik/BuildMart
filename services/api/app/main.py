@@ -16,6 +16,8 @@ from app.api.v1 import (
     shops,
 )
 from app.core.config import settings
+from app.core.logging import setup_logging, logger
+import time
 from app.db.mongodb import close_mongo_connection
 from app.db.session import Base, engine
 from app.seed import seed_database
@@ -29,6 +31,8 @@ MAX_REQUEST_BODY_SIZE = 10 * 1024 * 1024  # 10 MB
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    setup_logging()
+    logger.info("Initializing BuildMart API services...")
     # Startup: ensure tables exist and run seeder if initial setup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -36,9 +40,9 @@ async def lifespan(app: FastAPI):
         try:
             await seed_database()
         except Exception as e:
-            print(f"[Lifespan] Seeding notice: {e}")
+            logger.info(f"[Lifespan] Seeding notice: {e}")
     else:
-        print("[Lifespan] Production mode: Automatic database seeding is disabled.")
+        logger.info("[Lifespan] Production mode: Automatic database seeding is disabled.")
     yield
     # Shutdown
     close_mongo_connection()
@@ -89,7 +93,10 @@ async def security_and_limits_middleware(request: Request, call_next):
         except ValueError:
             pass
 
+    start_time = time.perf_counter()
     response = await call_next(request)
+    duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
+    logger.info(f"{request.method} {request.url.path} -> {response.status_code} ({duration_ms}ms) [request_id={request_id}]")
 
     # 2. Strict Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"

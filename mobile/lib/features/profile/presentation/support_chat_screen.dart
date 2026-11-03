@@ -14,7 +14,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     {
       'isUser': false,
       'text':
-          'Hi there! 👋 Welcome to BuildMart Support. How can we help you today?',
+          'Hi there! Welcome to BuildMart Support. How can we help you today?',
       'time': '10:00 AM'
     },
   ];

@@ -159,10 +159,11 @@ class ProductCard extends ConsumerWidget {
                       Text(
                         '₹${product.originalPrice!.toStringAsFixed(0)}',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.5),
                           decoration: TextDecoration.lineThrough,
-                          decorationColor:
-                              theme.colorScheme.onSurface.withOpacity(0.5),
+                          decorationColor: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.5),
                         ),
                       ),
                     Row(
@@ -189,8 +190,8 @@ class ProductCard extends ConsumerWidget {
                                           .read(cartRepositoryProvider)
                                           .updateQuantity(userId, product.id,
                                               cartQuantity - 1),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             horizontal: 4, vertical: 6),
                                         child: Icon(Icons.remove,
                                             size: 16, color: AppColors.primary),
@@ -209,8 +210,8 @@ class ProductCard extends ConsumerWidget {
                                           .read(cartRepositoryProvider)
                                           .updateQuantity(userId, product.id,
                                               cartQuantity + 1),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             horizontal: 4, vertical: 6),
                                         child: Icon(Icons.add,
                                             size: 16, color: AppColors.primary),

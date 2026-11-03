@@ -1,3 +1,4 @@
+from app.core.logging import logger
 import asyncio
 import json
 from pathlib import Path
@@ -55,7 +56,7 @@ async def seed_database(session_factory=None):
         if (session_factory and hasattr(session_factory, "kw") and "bind" in session_factory.kw)
         else engine
     )
-    print("[Seed] Initializing database schema...")
+    logger.info("[Seed] Initializing database schema...")
     async with target_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -73,17 +74,17 @@ async def seed_database(session_factory=None):
             break
 
     if not seed_file:
-        print(f"[Seed] Warning: seeded_data.json not found in {possible_paths}")
+        logger.info(f"[Seed] Warning: seeded_data.json not found in {possible_paths}")
         return
 
-    print(f"[Seed] Loading seed data from {seed_file}...")
+    logger.info(f"[Seed] Loading seed data from {seed_file}...")
     with open(seed_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     session_maker = session_factory or AsyncSessionLocal
     async with session_maker() as session:
         # 1. Create or get Default Demo Users (Buyer, Admin, Seller)
-        print("[Seed] Seeding default demo users with secure bcrypt hashes...")
+        logger.info("[Seed] Seeding default demo users with secure bcrypt hashes...")
         await get_or_create_seed_user(
             session, email="buyer@buildmart.dev", role="buyer", name="BuildMart Demo Buyer"
         )
@@ -96,7 +97,7 @@ async def seed_database(session_factory=None):
 
         # 2. Categories
         categories_data = data.get("categories", [])
-        print(f"[Seed] Seeding {len(categories_data)} categories...")
+        logger.info(f"[Seed] Seeding {len(categories_data)} categories...")
         cat_ids = [cat.get("id") for cat in categories_data if cat.get("id")]
         existing_cat_ids = set()
         if cat_ids:
@@ -117,7 +118,7 @@ async def seed_database(session_factory=None):
 
         # 3. Brands
         brands_data = data.get("brands", [])
-        print(f"[Seed] Seeding {len(brands_data)} brands...")
+        logger.info(f"[Seed] Seeding {len(brands_data)} brands...")
         brand_ids = [b.get("id") for b in brands_data if b.get("id")]
         existing_brand_ids = set()
         if brand_ids:
@@ -138,7 +139,7 @@ async def seed_database(session_factory=None):
 
         # 4. Shops / Yards
         shops_data = data.get("shops", [])
-        print(f"[Seed] Seeding {len(shops_data)} shops...")
+        logger.info(f"[Seed] Seeding {len(shops_data)} shops...")
         shop_ids = [s.get("id") for s in shops_data if s.get("id")]
         existing_shop_ids = set()
         if shop_ids:
@@ -168,7 +169,7 @@ async def seed_database(session_factory=None):
 
         # 5. Products
         products_data = data.get("products", [])
-        print(f"[Seed] Seeding {len(products_data)} products...")
+        logger.info(f"[Seed] Seeding {len(products_data)} products...")
         prod_ids = [p.get("id") for p in products_data if p.get("id")]
         existing_prod_ids = set()
         if prod_ids:
@@ -200,7 +201,7 @@ async def seed_database(session_factory=None):
 
         # 6. Banners
         banners_data = data.get("banners", [])
-        print(f"[Seed] Seeding {len(banners_data)} banners...")
+        logger.info(f"[Seed] Seeding {len(banners_data)} banners...")
         banner_ids = [bn.get("id") for bn in banners_data if bn.get("id")]
         existing_banner_ids = set()
         if banner_ids:
@@ -222,7 +223,7 @@ async def seed_database(session_factory=None):
                 session.add(banner)
         await session.commit()
 
-        print("[Seed] Database seeding successfully completed!")
+        logger.info("[Seed] Database seeding successfully completed!")
 
 if __name__ == "__main__":
     asyncio.run(seed_database())

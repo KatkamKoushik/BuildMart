@@ -3,11 +3,11 @@
 This document details the multi-tier GitHub Actions continuous integration pipelines, automated security scanning, Node 24 native action runtimes, and branch protection criteria in BuildMart.
 
 Primary Source Files:
-- [.github/workflows/security-audit.yml](file:///d:/buildmart/.github/workflows/security-audit.yml)
-- [.github/workflows/ci-web.yml](file:///d:/buildmart/.github/workflows/ci-web.yml)
-- [.github/workflows/ci-api.yml](file:///d:/buildmart/.github/workflows/ci-api.yml)
-- [.github/workflows/flutter_ci.yml](file:///d:/buildmart/.github/workflows/flutter_ci.yml)
-- [package.json](file:///d:/buildmart/package.json)
+- [.github/workflows/security-audit.yml](../../.github/workflows/security-audit.yml)
+- [.github/workflows/ci-web.yml](../../.github/workflows/ci-web.yml)
+- [.github/workflows/ci-api.yml](../../.github/workflows/ci-api.yml)
+- [.github/workflows/flutter_ci.yml](../../.github/workflows/flutter_ci.yml)
+- [package.json](../../package.json)
 
 ---
 
@@ -86,7 +86,7 @@ In `ci-web.yml` and `security-audit.yml`, `pnpm/action-setup@v6` automatically d
 
 ## Automated Secret Leak Audit Gate
 
-Implemented in [.github/workflows/security-audit.yml](file:///d:/buildmart/.github/workflows/security-audit.yml):
+Implemented in [.github/workflows/security-audit.yml](../../.github/workflows/security-audit.yml):
 
 ```bash
 # 1. Verify no private keys or certificates are tracked in Git

@@ -64,6 +64,23 @@ services:
     ports:
       - "8000:8000"
 
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    container_name: buildmart-web
+    restart: unless-stopped
+    networks:
+      - buildmart-net
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
 networks:
   buildmart-net:
     driver: bridge

@@ -3,11 +3,11 @@
 This document describes the dual-database persistence tier of BuildMart, including the primary relational schema (PostgreSQL 16), migration workflows (Alembic), and document store integration (Google Cloud Firestore Enterprise MongoDB Wire Protocol).
 
 Primary Source Files:
-- [services/api/app/models/models.py](file:///d:/buildmart/services/api/app/models/models.py)
-- [services/api/app/db/session.py](file:///d:/buildmart/services/api/app/db/session.py)
-- [services/api/app/db/mongodb.py](file:///d:/buildmart/services/api/app/db/mongodb.py)
-- [services/api/app/seed.py](file:///d:/buildmart/services/api/app/seed.py)
-- [services/api/alembic](file:///d:/buildmart/services/api/alembic)
+- [services/api/app/models/models.py](../../services/api/app/models/models.py)
+- [services/api/app/db/session.py](../../services/api/app/db/session.py)
+- [services/api/app/db/mongodb.py](../../services/api/app/db/mongodb.py)
+- [services/api/app/seed.py](../../services/api/app/seed.py)
+- [services/api/alembic](../../services/api/alembic)
 
 ---
 
@@ -179,7 +179,7 @@ alembic revision --autogenerate -m "describe_schema_change"
 ```
 
 ### Migration Automated Verification
-The repository contains an automated test [services/api/tests/test_migrations.py](file:///d:/buildmart/services/api/tests/test_migrations.py) that verifies migration upgrade and rollback integrity during CI builds.
+The repository contains an automated test [services/api/tests/test_migrations.py](../../services/api/tests/test_migrations.py) that verifies migration upgrade and rollback integrity during CI builds.
 
 ---
 
@@ -187,7 +187,7 @@ The repository contains an automated test [services/api/tests/test_migrations.py
 
 For document storage, audit logging, and flexible specifications, BuildMart integrates with Google Cloud Firestore's MongoDB compatibility wire protocol using PyMongo:
 
-Source implementation: [services/api/app/db/mongodb.py](file:///d:/buildmart/services/api/app/db/mongodb.py)
+Source implementation: [services/api/app/db/mongodb.py](../../services/api/app/db/mongodb.py)
 
 Key configurations:
 - `serverSelectionTimeoutMS`: 5,000 ms
@@ -202,7 +202,7 @@ Health verification is exposed on `/api/v1/health` where `ping` commands verify 
 
 ## Database Seeding Pipeline
 
-Source: [services/api/app/seed.py](file:///d:/buildmart/services/api/app/seed.py)
+Source: [services/api/app/seed.py](../../services/api/app/seed.py)
 
 During local development and automated testing, the seeding pipeline executes automatically on application lifespan startup:
 - **16 Material Categories**: Cement, Steel, Bricks, Plumbing, Electricals, Tiles, Paints, Hardware, Sanitaryware, etc.

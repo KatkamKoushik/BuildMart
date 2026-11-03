@@ -1,4 +1,4 @@
-# BuildMart Maintenance, Data Migration & Audit Tooling 🛠️
+# BuildMart Maintenance, Data Migration & Audit Tooling
 
 This directory contains offline utility, data cleaning, and audit scripts used during the initial development, catalog curation, and image synchronization of BuildMart.
 
@@ -6,7 +6,7 @@ This directory contains offline utility, data cleaning, and audit scripts used d
 
 ---
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```text
 scripts/
@@ -18,7 +18,7 @@ scripts/
 
 ---
 
-## 🔍 `scripts/audits/`
+## `scripts/audits/`
 Scripts and reports that inspect and verify product listings, image links, and brand uniformity:
 
 | File | Description |
@@ -32,7 +32,7 @@ Scripts and reports that inspect and verify product listings, image links, and b
 
 ---
 
-## 🔄 `scripts/migrations/`
+## `scripts/migrations/`
 One-time and batch migration scripts to normalize seed data in `assets/seeded_data.json`:
 
 | File | Description |

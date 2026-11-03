@@ -3,11 +3,11 @@
 This document provides a detailed breakdown of the BuildMart 3-Tier Enterprise architecture, module boundaries, monorepo dependency hierarchy, and cross-cutting request workflows.
 
 Primary Source Files:
-- [apps/web](file:///d:/buildmart/apps/web)
-- [services/api/app/main.py](file:///d:/buildmart/services/api/app/main.py)
-- [packages/shared](file:///d:/buildmart/packages/shared)
-- [mobile/lib](file:///d:/buildmart/mobile/lib)
-- [infra/docker-compose.yml](file:///d:/buildmart/infra/docker-compose.yml)
+- [apps/web](../../apps/web)
+- [services/api/app/main.py](../../services/api/app/main.py)
+- [packages/shared](../../packages/shared)
+- [mobile/lib](../../mobile/lib)
+- [infra/docker-compose.yml](../../infra/docker-compose.yml)
 
 ---
 
@@ -16,13 +16,13 @@ Primary Source Files:
 BuildMart adheres to Clean Architecture and Hexagonal separation patterns:
 
 1. **Independent Presentation Layer**:
-   The web frontend ([apps/web](file:///d:/buildmart/apps/web)) and mobile client ([mobile](file:///d:/buildmart/mobile)) communicate with the backend exclusively via versioned HTTP REST interfaces (`/api/v1`). Neither presentation client connects directly to databases or caches.
+   The web frontend ([apps/web](../../apps/web)) and mobile client ([mobile](../../mobile)) communicate with the backend exclusively via versioned HTTP REST interfaces (`/api/v1`). Neither presentation client connects directly to databases or caches.
 
 2. **Server-Authoritative Core**:
-   All business logic, pricing computations, tax calculations (statutory 18% GST), inventory validation, and payment verification reside inside the FastAPI application service ([services/api](file:///d:/buildmart/services/api)).
+   All business logic, pricing computations, tax calculations (statutory 18% GST), inventory validation, and payment verification reside inside the FastAPI application service ([services/api](../../services/api)).
 
 3. **Isolated Shared Domain Contracts**:
-   Unified interfaces and validation rules are defined in [packages/shared](file:///d:/buildmart/packages/shared), eliminating divergence between frontend web contracts and backend serialization rules.
+   Unified interfaces and validation rules are defined in [packages/shared](../../packages/shared), eliminating divergence between frontend web contracts and backend serialization rules.
 
 4. **Layered Request Pipeline**:
    Requests pass through security, correlation, and compression middlewares before reaching route controllers, keeping business handlers focused solely on domain execution.
@@ -112,7 +112,7 @@ sequenceDiagram
 
 ## Cross-Cutting Gateway Middlewares
 
-Implemented in [services/api/app/main.py](file:///d:/buildmart/services/api/app/main.py):
+Implemented in [services/api/app/main.py](../../services/api/app/main.py):
 
 ### 1. Request Correlation Tracing (`X-Request-ID`)
 Every incoming request is inspected for an `X-Request-ID` header. If absent, a cryptographically random UUIDv4 is generated. This ID is passed to internal logs and returned in all response headers for distributed tracing and root cause investigation.

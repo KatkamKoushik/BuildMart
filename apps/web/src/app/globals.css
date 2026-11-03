@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,8 +7,10 @@
 :root {
   --font-inter: 'Inter', sans-serif;
   --font-outfit: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
   --primary-navy: #0B1527;
   --primary-amber: #F59E0B;
+  --primary-amber-hover: #D97706;
 }
 
 body {
@@ -21,6 +23,12 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit);
+}
+
+/* Keyboard accessibility & focus indicators */
+:focus-visible {
+  outline: 2px solid var(--primary-amber);
+  outline-offset: 2px;
 }
 
 /* Glassmorphism utilities */
@@ -52,4 +60,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

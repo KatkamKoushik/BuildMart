@@ -75,10 +75,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
     // Razorpay Flow
     setState(() => _isProcessing = true);
 
-    // In a real app, you would fetch the order_id from your backend here.
-    // We are proceeding with a client-side mock for the prototype.
+    final razorpayKey = dotenv.env['RAZORPAY_KEY_ID'];
+    if (razorpayKey == null || razorpayKey.isEmpty) {
+      setState(() => _isProcessing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Payment configuration error: RAZORPAY_KEY_ID is not configured.'),
+        ),
+      );
+      return;
+    }
+
     var options = {
-      'key': dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_TM6Z7BqbHQaK7R',
+      'key': razorpayKey,
 
       'amount': (widget.amount * 100).toInt(), // Amount in paise
       'name': 'BuildMart',

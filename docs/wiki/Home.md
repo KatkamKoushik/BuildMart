@@ -69,13 +69,13 @@ The technical wiki is partitioned into deep-dive engineering manuals:
 
 | Document | Scope and Technical Domain | Primary Reference |
 | :--- | :--- | :--- |
-| [Architecture](file:///d:/buildmart/docs/wiki/Architecture.md) | Enterprise 3-tier boundary breakdown, Monorepo layout, and request flows | [Architecture Guide](file:///d:/buildmart/docs/wiki/Architecture.md) |
-| [Database and Persistence](file:///d:/buildmart/docs/wiki/Database-and-Persistence.md) | Dual-database design, PostgreSQL relational schema, Alembic migrations, and Firestore MongoDB wire protocol | [Database Manual](file:///d:/buildmart/docs/wiki/Database-and-Persistence.md) |
-| [Authentication and Security](file:///d:/buildmart/docs/wiki/Authentication-and-Security.md) | JWT auth lifecycle, RBAC enforcement, cryptographic signature verification, and HTTP security policies | [Security Manual](file:///d:/buildmart/docs/wiki/Authentication-and-Security.md) |
-| [Payments and Orders](file:///d:/buildmart/docs/wiki/Payments-and-Orders.md) | Razorpay checkout flow, HMAC-SHA256 verification, webhook replay protection, and order state machine | [Payments Manual](file:///d:/buildmart/docs/wiki/Payments-and-Orders.md) |
-| [Mobile Engineering](file:///d:/buildmart/docs/wiki/Mobile-Engineering.md) | Flutter 3.x Android architecture, Riverpod 2 state, ProGuard R8 rules, and network resilience | [Mobile Manual](file:///d:/buildmart/docs/wiki/Mobile-Engineering.md) |
-| [CI/CD and Quality Gates](file:///d:/buildmart/docs/wiki/CI-CD-and-Quality-Gates.md) | Multi-tier GitHub Actions workflows, Node 24 runtimes, automated secret auditing, and test suites | [CI/CD Manual](file:///d:/buildmart/docs/wiki/CI-CD-and-Quality-Gates.md) |
-| [Deployment and Operations](file:///d:/buildmart/docs/wiki/Deployment-and-Operations.md) | Docker Compose topology, production readiness criteria, health checks, and environment configurations | [Operations Manual](file:///d:/buildmart/docs/wiki/Deployment-and-Operations.md) |
+| [Architecture](Architecture.md) | Enterprise 3-tier boundary breakdown, Monorepo layout, and request flows | [Architecture Guide](Architecture.md) |
+| [Database and Persistence](Database-and-Persistence.md) | Dual-database design, PostgreSQL relational schema, Alembic migrations, and Firestore MongoDB wire protocol | [Database Manual](Database-and-Persistence.md) |
+| [Authentication and Security](Authentication-and-Security.md) | JWT auth lifecycle, RBAC enforcement, cryptographic signature verification, and HTTP security policies | [Security Manual](Authentication-and-Security.md) |
+| [Payments and Orders](Payments-and-Orders.md) | Razorpay checkout flow, HMAC-SHA256 verification, webhook replay protection, and order state machine | [Payments Manual](Payments-and-Orders.md) |
+| [Mobile Engineering](Mobile-Engineering.md) | Flutter 3.x Android architecture, Riverpod 2 state, ProGuard R8 rules, and network resilience | [Mobile Manual](Mobile-Engineering.md) |
+| [CI/CD and Quality Gates](CI-CD-and-Quality-Gates.md) | Multi-tier GitHub Actions workflows, Node 24 runtimes, automated secret auditing, and test suites | [CI/CD Manual](CI-CD-and-Quality-Gates.md) |
+| [Deployment and Operations](Deployment-and-Operations.md) | Docker Compose topology, production readiness criteria, health checks, and environment configurations | [Operations Manual](Deployment-and-Operations.md) |
 
 ---
 

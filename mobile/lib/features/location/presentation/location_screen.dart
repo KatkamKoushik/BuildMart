@@ -215,7 +215,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                           .read(userRepositoryProvider)
                           .addSavedAddress(user.id, selectedCity);
                     }
-                    if (mounted) {
+                    if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text('City selected: $selectedCity'),

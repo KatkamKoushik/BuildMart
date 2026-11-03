@@ -3,11 +3,11 @@
 This document describes the commercial transaction architecture, Razorpay payment processing, cryptographic signature verification, webhook deduplication, and the formal order state machine.
 
 Primary Source Files:
-- [services/api/app/api/v1/checkout.py](file:///d:/buildmart/services/api/app/api/v1/checkout.py)
-- [services/api/app/api/v1/orders.py](file:///d:/buildmart/services/api/app/api/v1/orders.py)
-- [services/api/app/api/v1/quotes.py](file:///d:/buildmart/services/api/app/api/v1/quotes.py)
-- [services/api/app/models/models.py](file:///d:/buildmart/services/api/app/models/models.py)
-- [apps/web/src/app/checkout](file:///d:/buildmart/apps/web/src/app/checkout)
+- [services/api/app/api/v1/checkout.py](../../services/api/app/api/v1/checkout.py)
+- [services/api/app/api/v1/orders.py](../../services/api/app/api/v1/orders.py)
+- [services/api/app/api/v1/quotes.py](../../services/api/app/api/v1/quotes.py)
+- [services/api/app/models/models.py](../../services/api/app/models/models.py)
+- [apps/web/src/app/checkout](../../apps/web/src/app/checkout)
 
 ---
 

@@ -342,8 +342,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     return RadioListTile<String>(
       title: Text(title),
       value: value,
+      // ignore: deprecated_member_use
       groupValue: _sortBy,
       activeColor: AppColors.primary,
+      // ignore: deprecated_member_use
       onChanged: (val) {
         setModalState(() {
           _sortBy = val!;
@@ -376,7 +378,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   SwitchListTile(
                     title: const Text('In Stock Only'),
                     value: _inStockOnly,
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
+                    // ignore: deprecated_member_use
                     onChanged: (val) {
                       setModalState(() {
                         _inStockOnly = val;

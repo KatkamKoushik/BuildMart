@@ -1,3 +1,4 @@
+from app.core.logging import logger
 import uuid
 import hmac
 import hashlib
@@ -176,7 +177,7 @@ async def bootstrap_admin_account(
     await db.commit()
     await db.refresh(user)
 
-    print(f"[SECURITY AUDIT] User '{user.email}' (ID: {user.id}) promoted from '{old_role}' to 'admin' via bootstrap protocol at {datetime.now(timezone.utc).isoformat()}")
+    logger.warning(f"[SECURITY AUDIT] User '{user.email}' (ID: {user.id}) promoted from '{old_role}' to 'admin' via bootstrap protocol at {datetime.now(timezone.utc).isoformat()}")
     return user
 
 
