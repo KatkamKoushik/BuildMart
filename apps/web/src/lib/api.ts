@@ -12,32 +12,41 @@ import type {
 function getApiBaseUrl(): string {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
+    const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (envUrl && !envUrl.includes("localhost")) {
+      return envUrl;
+    }
     if (host === "127.0.0.1") {
-      return (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1").replace("localhost", "127.0.0.1");
+      return (envUrl || "http://127.0.0.1:8000/api/v1").replace("localhost", "127.0.0.1");
+    }
+    if (host !== "localhost" && host !== "127.0.0.1" && !envUrl?.includes(host)) {
+      return `${window.location.protocol}//${window.location.host}/api/v1`;
     }
   }
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 }
 
-let authToken: string | null = null;
+let inMemoryAuthToken: string | null = null;
 
 export async function getAuthToken(): Promise<string | null> {
-  if (typeof window === "undefined") {
-    return null;
+  // Purge any legacy token from localStorage to prevent XSS exfiltration
+  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    try {
+      localStorage.removeItem("buildmart_access_token");
+    } catch {
+      // Storage unavailable in sandbox
+    }
   }
-  if (!authToken) {
-    authToken = localStorage.getItem("buildmart_access_token");
-  }
-  return authToken;
+  return inMemoryAuthToken;
 }
 
 export function setAuthToken(token: string | null) {
-  authToken = token;
-  if (typeof window !== "undefined") {
-    if (token) {
-      localStorage.setItem("buildmart_access_token", token);
-    } else {
+  inMemoryAuthToken = token;
+  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    try {
       localStorage.removeItem("buildmart_access_token");
+    } catch {
+      // Storage unavailable in sandbox
     }
   }
 }
@@ -60,6 +69,7 @@ async function fetchJson<T>(endpoint: string, options: RequestInit = {}): Promis
     const res = await fetch(url, {
       ...options,
       headers,
+      credentials: options.credentials || "include",
       cache: options.cache || "no-store",
     });
 

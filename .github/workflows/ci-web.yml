@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   validate-web:
-    name: Typecheck & Build Next.js
+    name: Typecheck, Test & Build Next.js
     runs-on: ubuntu-latest
 
     steps:
@@ -48,6 +48,11 @@ jobs:
         run: |
           pnpm --filter @buildmart/shared typecheck
           pnpm --filter @buildmart/web typecheck
+
+      - name: Run Unit Tests (Shared & Web)
+        run: |
+          pnpm --filter @buildmart/shared test
+          pnpm --filter @buildmart/web test
 
       - name: Build Next.js App
         run: pnpm --filter @buildmart/web build

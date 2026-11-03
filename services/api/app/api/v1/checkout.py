@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.db.session import get_db
 from app.core.config import settings
+from app.core.logging import logger
 from app.schemas.schemas import RazorpayOrderCreate, RazorpayVerifyRequest, WebhookResponse
 from app.core.security import require_authenticated_user
 from app.models.models import User, Order, WebhookEvent
@@ -136,10 +137,21 @@ async def verify_razorpay_payment(
 ):
     """
     Authoritative payment verification.
-    - Constant-time HMAC-SHA256 signature verification.
-    - Matches and validates internal Order ownership and status.
+    - Rejects empty, missing, or whitespace gateway secret keys.
+    - Requires an existing persisted internal order record (404 if absent).
+    - Requires an established razorpay_order_id on the registered order.
+    - Enforces exact razorpay_order_id match and caller ownership.
+    - Verifies constant-time HMAC-SHA256 signature.
     - Idempotent state transitions preventing double-confirmation.
     """
+    # 1. Reject unconfigured or empty gateway secret
+    if not settings.RAZORPAY_KEY_SECRET or not settings.RAZORPAY_KEY_SECRET.strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Payment gateway verification secret is not configured"
+        )
+
+    # 2. Verify constant-time HMAC-SHA256 signature
     body = f"{payload.razorpay_order_id}|{payload.razorpay_payment_id}"
     expected_signature = hmac.new(
         settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
@@ -153,6 +165,7 @@ async def verify_razorpay_payment(
             detail="Invalid payment signature: Signature mismatch"
         )
 
+    # 3. Locate matching internal order (Must exist)
     order = None
     if payload.order_id:
         result = await db.execute(
@@ -167,34 +180,74 @@ async def verify_razorpay_payment(
         )
         order = result.scalars().first()
 
-    if order:
-        if order.user_id != current_user.id and current_user.role != "admin":
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access forbidden: You do not own this order"
-            )
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No matching internal order found for payment verification"
+        )
 
-        if order.razorpay_order_id and order.razorpay_order_id != payload.razorpay_order_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Payment order ID mismatch with registered order"
-            )
+    # 4. Check ownership
+    if order.user_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: You do not own this order"
+        )
 
-        if order.payment_status != "paid":
-            order.payment_status = "paid"
-            order.status = "confirmed"
-            order.razorpay_order_id = payload.razorpay_order_id
-            order.razorpay_payment_id = payload.razorpay_payment_id
-            order.razorpay_signature = payload.razorpay_signature
-            await db.commit()
-            await db.refresh(order)
+    # 5. Enforce that order has registered a razorpay_order_id
+    if not order.razorpay_order_id or not order.razorpay_order_id.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Order has not initiated a registered Razorpay payment transaction"
+        )
+
+    # 6. Enforce exact match with registered order
+    if order.razorpay_order_id != payload.razorpay_order_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Payment order ID mismatch with registered order"
+        )
+
+    # 7. Gateway verification with Razorpay API client if live credentials configured
+    if (
+        settings.RAZORPAY_KEY_ID
+        and settings.RAZORPAY_KEY_SECRET
+        and not settings.RAZORPAY_KEY_SECRET.startswith("mock_")
+        and "mock" not in settings.RAZORPAY_KEY_SECRET.lower()
+        and not settings.RAZORPAY_KEY_ID.startswith("mock_")
+    ):
+        try:
+            import razorpay
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            rzp_payment = client.payment.fetch(payload.razorpay_payment_id)
+            if rzp_payment.get("order_id") != payload.razorpay_order_id:
+                raise HTTPException(status_code=400, detail="Gateway payment order ID mismatch")
+            expected_paise = int(round(order.total_amount * 100))
+            if rzp_payment.get("amount") != expected_paise:
+                raise HTTPException(status_code=400, detail="Gateway payment amount mismatch with order total")
+            if rzp_payment.get("status") not in ["captured", "authorized"]:
+                raise HTTPException(status_code=400, detail=f"Gateway payment not captured (status: {rzp_payment.get('status')})")
+        except HTTPException:
+            raise
+        except Exception as e:
+            if settings.ENVIRONMENT.lower() == "production":
+                raise HTTPException(status_code=502, detail=f"Payment gateway verification failed: {str(e)}")
+
+    # 8. Idempotently transition order to paid and confirmed
+    if order.payment_status != "paid":
+        order.payment_status = "paid"
+        order.status = "confirmed"
+        order.razorpay_order_id = payload.razorpay_order_id
+        order.razorpay_payment_id = payload.razorpay_payment_id
+        order.razorpay_signature = payload.razorpay_signature
+        await db.commit()
+        await db.refresh(order)
 
     return {
         "verified": True,
         "message": "Payment verified successfully",
         "order_id": payload.razorpay_order_id,
         "payment_id": payload.razorpay_payment_id,
-        "internal_order_id": order.id if order else None
+        "internal_order_id": order.id
     }
 
 
@@ -206,11 +259,20 @@ async def razorpay_webhook(
 ):
     """
     Razorpay Webhook Verification.
+    - Rejects missing or empty webhook secret (503 Service Unavailable).
     - Constant-time HMAC-SHA256 signature verification over exact raw bytes.
     - Replay attack deduplication.
-    - Transactional state updates.
+    - Transactional state updates with payment amount verification.
     """
-    if not x_razorpay_signature:
+    # 1. Reject unconfigured or empty webhook secret
+    if not settings.RAZORPAY_WEBHOOK_SECRET or not settings.RAZORPAY_WEBHOOK_SECRET.strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Payment gateway webhook secret is not configured"
+        )
+
+    # 2. Require signature header
+    if not x_razorpay_signature or not x_razorpay_signature.strip():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Missing X-Razorpay-Signature header"
@@ -255,6 +317,17 @@ async def razorpay_webhook(
         order = result.scalars().first()
         if order:
             if event_type in ["payment.captured", "order.paid"]:
+                # Verify payment amount matches internal order
+                payment_amount = payment_entity.get("amount")
+                expected_paise = int(round(order.total_amount * 100))
+                if payment_amount and payment_amount != expected_paise:
+                    logger.warning(
+                        f"[Security] Webhook payment amount mismatch for order {order.id}: expected {expected_paise}, got {payment_amount}"
+                    )
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Webhook payment amount mismatch with order total"
+                    )
                 order.payment_status = "paid"
                 order.status = "confirmed"
                 order.razorpay_payment_id = payment_entity.get("id")
@@ -273,5 +346,5 @@ async def razorpay_webhook(
     return WebhookResponse(
         status="success",
         event_id=event_id,
-        message=f"Webhook event '{event_type}' processed successfully"
+        message="Webhook processed successfully"
     )

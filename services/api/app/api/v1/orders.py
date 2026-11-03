@@ -1,5 +1,5 @@
 import time
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,41 +26,100 @@ VALID_TRANSITIONS = {
     "cancelled": []  # Terminal state
 }
 
-def calculate_order_financials(subtotal: float) -> Tuple[float, float, float, float]:
+# Statutory GST rates for Indian construction materials
+GST_RATES_BY_CATEGORY = {
+    "cement": 0.28,        # HSN 2523 - 28%
+    "paint": 0.28,         # HSN 3208/3209 - 28%
+    "steel": 0.18,         # HSN 7214 - 18%
+    "electrical": 0.18,    # HSN 8544 - 18%
+    "plumbing": 0.18,      # HSN 3917 - 18%
+    "sand": 0.05,          # HSN 2505 - 5%
+    "aggregates": 0.05,    # HSN 2517 - 5%
+    "bricks": 0.12,        # HSN 6901 - 12%
+}
+DEFAULT_GST_RATE = 0.18
+
+def get_product_gst_rate(product: Product) -> float:
+    """
+    Resolves product-specific statutory GST tax rate.
+    Checks specifications dictionary for custom tax_rate/gst_rate before category default.
+    """
+    if product.specifications and isinstance(product.specifications, dict):
+        custom_rate = product.specifications.get("gst_rate") or product.specifications.get("tax_rate")
+        if custom_rate is not None:
+            try:
+                return float(custom_rate)
+            except (ValueError, TypeError):
+                pass
+    if product.category_id:
+        return GST_RATES_BY_CATEGORY.get(product.category_id.lower(), DEFAULT_GST_RATE)
+    return DEFAULT_GST_RATE
+
+
+def calculate_order_financials(subtotal: float, item_tax_sum: Optional[float] = None) -> Tuple[float, float, float, float]:
     """
     Authoritative order calculation enforcing:
-    - 18% GST (standard Indian construction materials tax rate)
+    - Itemized statutory GST classification rates
     - Free delivery for orders >= Rs. 5000, otherwise Rs. 250
     Returns (subtotal, tax, delivery_fee, total_amount).
     """
     subtotal = round(subtotal, 2)
-    tax = round(subtotal * 0.18, 2)
+    tax = round(item_tax_sum, 2) if item_tax_sum is not None else round(subtotal * DEFAULT_GST_RATE, 2)
     delivery_fee = 0.0 if subtotal >= 5000 else 250.0
     total_amount = round(subtotal + tax + delivery_fee, 2)
     return subtotal, tax, delivery_fee, total_amount
 
 
-def build_items_from_cart(cart_rows) -> Tuple[float, List[OrderItem]]:
+async def build_items_from_cart(
+    user_id: str,
+    db: AsyncSession
+) -> Tuple[float, float, List[OrderItem]]:
     """
-    Validates cart items and builds OrderItem instances using current product prices.
+    Validates cart items and decrements inventory with row-level locks.
+    Returns (subtotal, total_tax, order_items).
     """
+    # 1. Fetch user's cart rows
+    cart_res = await db.execute(
+        select(CartItem).where(CartItem.user_id == user_id)
+    )
+    cart_items = cart_res.scalars().all()
+    if not cart_items:
+        raise HTTPException(status_code=400, detail="Cannot place order with empty cart")
+
+    # 2. Acquire row locks in sorted order to prevent deadlocks
+    product_ids = sorted(list(set(c.product_id for c in cart_items if c.product_id)))
+    prod_res = await db.execute(
+        select(Product).where(Product.id.in_(product_ids)).with_for_update()
+    )
+    products_by_id = {prod.id: prod for prod in prod_res.scalars().all()}
+
     subtotal = 0.0
+    total_tax = 0.0
     order_items: List[OrderItem] = []
-    for cart_item, product in cart_rows:
+
+    for cart_item in cart_items:
         if cart_item.quantity <= 0:
             raise HTTPException(status_code=422, detail="Item quantity must be greater than zero")
-        if not product.is_active:
-            raise HTTPException(status_code=400, detail=f"Product '{product.title}' is currently unavailable")
+        
+        product = products_by_id.get(cart_item.product_id)
+        if not product or not product.is_active:
+            name = product.title if product else cart_item.product_id
+            raise HTTPException(status_code=400, detail=f"Product '{name}' is currently unavailable")
 
         if product.stock_quantity < cart_item.quantity:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Insufficient inventory for '{product.title}'. Requested: {cart_item.quantity}, available: {product.stock_quantity}"
             )
+        
+        # Atomically decrement locked inventory row
         product.stock_quantity -= cart_item.quantity
 
         item_total = round(product.price * cart_item.quantity, 2)
         subtotal += item_total
+        tax_rate = get_product_gst_rate(product)
+        total_tax += round(item_total * tax_rate, 2)
+
         order_items.append(
             OrderItem(
                 product_id=product.id,
@@ -71,28 +130,36 @@ def build_items_from_cart(cart_rows) -> Tuple[float, List[OrderItem]]:
                 image_url=product.image_urls[0] if product.image_urls else ""
             )
         )
-    return subtotal, order_items
+    return subtotal, total_tax, order_items
 
 
 async def build_items_from_payload(
-    items: List[dict], db: AsyncSession
-) -> Tuple[float, List[OrderItem]]:
+    items: List[dict],
+    db: AsyncSession
+) -> Tuple[float, float, List[OrderItem]]:
     """
-    Batch-fetches products and builds OrderItem instances from direct order items.
-    Prevents N+1 queries by batching product IDs.
+    Batch-fetches products and decrements inventory using sorted row locks.
+    Prevents N+1 queries and concurrent race conditions.
+    Returns (subtotal, total_tax, order_items).
     """
-    product_ids = [
+    product_ids = sorted(list(set(
         item.get("productId") or item.get("product_id")
         for item in items
         if item.get("productId") or item.get("product_id")
-    ]
-    products_by_id = {}
-    if product_ids:
-        prod_res = await db.execute(select(Product).where(Product.id.in_(product_ids)))
-        products_by_id = {prod.id: prod for prod in prod_res.scalars().all()}
+    )))
+    if not product_ids:
+        raise HTTPException(status_code=400, detail="Order must contain at least one valid product")
+
+    # Acquire row locks in sorted order
+    prod_res = await db.execute(
+        select(Product).where(Product.id.in_(product_ids)).with_for_update()
+    )
+    products_by_id = {prod.id: prod for prod in prod_res.scalars().all()}
 
     subtotal = 0.0
+    total_tax = 0.0
     order_items: List[OrderItem] = []
+
     for item in items:
         prod_id = item.get("productId") or item.get("product_id")
         qty = item.get("quantity", 1)
@@ -110,10 +177,15 @@ async def build_items_from_payload(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Insufficient inventory for '{product.title}'. Requested: {qty}, available: {product.stock_quantity}"
             )
+        
+        # Atomically decrement locked inventory row
         product.stock_quantity -= qty
 
         item_total = round(product.price * qty, 2)
         subtotal += item_total
+        tax_rate = get_product_gst_rate(product)
+        total_tax += round(item_total * tax_rate, 2)
+
         order_items.append(
             OrderItem(
                 product_id=product.id,
@@ -124,7 +196,7 @@ async def build_items_from_payload(
                 image_url=product.image_urls[0] if product.image_urls else ""
             )
         )
-    return subtotal, order_items
+    return subtotal, total_tax, order_items
 
 
 @router.post("", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
@@ -135,30 +207,20 @@ async def create_order(
 ):
     """
     F-01, F-11 & F-13: Server-authoritative order creation.
-    - Validates quantity > 0 and stock availability.
+    - Concurrency-safe atomic inventory reservation with row-level locks.
     - Re-fetches prices from DB (ignoring any client-submitted prices).
-    - Enforces 18% GST and standard delivery fee rules.
+    - Enforces statutory itemized GST and delivery fee rules.
     - Never marks online orders as 'paid' at creation time.
     """
-    cart_res = await db.execute(
-        select(CartItem, Product)
-        .join(Product, CartItem.product_id == Product.id)
-        .where(CartItem.user_id == current_user.id)
-    )
-    cart_rows = cart_res.all()
-
-    if not cart_rows and not payload.items:
-        raise HTTPException(status_code=400, detail="Cannot place order with empty cart")
-
     if payload.items:
-        subtotal, order_items = await build_items_from_payload(payload.items, db)
+        subtotal, total_tax, order_items = await build_items_from_payload(payload.items, db)
     else:
-        subtotal, order_items = build_items_from_cart(cart_rows)
+        subtotal, total_tax, order_items = await build_items_from_cart(current_user.id, db)
 
     if not order_items:
         raise HTTPException(status_code=400, detail="Order must contain at least one valid product")
 
-    subtotal, tax, delivery_fee, total_amount = calculate_order_financials(subtotal)
+    subtotal, tax, delivery_fee, total_amount = calculate_order_financials(subtotal, total_tax)
     estimated_delivery = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%d %b %Y")
 
     payment_method = payload.payment_method.lower()
@@ -245,6 +307,7 @@ async def cancel_order(
 ):
     """
     F-11: Authoritative Order Lifecycle - Cancellation.
+    - Row-level lock protects against simultaneous cancellations and double-restoration.
     - Owner or admin only.
     - Cannot cancel once dispatched or delivered.
     """
@@ -252,6 +315,7 @@ async def cancel_order(
         select(Order)
         .options(selectinload(Order.items))
         .where((Order.id == order_id) | (Order.order_number == order_id))
+        .with_for_update()
     )
     order = result.scalars().first()
     if not order:
@@ -266,6 +330,7 @@ async def cancel_order(
     if order.status in ["dispatched", "delivered"]:
         raise HTTPException(status_code=400, detail="Cannot cancel order once dispatched or delivered")
 
+    # Idempotent return if already cancelled
     if order.status == "cancelled":
         return order
 
@@ -273,11 +338,13 @@ async def cancel_order(
     if order.payment_status == "paid":
         order.payment_status = "refunded"
 
-    # Restore inventory quantities
+    # Restore inventory quantities with row locks
     if order.items:
-        prod_ids = [item.product_id for item in order.items if item.product_id]
+        prod_ids = sorted(list(set(item.product_id for item in order.items if item.product_id)))
         if prod_ids:
-            res = await db.execute(select(Product).where(Product.id.in_(prod_ids)))
+            res = await db.execute(
+                select(Product).where(Product.id.in_(prod_ids)).with_for_update()
+            )
             prod_map = {p.id: p for p in res.scalars().all()}
             for item in order.items:
                 if item.product_id and item.product_id in prod_map:
@@ -302,6 +369,7 @@ async def update_order_status(
         select(Order)
         .options(selectinload(Order.items))
         .where((Order.id == order_id) | (Order.order_number == order_id))
+        .with_for_update()
     )
     order = result.scalars().first()
     if not order:

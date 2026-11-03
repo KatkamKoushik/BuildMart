@@ -77,7 +77,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 async def security_and_limits_middleware(request: Request, call_next):
     # Correlation ID propagation (Section 28-B011)
     request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
-    # 1. Reject payloads exceeding maximum allowable request size
+
+    # 1. Reject payloads exceeding maximum allowable request size via Content-Length
     content_length = request.headers.get("content-length")
     if content_length:
         try:
@@ -93,12 +94,31 @@ async def security_and_limits_middleware(request: Request, call_next):
         except ValueError:
             pass
 
+    # 2. Enforce streaming body consumption limits for chunked/unstated transfers
+    received_bytes = 0
+    original_receive = request._receive
+
+    async def limited_receive():
+        nonlocal received_bytes
+        message = await original_receive()
+        if message["type"] == "http.request":
+            body_chunk = message.get("body", b"")
+            received_bytes += len(body_chunk)
+            if received_bytes > MAX_REQUEST_BODY_SIZE:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail="Request payload exceeds maximum allowable limit (10MB)."
+                )
+        return message
+
+    request._receive = limited_receive
+
     start_time = time.perf_counter()
     response = await call_next(request)
     duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
     logger.info(f"{request.method} {request.url.path} -> {response.status_code} ({duration_ms}ms) [request_id={request_id}]")
 
-    # 2. Strict Security Headers
+    # 3. Strict Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
