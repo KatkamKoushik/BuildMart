@@ -956,3 +956,76 @@ async def test_registration_nullable_phone_preserves_none(async_client):
     assert reg_res.status_code == 201
     user_data = reg_res.json()["user"]
     assert user_data.get("phone") is None
+
+
+@pytest.mark.asyncio
+async def test_slowapi_rate_limiter_enforcement(async_client):
+    """
+    Test that SlowAPI rate limiting enforces limits and returns 429 when enabled.
+    """
+    from app.core.rate_limit import limiter
+    limiter.enabled = True
+    try:
+        email = f"rate_limit_test_{int(time.time())}@buildmart.dev"
+        responses = []
+        for _ in range(5):
+            res = await async_client.post("/api/v1/auth/password-reset-request", json={"email": email})
+            responses.append(res.status_code)
+        
+        # At least one request beyond the limit must return 429
+        assert 429 in responses, f"Expected 429 Too Many Requests in {responses}"
+    finally:
+        limiter.enabled = False
+
+
+@pytest.mark.asyncio
+async def test_razorpay_sdk_utility_signature_verification_and_tampering(async_client):
+    """
+    Test authoritative payment verification using official Razorpay SDK utility.
+    Valid signatures are accepted; forged/tampered signatures are rejected with 400.
+    """
+    buyer_token = await get_test_token(async_client, "rzp_sdk_test@buildmart.dev")
+    headers = {"Authorization": f"Bearer {buyer_token}"}
+
+    # 1. Create order
+    res = await async_client.get("/api/v1/products")
+    prods = res.json()
+    prod = prods[0] if isinstance(prods, list) else prods["products"][0]
+    order_res = await async_client.post("/api/v1/orders", json={
+        "delivery_address": {"city": "Hyderabad", "phone": "9999999999"},
+        "payment_method": "razorpay",
+        "items": [{"productId": prod["id"], "quantity": 1}]
+    }, headers=headers)
+    assert order_res.status_code == 201
+    order_id = order_res.json()["id"]
+
+    # 2. Initiate payment session
+    init_res = await async_client.post("/api/v1/checkout/razorpay/create-order", json={"order_id": order_id}, headers=headers)
+    assert init_res.status_code == 200
+    rzp_order_id = init_res.json()["order_id"]
+
+    # 3. Generate valid signature
+    rzp_payment_id = f"pay_{int(time.time())}_valid"
+    msg = f"{rzp_order_id}|{rzp_payment_id}"
+    valid_sig = hmac.new(settings.RAZORPAY_KEY_SECRET.encode("utf-8"), msg.encode("utf-8"), hashlib.sha256).hexdigest()
+
+    # 4. Attempt verification with tampered signature -> must return 400
+    tampered_sig = valid_sig[:-4] + "0000"
+    tampered_res = await async_client.post("/api/v1/checkout/razorpay/verify", json={
+        "order_id": order_id,
+        "razorpay_order_id": rzp_order_id,
+        "razorpay_payment_id": rzp_payment_id,
+        "razorpay_signature": tampered_sig
+    }, headers=headers)
+    assert tampered_res.status_code == 400
+    assert "invalid payment signature" in tampered_res.json()["detail"].lower()
+
+    # 5. Attempt verification with valid signature -> must succeed 200
+    valid_res = await async_client.post("/api/v1/checkout/razorpay/verify", json={
+        "order_id": order_id,
+        "razorpay_order_id": rzp_order_id,
+        "razorpay_payment_id": rzp_payment_id,
+        "razorpay_signature": valid_sig
+    }, headers=headers)
+    assert valid_res.status_code == 200
+    assert valid_res.json()["verified"] is True

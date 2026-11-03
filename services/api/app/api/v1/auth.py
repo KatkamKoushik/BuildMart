@@ -37,6 +37,7 @@ from app.core.security import (
     JWT_AUDIENCE,
 )
 from app.core.config import settings
+from app.core.rate_limit import limiter
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -90,7 +91,9 @@ async def dispatch_password_reset_email(to_email: str, reset_token: str) -> None
 
 
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/minute")
 async def register_account(
+    request: Request,
     payload: RegisterRequest,
     response: Response,
     db: AsyncSession = Depends(get_db)
@@ -155,7 +158,9 @@ async def register_account(
 
 @router.post("/login", response_model=TokenResponse)
 @router.post("/token", response_model=TokenResponse)
+@limiter.limit("10/minute")
 async def login_user(
+    request: Request,
     payload: TokenRequest,
     response: Response,
     db: AsyncSession = Depends(get_db)
@@ -265,7 +270,9 @@ async def bootstrap_admin_account(
 
 
 @router.post("/password-reset-request")
+@limiter.limit("3/minute")
 async def request_password_reset(
+    request: Request,
     payload: PasswordResetRequest,
     db: AsyncSession = Depends(get_db)
 ):
@@ -314,7 +321,9 @@ async def request_password_reset(
 
 
 @router.post("/password-reset")
+@limiter.limit("5/minute")
 async def confirm_password_reset(
+    request: Request,
     payload: PasswordResetConfirm,
     db: AsyncSession = Depends(get_db)
 ):

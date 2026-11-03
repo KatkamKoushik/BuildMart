@@ -9,6 +9,7 @@ from sqlalchemy import select
 from app.db.session import get_db
 from app.core.config import settings
 from app.core.logging import logger
+from app.core.rate_limit import limiter
 from app.schemas.schemas import RazorpayOrderCreate, RazorpayVerifyRequest, WebhookResponse
 from app.core.security import require_authenticated_user
 from app.models.models import User, Order, WebhookEvent
@@ -16,7 +17,9 @@ from app.models.models import User, Order, WebhookEvent
 router = APIRouter(prefix="/checkout", tags=["Checkout"])
 
 @router.post("/razorpay/create-order")
+@limiter.limit("10/minute")
 async def create_razorpay_order(
+    request: Request,
     payload: RazorpayOrderCreate,
     current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
@@ -42,40 +45,39 @@ async def create_razorpay_order(
         )
     )
     order = result.scalars().first()
-
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Order '{target_order_id}' not found. Cannot initiate payment without a verified order."
+            detail=f"Order '{target_order_id}' was not found. Orders must be submitted before payment initiation."
         )
 
     if order.user_id != current_user.id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: You do not have permission to pay for this order"
+            detail="Access forbidden: You do not have permission to pay for this order."
         )
 
     if order.payment_status == "paid":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Order has already been paid"
+            detail="Order is already paid."
         )
 
-    if order.status in ["cancelled", "delivered"]:
+    if order.status == "cancelled":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Cannot initiate payment for order in '{order.status}' status"
+            detail="Cannot pay for a cancelled order."
         )
 
-    # Server-authoritative payable amount derived strictly from persisted order
+    # Convert authoritative order total to paise
     amount_in_paise = int(round(order.total_amount * 100))
     if amount_in_paise <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Payable order amount must be greater than zero"
+            detail="Invalid order total amount."
         )
 
-    receipt = order.order_number
+    receipt = f"rcpt_{order.id[:12]}"
 
     # Live/Sandbox Razorpay credentials configured
     if (
@@ -130,7 +132,9 @@ async def create_razorpay_order(
 
 
 @router.post("/razorpay/verify")
+@limiter.limit("10/minute")
 async def verify_razorpay_payment(
+    request: Request,
     payload: RazorpayVerifyRequest,
     current_user: User = Depends(require_authenticated_user),
     db: AsyncSession = Depends(get_db)
@@ -141,7 +145,7 @@ async def verify_razorpay_payment(
     - Requires an existing persisted internal order record (404 if absent).
     - Requires an established razorpay_order_id on the registered order.
     - Enforces exact razorpay_order_id match and caller ownership.
-    - Verifies constant-time HMAC-SHA256 signature.
+    - Verifies HMAC signature using official Razorpay SDK utility.
     - Idempotent state transitions preventing double-confirmation.
     """
     # 1. Reject unconfigured or empty gateway secret
@@ -151,15 +155,17 @@ async def verify_razorpay_payment(
             detail="Payment gateway verification secret is not configured"
         )
 
-    # 2. Verify constant-time HMAC-SHA256 signature
-    body = f"{payload.razorpay_order_id}|{payload.razorpay_payment_id}"
-    expected_signature = hmac.new(
-        settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
-        body.encode("utf-8"),
-        hashlib.sha256
-    ).hexdigest()
-
-    if not hmac.compare_digest(expected_signature, payload.razorpay_signature):
+    # 2. Verify signature using official Razorpay SDK utility
+    params = {
+        "razorpay_order_id": payload.razorpay_order_id,
+        "razorpay_payment_id": payload.razorpay_payment_id,
+        "razorpay_signature": payload.razorpay_signature
+    }
+    try:
+        import razorpay
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID or "rzp_placeholder", settings.RAZORPAY_KEY_SECRET))
+        client.utility.verify_payment_signature(params)
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid payment signature: Signature mismatch"
@@ -260,7 +266,7 @@ async def razorpay_webhook(
     """
     Razorpay Webhook Verification.
     - Rejects missing or empty webhook secret (503 Service Unavailable).
-    - Constant-time HMAC-SHA256 signature verification over exact raw bytes.
+    - Verifies HMAC signature using official Razorpay SDK utility.
     - Replay attack deduplication.
     - Transactional state updates with payment amount verification.
     """
@@ -279,20 +285,31 @@ async def razorpay_webhook(
         )
 
     raw_body = await request.body()
-    expected_signature = hmac.new(
-        settings.RAZORPAY_WEBHOOK_SECRET.encode("utf-8"),
-        raw_body,
-        hashlib.sha256
-    ).hexdigest()
+    try:
+        raw_body_text = raw_body.decode("utf-8")
+    except UnicodeDecodeError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid payload encoding"
+        )
 
-    if not hmac.compare_digest(expected_signature, x_razorpay_signature):
+    # 3. Verify webhook signature using official Razorpay SDK utility
+    try:
+        import razorpay
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID or "rzp_placeholder", settings.RAZORPAY_KEY_SECRET or "dummy"))
+        client.utility.verify_webhook_signature(
+            raw_body_text,
+            x_razorpay_signature,
+            settings.RAZORPAY_WEBHOOK_SECRET
+        )
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid webhook signature"
         )
 
     try:
-        event_data = json.loads(raw_body.decode("utf-8"))
+        event_data = json.loads(raw_body_text)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid JSON webhook payload")
 

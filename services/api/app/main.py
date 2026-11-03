@@ -17,6 +17,9 @@ from app.api.v1 import (
 )
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
+from app.core.rate_limit import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 import time
 from app.db.mongodb import close_mongo_connection
 from app.db.session import Base, engine
@@ -33,16 +36,15 @@ MAX_REQUEST_BODY_SIZE = 10 * 1024 * 1024  # 10 MB
 async def lifespan(app: FastAPI):
     setup_logging()
     logger.info("Initializing BuildMart API services...")
-    # Startup: ensure tables exist and run seeder if initial setup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
     if settings.ENVIRONMENT.lower() != "production":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
         try:
             await seed_database()
         except Exception as e:
             logger.info(f"[Lifespan] Seeding notice: {e}")
     else:
-        logger.info("[Lifespan] Production mode: Automatic database seeding is disabled.")
+        logger.info("[Lifespan] Production mode: Schema must be managed via Alembic migrations ('alembic upgrade head'). Automatic create_all and seeding are disabled.")
     yield
     # Shutdown
     close_mongo_connection()
@@ -57,6 +59,10 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/api/v1/openapi.json"
 )
+
+# Register SlowAPI rate limiter state and exception handler
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS configuration
 origins = settings.cors_origins
