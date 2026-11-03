@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import '../features/auth/data/auth_repository.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/categories/presentation/categories_screen.dart';
 import '../features/orders/presentation/orders_screen.dart';
@@ -49,14 +49,9 @@ final GlobalKey<NavigatorState> _profileNavigatorKey =
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/welcome',
+  refreshListenable: authRepository.authStateListenable,
   redirect: (context, state) {
-    bool isLoggedIn = false;
-    try {
-      isLoggedIn = FirebaseAuth.instance.currentUser != null;
-    } catch (_) {
-      // Safe fallback when Firebase is not initialized or offline
-      isLoggedIn = false;
-    }
+    final bool isLoggedIn = authRepository.isLoggedInSync;
     final path = state.uri.path;
     final isAuthRoute =
         path == '/welcome' || path == '/login' || path == '/otp';
@@ -143,8 +138,15 @@ final appRouter = GoRouter(
           ProductDetailsScreen(productId: state.pathParameters['id']!),
     ),
     GoRoute(
+      path: '/shop/:id',
+      builder: (context, state) =>
+          ShopDetailsScreen(shopId: state.pathParameters['id'] ?? 'shop_001'),
+    ),
+    GoRoute(
       path: '/shop-details',
-      builder: (context, state) => const ShopDetailsScreen(),
+      builder: (context, state) => ShopDetailsScreen(
+        shopId: state.uri.queryParameters['id'] ?? 'shop_001',
+      ),
     ),
     GoRoute(
       path: '/checkout',

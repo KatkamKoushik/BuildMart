@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/dummy_images.dart';
 import '../../../shared/widgets/buildmart_button.dart';
 import '../../../shared/widgets/buildmart_text_field.dart';
-import '../../../shared/widgets/network_image_widget.dart';
 
 class DeliverySuccessScreen extends StatefulWidget {
   const DeliverySuccessScreen({super.key});
@@ -26,11 +24,14 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              const NetworkImageWidget(
-                imageUrl: DummyImages.illustrationSuccess,
-                width: 150,
-                height: 150,
-                fit: BoxFit.contain,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  'assets/images/empty_state_illustrations/payment_success_mobile_app_illus.jpeg',
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.contain,
+                ),
               ),
               const SizedBox(height: 24),
               Text(
@@ -99,8 +100,7 @@ class _DeliverySuccessScreenState extends State<DeliverySuccessScreen> {
               BuildMartButton(
                 text: 'Repeat Order',
                 icon: Icons.replay,
-                onPressed: () =>
-                    context.go('/cart'), // Navigates to cart as mock for repeat
+                onPressed: () => context.go('/cart'),
               ),
               const SizedBox(height: 16),
               BuildMartButton(

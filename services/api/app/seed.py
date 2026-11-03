@@ -131,7 +131,7 @@ async def seed_database(session_factory=None):
                 brand = Brand(
                     id=b_id,
                     name=b.get("name"),
-                    image_url=b.get("imageUrl") or "",
+                    image_url=b.get("imageUrl") or b.get("logoUrl") or "",
                     category_id=b.get("categoryId")
                 )
                 session.add(brand)

@@ -5,7 +5,16 @@ import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/buildmart_card.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
-  const OrderTrackingScreen({super.key});
+  final String? orderId;
+  final String? driverName;
+  final String? driverPhone;
+
+  const OrderTrackingScreen({
+    super.key,
+    this.orderId,
+    this.driverName,
+    this.driverPhone,
+  });
 
   @override
   State<OrderTrackingScreen> createState() => _OrderTrackingScreenState();
@@ -131,10 +140,10 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                             BuildMartCard(
                               child: Row(
                                 children: [
-                                  const CircleAvatar(
+                                  CircleAvatar(
                                     radius: 24,
-                                    backgroundImage: NetworkImage(
-                                        'https://via.placeholder.com/150'),
+                                    backgroundColor: AppColors.primary.withValues(alpha: 0.15),
+                                    child: const Icon(Icons.delivery_dining, color: AppColors.primary, size: 28),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -142,14 +151,20 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Ramesh Kumar',
-                                            style: TextStyle(
+                                        Text(
+                                            widget.driverName != null && widget.driverName!.isNotEmpty
+                                                ? widget.driverName!
+                                                : 'Assigning Delivery Partner...',
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16)),
                                         Row(
                                           children: [
-                                            const Text('TS09 AB 1234',
-                                                style: TextStyle(
+                                            Text(
+                                                widget.orderId != null && widget.orderId!.isNotEmpty
+                                                    ? 'Order #'
+                                                    : 'Active Delivery',
+                                                style: const TextStyle(
                                                     color: AppColors.textLight,
                                                     fontSize: 12)),
                                             const SizedBox(width: 8),

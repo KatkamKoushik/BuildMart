@@ -8,6 +8,7 @@ import 'l10n/app_localizations.dart';
 import 'features/products/data/product_providers.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/providers/settings_provider.dart';
+import 'core/services/local_catalog_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,13 @@ void main() async {
   } catch (e) {
     debugPrint(
         'Firebase initialization failed (Have you run flutterfire configure?): $e');
+  }
+
+    // Pre-load local offline catalog for instant UI rendering
+  try {
+    await LocalCatalogService.instance.ensureInitialized();
+  } catch (e) {
+    debugPrint('LocalCatalogService notice: ');
   }
 
   final prefs = await SharedPreferences.getInstance();

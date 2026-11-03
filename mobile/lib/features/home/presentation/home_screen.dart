@@ -19,7 +19,7 @@ import '../../categories/data/category_repository.dart';
 import '../../brands/data/brand_repository.dart';
 import '../../shops/data/shop_repository.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../core/services/seeder_service.dart';
+import '../../checkout/presentation/checkout_providers.dart';
 import '../../../core/utils/category_translator.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -168,13 +168,16 @@ class HomeScreen extends ConsumerWidget {
   }
 
   AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
+    final currentAddress = ref.watch(deliveryAddressProvider);
     final userAsync = ref.watch(userProvider);
 
-    String titleText = AppLocalizations.of(context)!.location;
-    String shortAddress = AppLocalizations.of(context)!.selectDeliveryLocation;
+    String titleText = currentAddress.title.isNotEmpty ? currentAddress.title : AppLocalizations.of(context)!.location;
+    String shortAddress = currentAddress.addressLine.isNotEmpty && currentAddress.id != 'initial'
+        ? currentAddress.addressLine.split(',')[0].trim()
+        : AppLocalizations.of(context)!.selectDeliveryLocation;
 
     userAsync.whenData((user) {
-      if (user != null && user.savedAddresses.isNotEmpty) {
+      if (user != null && user.savedAddresses.isNotEmpty && currentAddress.id == 'initial') {
         final addressLine = user.savedAddresses.first;
         final parts = addressLine.split(',');
         shortAddress = parts.isNotEmpty ? parts[0].trim() : addressLine;
@@ -189,6 +192,7 @@ class HomeScreen extends ConsumerWidget {
         label: 'Current Delivery Location: $shortAddress',
         button: true,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () => context.push('/location'),
           child: Row(
             children: [
@@ -227,23 +231,7 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       actions: [
-        Semantics(
-          label: 'Seed Database',
-          button: true,
-          child: IconButton(
-            icon: const Icon(Icons.cloud_upload,
-                color: AppColors.primary, size: 28),
-            onPressed: () async {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Seeding database...')));
-              await SeederService().seedDatabase();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Seeding complete! Please restart app.')));
-              }
-            },
-          ),
-        ),
+
         Semantics(
           label: 'Notifications',
           button: true,

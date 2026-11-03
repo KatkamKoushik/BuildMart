@@ -1,3 +1,4 @@
+import '../../../core/services/local_catalog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +9,6 @@ import '../../../shared/widgets/network_image_widget.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../data/user_repository.dart';
 import '../../../core/services/cloudinary_service.dart';
-import '../../../core/services/seeder_service.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../core/providers/settings_provider.dart';
 import '../../../l10n/app_localizations.dart';
@@ -120,14 +120,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   border: Border.all(
                                       color: AppColors.primary, width: 2),
                                 ),
-                                child: NetworkImageWidget(
-                                  imageUrl: user.profileImageUrl ??
-                                      'https://via.placeholder.com/150',
-                                  width: 64,
-                                  height: 64,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(32)),
-                                ),
+                                child: (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
+                                    ? NetworkImageWidget(
+                                        imageUrl: user.profileImageUrl!,
+                                        width: 64,
+                                        height: 64,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(32)),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 32,
+                                        backgroundColor: AppColors.primary,
+                                        child: Text(
+                                          user.name.isNotEmpty
+                                              ? user.name[0].toUpperCase()
+                                              : 'U',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 24,
+                                          ),
+                                        ),
+                                      ),
                               ),
                               if (_isUploading)
                                 const CircularProgressIndicator(
@@ -309,12 +323,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     : () async {
                         setState(() => _isSeeding = true);
                         try {
-                          await SeederService().seedDatabase();
+                          await LocalCatalogService.instance.loadFromAssets();
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text(
-                                    'Catalog refreshed! Restart the app to see changes.'),
+                                content: Text('Catalog refreshed successfully!'),
                                 backgroundColor: AppColors.success,
                               ),
                             );

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -65,7 +67,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  void _processPayment() {
+  void _processPayment() async {
     if (_selectedPaymentMethod == 1) {
       // COD Selected
       context.go('/payment-success');
@@ -87,15 +89,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
       return;
     }
 
+    final user = FirebaseAuth.instance.currentUser;
+    final prefs = await SharedPreferences.getInstance();
+    final userEmail = user?.email ?? prefs.getString('cached_user_email') ?? '';
+    final userPhone = user?.phoneNumber ?? prefs.getString('cached_user_phone') ?? '';
+
     var options = {
       'key': razorpayKey,
-
-      'amount': (widget.amount * 100).toInt(), // Amount in paise
+      'amount': (widget.amount * 100).toInt(),
       'name': 'BuildMart',
       'description': 'Order Payment',
-      'prefill': {'contact': '9876543210', 'email': 'customer@buildmart.com'},
+      'prefill': {
+        if (userPhone.isNotEmpty) 'contact': userPhone,
+        if (userEmail.isNotEmpty) 'email': userEmail,
+      },
       'theme': {
-        'color': '#FFC107' // App primary color
+        'color': '#FFC107'
       }
     };
 

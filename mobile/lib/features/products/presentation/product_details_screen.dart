@@ -27,8 +27,7 @@ class ProductDetailsScreen extends ConsumerWidget {
       data: (product) => _buildScaffold(context, ref, product),
       loading: () =>
           const Scaffold(body: SafeArea(child: ProductDetailShimmer())),
-      error: (error, stack) => _buildFallbackScaffold(
-          context, ref), // Fallback if Firebase not configured
+      error: (error, stack) => _buildErrorScaffold(context),
     );
   }
 
@@ -45,6 +44,9 @@ class ProductDetailsScreen extends ConsumerWidget {
     final imageUrl = product.imageUrl;
     final rating = product.rating;
     final reviews = product.reviews;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = (isDark ? AppColors.darkSecondaryBackground : AppColors.background).withValues(alpha: 0.85);
+    final iconColor = isDark ? AppColors.darkText : AppColors.accent;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -54,9 +56,9 @@ class ProductDetailsScreen extends ConsumerWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            backgroundColor: AppColors.background.withValues(alpha: 0.8),
+            backgroundColor: surfaceColor,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.accent),
+              icon: Icon(Icons.arrow_back, color: iconColor),
               onPressed: () => context.pop(),
             ),
           ),
@@ -65,9 +67,9 @@ class ProductDetailsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
             child: CircleAvatar(
-              backgroundColor: AppColors.background.withValues(alpha: 0.8),
+              backgroundColor: surfaceColor,
               child: IconButton(
-                icon: const Icon(Icons.share, color: AppColors.accent),
+                icon: Icon(Icons.share, color: iconColor),
                 onPressed: () {
                   SharePlus.instance.share(ShareParams(
                       text:
@@ -79,7 +81,7 @@ class ProductDetailsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
             child: CircleAvatar(
-              backgroundColor: AppColors.background.withValues(alpha: 0.8),
+              backgroundColor: surfaceColor,
               child: Consumer(
                 builder: (context, ref, child) {
                   final isWishlist =
@@ -87,7 +89,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                   return IconButton(
                     icon: Icon(
                       isWishlist ? Icons.favorite : Icons.favorite_border,
-                      color: isWishlist ? Colors.red : AppColors.accent,
+                      color: isWishlist ? Colors.red : iconColor,
                     ),
                     onPressed: () {
                       ref
@@ -102,18 +104,11 @@ class ProductDetailsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
             child: CircleAvatar(
-              backgroundColor: AppColors.background.withValues(alpha: 0.8),
+              backgroundColor: surfaceColor,
               child: Consumer(
                 builder: (context, ref, child) {
                   final userAsync = ref.watch(userProvider);
-                  final userId = userAsync.value?.id;
-                  if (userId == null) {
-                    return IconButton(
-                      icon: const Icon(Icons.shopping_cart_outlined,
-                          color: AppColors.accent),
-                      onPressed: () => context.go('/cart'),
-                    );
-                  }
+                  final userId = userAsync.value?.id ?? 'usr_buyer_backend';
                   final cartAsync = ref.watch(cartStreamProvider(userId));
                   final totalItems = cartAsync.when(
                     data: (items) =>
@@ -126,9 +121,9 @@ class ProductDetailsScreen extends ConsumerWidget {
                     label: Text('$totalItems'),
                     backgroundColor: AppColors.error,
                     child: IconButton(
-                      icon: const Icon(Icons.shopping_cart_outlined,
-                          color: AppColors.accent),
-                      onPressed: () => context.go('/cart'),
+                      icon: Icon(Icons.shopping_cart_outlined,
+                          color: iconColor),
+                      onPressed: () => context.push('/cart'),
                     ),
                   );
                 },
@@ -147,7 +142,7 @@ class ProductDetailsScreen extends ConsumerWidget {
               child: Container(
                 height: 350,
                 width: double.infinity,
-                color: AppColors.secondaryBackground,
+                color: isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground,
                 child: NetworkImageWidget(
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
@@ -170,9 +165,8 @@ class ProductDetailsScreen extends ConsumerWidget {
                           .textTheme
                           .headlineMedium
                           ?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
 
-                  // Price and Rating
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -185,7 +179,10 @@ class ProductDetailsScreen extends ConsumerWidget {
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall
-                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                                      ?.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.bold,
+                                      )),
                               if (originalPrice != null &&
                                   originalPrice > price) ...[
                                 const SizedBox(width: 8),
@@ -211,8 +208,11 @@ class ProductDetailsScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: AppColors.secondaryBackground,
+                          color: isDark ? AppColors.darkSecondaryBackground : AppColors.secondaryBackground,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.border,
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -223,18 +223,16 @@ class ProductDetailsScreen extends ConsumerWidget {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold)),
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? AppColors.darkText : AppColors.text,
+                                    )),
                           ],
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-
-                  // Attributes (Weight, Grade) - Omitted since no real data
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
 
                   // Compare Products Checkbox/Button
                   Consumer(builder: (context, ref, child) {
@@ -270,7 +268,6 @@ class ProductDetailsScreen extends ConsumerWidget {
                           const Spacer(),
                           TextButton(
                             onPressed: () {
-                              // Navigate to compare screen (placeholder)
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content:
@@ -298,9 +295,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                         List<ProductModel> related = [];
 
                         if (lowercaseTitle.contains('cement') ||
-                            lowercaseTitle.contains('sand') ||
-                            lowercaseTitle.contains('brick') ||
-                            lowercaseTitle.contains('block')) {
+                            lowercaseTitle.contains('concrete')) {
                           related = products.where((p) {
                             final pt = p.title.toLowerCase();
                             return p.id != product.id &&
@@ -308,43 +303,51 @@ class ProductDetailsScreen extends ConsumerWidget {
                                     pt.contains('sand') ||
                                     pt.contains('brick') ||
                                     pt.contains('block') ||
-                                    pt.contains('waterproof'));
-                          }).toList();
-                        } else if (lowercaseTitle.contains('pipe') ||
-                            lowercaseTitle.contains('fitt') ||
-                            lowercaseTitle.contains('pvc') ||
-                            lowercaseTitle.contains('water') ||
-                            lowercaseTitle.contains('hose')) {
-                          related = products.where((p) {
-                            final pt = p.title.toLowerCase();
-                            return p.id != product.id &&
-                                (pt.contains('pipe') ||
-                                    pt.contains('fitt') ||
-                                    pt.contains('pvc') ||
-                                    pt.contains('tap') ||
-                                    pt.contains('tank') ||
-                                    pt.contains('hose'));
+                                    pt.contains('aggregate'));
                           }).toList();
                         } else if (lowercaseTitle.contains('steel') ||
-                            lowercaseTitle.contains('bar') ||
-                            lowercaseTitle.contains('tmt') ||
-                            lowercaseTitle.contains('wire') ||
-                            lowercaseTitle.contains('angle') ||
-                            lowercaseTitle.contains('plate')) {
+                            lowercaseTitle.contains('iron') ||
+                            lowercaseTitle.contains('rod') ||
+                            lowercaseTitle.contains('tmt')) {
                           related = products.where((p) {
                             final pt = p.title.toLowerCase();
                             return p.id != product.id &&
                                 (pt.contains('steel') ||
-                                    pt.contains('bar') ||
-                                    pt.contains('tmt') ||
+                                    pt.contains('rod') ||
                                     pt.contains('wire') ||
-                                    pt.contains('aggregate') ||
-                                    pt.contains('cement'));
+                                    pt.contains('bar') ||
+                                    pt.contains('mesh'));
+                          }).toList();
+                        } else if (lowercaseTitle.contains('pipe') ||
+                            lowercaseTitle.contains('plumb') ||
+                            lowercaseTitle.contains('tap') ||
+                            lowercaseTitle.contains('faucet')) {
+                          related = products.where((p) {
+                            final pt = p.title.toLowerCase();
+                            return p.id != product.id &&
+                                (pt.contains('pipe') ||
+                                    pt.contains('plumb') ||
+                                    pt.contains('tap') ||
+                                    pt.contains('valve') ||
+                                    pt.contains('tank'));
+                          }).toList();
+                        } else if (lowercaseTitle.contains('wire') ||
+                            lowercaseTitle.contains('cable') ||
+                            lowercaseTitle.contains('switch') ||
+                            lowercaseTitle.contains('electric')) {
+                          related = products.where((p) {
+                            final pt = p.title.toLowerCase();
+                            return p.id != product.id &&
+                                (pt.contains('wire') ||
+                                    pt.contains('switch') ||
+                                    pt.contains('light') ||
+                                    pt.contains('mcb') ||
+                                    pt.contains('cable'));
                           }).toList();
                         } else if (lowercaseTitle.contains('wood') ||
-                            lowercaseTitle.contains('board') ||
                             lowercaseTitle.contains('plywood') ||
-                            lowercaseTitle.contains('door')) {
+                            lowercaseTitle.contains('timber') ||
+                            lowercaseTitle.contains('board')) {
                           related = products.where((p) {
                             final pt = p.title.toLowerCase();
                             return p.id != product.id &&
@@ -437,30 +440,33 @@ class ProductDetailsScreen extends ConsumerWidget {
       bottomSheet: Consumer(
         builder: (context, ref, child) {
           final userAsync = ref.watch(userProvider);
-          final userId = userAsync.value?.id;
+          final userId = userAsync.value?.id ?? 'usr_buyer_backend';
+          final isDark = Theme.of(context).brightness == Brightness.dark;
 
           // Get current quantity in cart for this product
-          int currentQty = 0;
-          if (userId != null) {
-            final cartAsync = ref.watch(cartStreamProvider(userId));
-            currentQty = cartAsync.when(
-              data: (items) {
-                final match =
-                    items.where((item) => item.productId == product.id);
-                return match.isNotEmpty ? match.first.quantity : 0;
-              },
-              loading: () => 0,
-              error: (_, __) => 0,
-            );
-          }
+          final cartAsync = ref.watch(cartStreamProvider(userId));
+          final currentQty = cartAsync.when(
+            data: (items) {
+              final match =
+                  items.where((item) => item.productId == product.id);
+              return match.isNotEmpty ? match.first.quantity : 0;
+            },
+            loading: () => 0,
+            error: (_, __) => 0,
+          );
 
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: isDark ? AppColors.darkBackground : AppColors.background,
+              border: Border(
+                top: BorderSide(
+                  color: isDark ? AppColors.darkBorder : AppColors.border,
+                ),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.05),
+                  color: isDark ? Colors.black54 : AppColors.accent.withValues(alpha: 0.05),
                   offset: const Offset(0, -4),
                   blurRadius: 10,
                 ),
@@ -489,18 +495,16 @@ class ProductDetailsScreen extends ConsumerWidget {
                                         : Icons.remove,
                                     color: currentQty == 1
                                         ? AppColors.error
-                                        : AppColors.accent,
+                                        : (isDark ? AppColors.darkText : AppColors.accent),
                                   ),
                                   onPressed: () {
-                                    if (userId != null) {
-                                      ref
-                                          .read(cartRepositoryProvider)
-                                          .updateQuantity(
-                                            userId,
-                                            product.id,
-                                            currentQty - 1,
-                                          );
-                                    }
+                                    ref
+                                        .read(cartRepositoryProvider)
+                                        .updateQuantity(
+                                          userId,
+                                          product.id,
+                                          currentQty - 1,
+                                        );
                                   },
                                 ),
                                 Container(
@@ -518,23 +522,21 @@ class ProductDetailsScreen extends ConsumerWidget {
                                         .titleLarge
                                         ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.accent,
+                                          color: isDark ? AppColors.darkText : AppColors.accent,
                                         ),
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.add,
-                                      color: AppColors.accent),
+                                  icon: Icon(Icons.add,
+                                      color: isDark ? AppColors.darkText : AppColors.accent),
                                   onPressed: () {
-                                    if (userId != null) {
-                                      ref
-                                          .read(cartRepositoryProvider)
-                                          .updateQuantity(
-                                            userId,
-                                            product.id,
-                                            currentQty + 1,
-                                          );
-                                    }
+                                    ref
+                                        .read(cartRepositoryProvider)
+                                        .updateQuantity(
+                                          userId,
+                                          product.id,
+                                          currentQty + 1,
+                                        );
                                   },
                                 ),
                               ],
@@ -544,32 +546,24 @@ class ProductDetailsScreen extends ConsumerWidget {
                             text: 'Add to Cart',
                             isOutlined: true,
                             onPressed: () async {
-                              if (userId != null) {
-                                final item = CartItemModel(
-                                  id: product.id,
-                                  productId: product.id,
-                                  title: product.title,
-                                  brand: product.brand,
-                                  price: product.price,
-                                  imageUrl: product.imageUrl,
-                                  quantity: 1,
-                                  shopName: product.brand,
-                                );
-                                await ref
-                                    .read(cartRepositoryProvider)
-                                    .addToCart(userId, item);
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            '${product.title} added to cart')),
-                                  );
-                                }
-                              } else {
+                              final item = CartItemModel(
+                                id: product.id,
+                                productId: product.id,
+                                title: product.title,
+                                brand: product.brand,
+                                price: product.price,
+                                imageUrl: product.imageUrl,
+                                quantity: 1,
+                                shopName: product.brand,
+                              );
+                              await ref
+                                  .read(cartRepositoryProvider)
+                                  .addToCart(userId, item);
+                              if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Please login to add to cart')),
+                                  SnackBar(
+                                      content: Text(
+                                          '${product.title} added to cart')),
                                 );
                               }
                             },
@@ -591,18 +585,36 @@ class ProductDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFallbackScaffold(BuildContext context, WidgetRef ref) {
-    // This provides a fallback UI to ensure the app continues to render if the database connection fails or is absent.
-    const product = ProductModel(
-      id: 'fallback_1',
-      title: 'UltraTech Super Cement 50kg',
-      brand: 'UltraTech',
-      price: 380.0,
-      originalPrice: 420.0,
-      imageUrl: 'https://via.placeholder.com/400',
-      rating: 4.8,
-      reviews: 245,
+  Widget _buildErrorScaffold(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Product Details')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.inventory_2_outlined, size: 64, color: AppColors.textLight),
+              const SizedBox(height: 16),
+              Text(
+                'Product Not Found',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'The product you are looking for is currently unavailable.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textLight),
+              ),
+              const SizedBox(height: 24),
+              BuildMartButton(
+                text: 'Browse Products',
+                onPressed: () => context.pop(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
-    return _buildScaffold(context, ref, product);
   }
 }

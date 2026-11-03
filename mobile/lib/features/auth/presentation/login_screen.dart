@@ -286,6 +286,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             .fade(delay: 150.ms, duration: 400.ms)
                             .slideY(begin: 0.2, curve: Curves.easeOut),
 
+
+
                         const SizedBox(height: 6),
 
                         // Tagline
